@@ -31,11 +31,11 @@
             </AnchorPane>
         </items>
       </SplitPane>
-      <Group>
+      <AnchorPane prefHeight="466.0" prefWidth="436.0">
          <children>
-            <ImageView fx:id="image" fitHeight="464.0" fitWidth="428.0" pickOnBounds="true" preserveRatio="true" />
-            <TextArea fx:id="feedbackArea" layoutY="407.0" prefHeight="57.0" prefWidth="432.0" />
+            <TextArea fx:id="feedbackArea" layoutY="401.0" prefHeight="65.0" prefWidth="433.0" />
+            <ImageView fx:id="image" fitHeight="402.0" fitWidth="427.0" pickOnBounds="true" preserveRatio="true" />
          </children>
-      </Group>
+      </AnchorPane>
    </children>
 </HBox>
