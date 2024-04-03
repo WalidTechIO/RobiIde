@@ -26,11 +26,16 @@
                   <Button fx:id="buttonExecute" alignment="CENTER" contentDisplay="CENTER" layoutX="88.0" layoutY="98.0" mnemonicParsing="false" text="Executer" />
                   <Label fx:id="labelMode" alignment="CENTER" contentDisplay="CENTER" layoutX="50.0" layoutY="23.0" prefHeight="17.0" prefWidth="138.0" text="Mode: Direct" />
                   <Label layoutX="7.0" prefHeight="17.0" prefWidth="76.0" text="Zone de code" />
-                  <Label layoutX="167.0" layoutY="123.0" prefHeight="17.0" prefWidth="87.0" text="Zone de rendu" />
+                  <Label layoutX="142.0" layoutY="123.0" prefHeight="17.0" prefWidth="99.0" text="Zone de feedback" />
                </children>
             </AnchorPane>
         </items>
       </SplitPane>
-      <ImageView fx:id="image" fitHeight="400.0" fitWidth="365.0" pickOnBounds="true" preserveRatio="true" />
+      <Group>
+         <children>
+            <ImageView fx:id="image" fitHeight="464.0" fitWidth="428.0" pickOnBounds="true" preserveRatio="true" />
+            <TextArea fx:id="feedbackArea" layoutY="407.0" prefHeight="57.0" prefWidth="432.0" />
+         </children>
+      </Group>
    </children>
 </HBox>

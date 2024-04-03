@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
+
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import partie2.client.ui.Controleur;
 import partie2.io.Program;
@@ -86,9 +88,7 @@ public class Client implements Runnable {
 				controller.commandFeedBack(res.feedback());
 				controller.imageReceipt(img);
 			} catch(IOException|ClassNotFoundException e) {
-				//Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de la reponse du serveur.").show());
-				e.printStackTrace();
-				System.exit(-1);
+				Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de la reponse du serveur.").show());
 			}
 		}
 	}

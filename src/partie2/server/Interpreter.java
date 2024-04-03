@@ -88,7 +88,7 @@ public class Interpreter {
 			return ref;
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
-			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Error: " + e, imgToB64(snapshot())));
+			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Error: " + e.getMessage(), imgToB64(snapshot())));
 		}
 		return null;
 	}

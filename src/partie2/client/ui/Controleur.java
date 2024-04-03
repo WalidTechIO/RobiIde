@@ -4,10 +4,8 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -51,6 +49,12 @@ public class Controleur {
 	private TextArea codeTextArea;
 	
 	/**
+	 * Zone de feedback.
+	 */
+	@FXML
+	private TextArea feedbackArea;
+	
+	/**
 	 * Bouton d'envoi du programme.
 	 */
 	@FXML
@@ -88,6 +92,7 @@ public class Controleur {
 		buttonMode.setOnMouseClicked(this::clickStepByStep);
 		buttonExecute.setOnMouseClicked(this::execute);
 		buttonSendProgram.setOnMouseClicked(this::sendProgram);
+		feedbackArea.setEditable(false);
 		client = new Client(7777, this);
 		mode = Mode.DIRECT;
 	}
@@ -135,7 +140,7 @@ public class Controleur {
 	}
 
 	public void commandFeedBack(String inst) {
-		Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, inst).show());
+		feedbackArea.appendText(inst + "\n");
 	}
 
 }

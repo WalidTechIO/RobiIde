@@ -21,7 +21,7 @@ public class IHMRobiMain extends Application {
 			FXMLLoader fxmlLoader = new FXMLLoader(url);
 			HBox root = (HBox) fxmlLoader.load();
 			
-			Scene scene = new Scene(root, 930, 590);
+			Scene scene = new Scene(root, 680, 470);
 			
 			primaryStage.setOnCloseRequest(e -> System.exit(0));
 			
