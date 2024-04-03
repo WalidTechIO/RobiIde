@@ -232,7 +232,7 @@ public class Controleur {
 	public void load(ActionEvent e) {
 		ExtensionFilter filter = new ExtensionFilter("Robi File (*.robi)", "*.robi");
 		FileChooser fc = new FileChooser();
-		fc.setTitle("Choisissez un emplacement de sauvegarde");
+		fc.setTitle("Ouvrir un script ROBI");
 		fc.getExtensionFilters().add(filter);
 		if(!codeTextArea.getText().isBlank()) {
 			ButtonType bt = new Alert(AlertType.CONFIRMATION, "Vous êtes sur le point d'ouvrir un fichier alors que la zone de code n'est pas vide.\nEtes-vous sur ?", ButtonType.YES, ButtonType.NO).showAndWait().get();
