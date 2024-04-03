@@ -4,37 +4,23 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import partie2.client.Client;
+import partie2.io.Mode;
+import partie2.io.Program;
 
 /**
  * Controleur de l'UI.
  */
 public class Controleur {
-	
-	/**
-	 * Enumeration representant les modes du client.
-	 */
-	private enum MODE {
-		S_B_S,
-		DIRECT
-	}
-	
-	/**
-	 * Index de la prochaine inst a effectuer en mode S_B_S
-	 */
-	private int sbsindice = 0;
-	
-	/**
-	 * Tableau d'instructions si MODE.S_B_S
-	 */
-	private String[] inst = null;
 	
 	/**
 	 * Client logique.
@@ -44,7 +30,7 @@ public class Controleur {
 	/**
 	 * Mode courant du client.
 	 */
-	private MODE mode;
+	private Mode mode;
 	
 	/**
 	 * Resources FXML.
@@ -63,6 +49,12 @@ public class Controleur {
 	 */
 	@FXML
 	private TextArea codeTextArea;
+	
+	/**
+	 * Bouton d'envoi du programme.
+	 */
+	@FXML
+	private Button buttonSendProgram;
 	
 	/**
 	 * Bouton gestion des modes.
@@ -95,8 +87,9 @@ public class Controleur {
 	void initialize() {
 		buttonMode.setOnMouseClicked(this::clickStepByStep);
 		buttonExecute.setOnMouseClicked(this::execute);
+		buttonSendProgram.setOnMouseClicked(this::sendProgram);
 		client = new Client(7777, this);
-		mode = MODE.DIRECT;
+		mode = Mode.DIRECT;
 	}
 	
 	/**
@@ -104,7 +97,7 @@ public class Controleur {
 	 * @param e Evenement du click.
 	 */
 	void clickStepByStep(MouseEvent e) {
-		mode = MODE.S_B_S;
+		mode = Mode.S_B_S;
 		labelMode.setText("Mode: Pas a Pas");
 		buttonMode.setText("Mode Direct");
 		buttonMode.setOnMouseClicked(this::clickDirect);
@@ -115,11 +108,14 @@ public class Controleur {
 	 * @param e Evenement du click.
 	 */
 	void clickDirect(MouseEvent e) {
-		mode = MODE.DIRECT;
+		mode = Mode.DIRECT;
 		labelMode.setText("Mode: Direct");
 		buttonMode.setText("Mode Pas a Pas");
 		buttonMode.setOnMouseClicked(this::clickStepByStep);
-		buttonExecute.setOnMouseClicked(this::execute);
+	}
+	
+	void sendProgram(MouseEvent e) {
+		client.sendProgram(new Program(mode, codeTextArea.getText()));
 	}
 	
 	/**
@@ -127,28 +123,7 @@ public class Controleur {
 	 * @param e Evenement du click.
 	 */
 	void execute(MouseEvent e) {
-		
-		if(mode == MODE.DIRECT) client.execute(codeTextArea.getText());
-		
-		else {
-			sbsindice = 0;			
-			inst = codeTextArea.getText().split("\n");
-			buttonExecute.setOnMouseClicked(this::oneStep);		
-			oneStep(null);
-		}
-		
-	}
-	
-	/**
-	 * Methode d'execution d'une seule instruction.
-	 * @param e Evenement du click.
-	 */
-	void oneStep(MouseEvent e) {
-		if(inst == null) return;
-		if(sbsindice == inst.length - 1) {
-			buttonExecute.setOnMouseClicked(this::execute);
-		}
-		client.execute(inst[sbsindice++]);
+		client.execute();
 	}
 	
 	/**
@@ -157,6 +132,10 @@ public class Controleur {
 	 */
 	public void imageReceipt(BufferedImage img) {
 		if(img != null) image.setImage(SwingFXUtils.toFXImage(img, null));
+	}
+
+	public void commandFeedBack(String inst) {
+		Platform.runLater(() -> new Alert(Alert.AlertType.INFORMATION, inst).show());
 	}
 
 }

@@ -3,12 +3,22 @@ package partie2.server;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.Base64;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.imageio.ImageIO;
 
 import graphicLayer.GImage;
 import graphicLayer.GOval;
 import graphicLayer.GRect;
 import graphicLayer.GSpace;
 import graphicLayer.GString;
+import partie2.io.Mode;
+import partie2.io.Program;
+import partie2.io.Response;
 import partie2.server.commands.AddElement;
 import partie2.server.commands.AddScript;
 import partie2.server.commands.Clear;
@@ -21,13 +31,20 @@ import partie2.server.commands.SetColor;
 import partie2.server.commands.SetDimension;
 import partie2.server.commands.Sleep;
 import stree.parser.SNode;
+import stree.parser.SParser;
 
 public class Interpreter {
 	
 	private final Environment env = new Environment();
 	private final GSpace space;
+	private final Server server;
+	private boolean sbs = false;
+	private boolean status = false;
+	private List<SNode> program = null;
 	
-	public Interpreter() {
+	public Interpreter(Server server) {
+		this.server = server;
+		
 		space = new GSpace("Server", new Dimension(200, 100));
 		space.open();
 
@@ -65,9 +82,13 @@ public class Interpreter {
 		Reference receiver = env.getReferenceByName(receiverName);
 		try {
 			if(receiver == null) throw new NullPointerException("Environment doesn't know \"" + receiverName + "\" reference.");
-			return receiver.run(this, expr);
+			Reference ref = receiver.run(this, expr);
+			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Success", imgToB64(snapshot())));
+			if(sbs && !server.receiveData()) return null;
+			return ref;
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
+			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Error: " + e, imgToB64(snapshot())));
 		}
 		return null;
 	}
@@ -89,6 +110,52 @@ public class Interpreter {
 	    space.print(g);
 	    g.dispose();
 	    return bi;
+	}
+	
+	public void setProgram(Program program) {
+		
+		if(program.mode() == Mode.S_B_S) sbs = true;
+		else sbs = false;
+		
+		// creation du parser
+		SParser<SNode> parser = new SParser<>();
+		
+		try {
+			this.program = parser.parse(program.contenu());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void runProgram() {
+		
+		if(program == null) return;
+		
+		status = true;
+		
+		Iterator<SNode> programIterator = program.iterator();
+		
+		while(programIterator.hasNext()) {
+			if(compute(programIterator.next()) == null) break;
+		}
+		
+		status = false;
+	}
+	
+	public boolean isRunning() {
+		return status;
+	}
+	
+	private String imgToB64(BufferedImage image) {
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
+		
+		try {
+			ImageIO.write(image, "png", os);
+			return Base64.getEncoder().encodeToString(os.toByteArray());
+		} catch(Exception e) {
+			return null;
+		}
 	}
 
 }

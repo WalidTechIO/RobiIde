@@ -1,16 +1,19 @@
 package partie2.client;
 
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.Base64;
 
 import javax.imageio.ImageIO;
-
 import javafx.scene.control.Alert;
 import partie2.client.ui.Controleur;
+import partie2.io.Program;
+import partie2.io.Response;
 
 /**
  * Client
@@ -52,14 +55,21 @@ public class Client implements Runnable {
 	}
 	
 	/**
-	 * Envoie la command au serveur.
-	 * @param command
+	 * Envoie un Exe au serveur.
 	 */
-	public void execute(String command) {
+	public void execute() {
 		try {
-			out.writeObject(command);
+			out.writeObject("Exe");
 		} catch (IOException ignored) {
 			new Alert(Alert.AlertType.ERROR, "Erreur lors de la tranmission de la commande.").show();
+		}
+	}
+	
+	public void sendProgram(Program program) {
+		try {
+			out.writeObject(program);
+		} catch (IOException ignored) {
+			new Alert(Alert.AlertType.ERROR, "Erreur lors de la tranmission du programme.").show();
 		}
 	}
 	
@@ -70,11 +80,25 @@ public class Client implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				BufferedImage img = ImageIO.read(in);
+				if(!(in.readObject() instanceof Response res)) throw new IOException();
+				BufferedImage img = b64ToImg(res.image());
+				if(img == null) throw new IOException(); 
+				controller.commandFeedBack(res.feedback());
 				controller.imageReceipt(img);
-			} catch(IOException e) {
-				new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de l'image.").show();
+			} catch(IOException|ClassNotFoundException e) {
+				//Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de la reponse du serveur.").show());
+				e.printStackTrace();
+				System.exit(-1);
 			}
+		}
+	}
+	
+	private BufferedImage b64ToImg(String b64) {
+		ByteArrayInputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
+		try {
+			return ImageIO.read(is);
+		} catch (IOException e) {
+			return null;
 		}
 	}
 
