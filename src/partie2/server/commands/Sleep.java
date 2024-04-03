@@ -15,10 +15,15 @@ public class Sleep implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		int delay = Integer.parseInt(method.get(2).contents());
+		int delay = 0;
+		try {
+			delay = Integer.parseInt(method.get(2).contents());
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid delay.");
+		}
 		try {
 			Thread.sleep(delay);
-		} catch(InterruptedException e) {
+		} catch(InterruptedException ignored) {
 			
 		}
 		

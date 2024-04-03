@@ -17,8 +17,12 @@ public class Translate implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
-		((GElement)reference.getRef()).translate(vec);
+		try {
+			Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+			((GElement)reference.getRef()).translate(vec);
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid translation value.");
+		}
 		
 		return reference;
 	}

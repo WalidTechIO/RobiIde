@@ -18,7 +18,12 @@ public class SetDimension implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		Dimension dim = new Dimension(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+		Dimension dim = null;
+		try {
+			dim = new Dimension(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid dimension value.");
+		}
 		if(reference.getRef() instanceof GBounded bndref) {
 			bndref.setWidth(dim.width);
 			bndref.setHeight(dim.height);
