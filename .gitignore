@@ -1,3 +1,5 @@
 javafx-win/
 bin/
 out/
+.idea/
+*.iml
