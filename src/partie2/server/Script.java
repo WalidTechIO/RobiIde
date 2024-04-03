@@ -30,8 +30,9 @@ public class Script {
 	}
 	
 	//Methode de demande d'execution d'un script
-	public Reference call(Environment environment, List<String> args) {
+	public Reference call(Interpreter interpreter, List<String> args) {
 		if(args.size() != params.size() - 1) throw new IllegalArgumentException();
+		Environment environment = interpreter.getEnvironment();
 		
 		Map<String, String> replaceValues = new HashMap<>();
 		replaceValues.put(params.get(0), refName);
@@ -40,7 +41,7 @@ public class Script {
 		replace(script, replaceValues);
 		
 		for(SNode children : script.children()) {
-			new Interpreter().compute(environment, children);
+			interpreter.compute(children);
 		}
 		
 		return environment.getReferenceByName(refName);

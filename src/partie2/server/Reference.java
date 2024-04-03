@@ -26,14 +26,17 @@ public class Reference {
 		primitives.put(selector, primitive);
 	}
 	
-	public Reference run(Environment environment, SNode method) {
+	public Reference run(Interpreter interpreter, SNode method) {
+		
+		Environment environment = interpreter.getEnvironment();
+		
 		if(method.size() < 2) throw new IllegalArgumentException("Entity " + environment.getNameByReference(this) + ": Wrong run call");
 		
 		String methodName = method.get(1).contents();
 		
 		//Primitive
 		if(primitives.containsKey(methodName)) {
-			return primitives.get(method.get(1).contents()).run(this, method);
+			return primitives.get(method.get(1).contents()).run(interpreter, method);
 		}
 		
 		//Scripts
@@ -44,7 +47,7 @@ public class Reference {
 				else throw new IllegalArgumentException("Pass an instruction as param for a script is forbidden");
 			}
 			
-			return scripts.get(methodName).call(environment, argsList);
+			return scripts.get(methodName).call(interpreter, argsList);
 		}
 		
 		throw new IllegalArgumentException("Method \"" + methodName + "\" is unknow for entity: " + environment.getNameByReference(this));
