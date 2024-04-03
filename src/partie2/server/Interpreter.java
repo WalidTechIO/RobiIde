@@ -79,16 +79,17 @@ public class Interpreter {
 	
 	public Reference compute(SNode expr) {
 		String receiverName = expr.get(0).contents();
+		String callName = receiverName + "->" + expr.get(1).contents();
 		Reference receiver = env.getReferenceByName(receiverName);
 		try {
 			if(receiver == null) throw new NullPointerException("Environment doesn't know \"" + receiverName + "\" reference.");
 			Reference ref = receiver.run(this, expr);
-			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Success", imgToB64(snapshot())));
+			server.sendResponse(new Response(callName + " Success", imgToB64(snapshot())));
 			if(sbs && !server.receiveData()) return null;
 			return ref;
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
-			server.sendResponse(new Response(expr.get(0).contents() + ":" + expr.get(1).contents() + " Error: " + e.getMessage(), imgToB64(snapshot())));
+			server.sendResponse(new Response(callName + " Error: " + e.getMessage(), imgToB64(snapshot())));
 		}
 		return null;
 	}
