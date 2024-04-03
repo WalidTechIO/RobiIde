@@ -14,8 +14,9 @@ public class DelElement implements Command {
 
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
-		Environment env = interpreter.getEnvironment();
 		if(method.size() != 3) throw new IllegalArgumentException("DelElement: Required 3 args, passed: " + method.size());
+		Environment env = interpreter.getEnvironment();
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		

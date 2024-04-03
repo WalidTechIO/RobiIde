@@ -12,8 +12,8 @@ public class Translate implements Command {
 
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
-
 		if(method.size() != 4) throw new IllegalArgumentException("Translate: Required 4 args, passed: " + method.size());
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		

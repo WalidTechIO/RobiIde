@@ -12,6 +12,7 @@ public class Clear implements Command {
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
 		if(method.size() != 2) throw new IllegalArgumentException("Clear: Required 2 args, passed: " + method.size());
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		

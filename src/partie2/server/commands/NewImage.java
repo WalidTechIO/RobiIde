@@ -17,8 +17,10 @@ public class NewImage implements Command {
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
 		if(method.size() != 3) throw new IllegalArgumentException("NewImage: Required 3 args, passed: " + method.size());
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
+		
 		File path = new File(method.get(2).contents());
 		BufferedImage rawImage = null;
 		try {
@@ -26,6 +28,7 @@ public class NewImage implements Command {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		
 		return new Reference(new GImage(rawImage));
 	}
 

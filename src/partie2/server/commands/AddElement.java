@@ -15,8 +15,8 @@ public class AddElement implements Command {
 
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
-	
 		if(method.size() != 4) throw new IllegalArgumentException("AddElement: Required 4 args, passed: " + method.size());
+		
 		Environment env = interpreter.getEnvironment();
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);

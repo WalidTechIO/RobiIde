@@ -22,6 +22,7 @@ public class SetColor implements Command {
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
 		if(method.size() != 3) throw new IllegalArgumentException("SetColor: Required 3 args, passed: " + method.size());
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		

@@ -14,10 +14,11 @@ public class SetDimension implements Command {
 	@Override
 	public Reference run(Interpreter interpreter, SNode method) {
 		if(method.size() != 4) throw new IllegalArgumentException("SetDimension: Required 4 args, passed: " + method.size());
-		Dimension dim = new Dimension(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+		
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
+		Dimension dim = new Dimension(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
 		if(reference.getRef() instanceof GBounded bndref) {
 			bndref.setWidth(dim.width);
 			bndref.setHeight(dim.height);
