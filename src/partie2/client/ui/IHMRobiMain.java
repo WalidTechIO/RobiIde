@@ -3,7 +3,7 @@ package partie2.client.ui;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -19,9 +19,9 @@ public class IHMRobiMain extends Application {
 		try {
 			URL url = IHMRobiMain.class.getResource("ui.fxml");
 			FXMLLoader fxmlLoader = new FXMLLoader(url);
-			HBox root = (HBox) fxmlLoader.load();
+			VBox root = (VBox) fxmlLoader.load();
 			
-			Scene scene = new Scene(root, 680, 470);
+			Scene scene = new Scene(root, 680, 492);
 			
 			primaryStage.setOnCloseRequest(e -> System.exit(0));
 			
