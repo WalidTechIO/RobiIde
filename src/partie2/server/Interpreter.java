@@ -40,6 +40,7 @@ public class Interpreter {
 	private final Server server;
 	private boolean sbs = false;
 	private boolean status = false;
+	private boolean sbsend = false;
 	private List<SNode> program = null;
 	
 	public Interpreter(Server server) {
@@ -78,20 +79,20 @@ public class Interpreter {
 	}
 	
 	public Reference compute(SNode expr) {
+		Reference ref = null;
 		String receiverName = expr.get(0).contents();
 		String callName = receiverName + "->" + expr.get(1).contents();
 		Reference receiver = env.getReferenceByName(receiverName);
 		try {
 			if(receiver == null) throw new NullPointerException("Environment doesn't know \"" + receiverName + "\" reference.");
-			Reference ref = receiver.run(this, expr);
+			ref = receiver.run(this, expr);
 			server.sendResponse(new Response(callName + " Success", imgToB64(snapshot())));
-			if(sbs && !server.receiveData()) return null;
-			return ref;
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
 			server.sendResponse(new Response(callName + " Error: " + e.getMessage(), imgToB64(snapshot())));
 		}
-		return null;
+		if(sbs && !server.receiveData()) sbsend = true;
+		return ref;
 	}
 
 	public Reference getReferenceByNode(SNode node) {
@@ -138,7 +139,11 @@ public class Interpreter {
 		Iterator<SNode> programIterator = program.iterator();
 		
 		while(programIterator.hasNext()) {
-			if(compute(programIterator.next()) == null) break;
+			compute(programIterator.next());
+			if(sbsend) {
+				sbsend = false;
+				break;
+			}
 		}
 		
 		status = false;
