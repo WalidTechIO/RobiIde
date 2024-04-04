@@ -38,7 +38,14 @@ public class Environment {
 		String res = "";
 		
 		for(Entry<String, Reference> entry : references.entrySet()) {
-			res += entry.getKey() + " is referencing: " + entry.getValue().getRef().getClass().getName() + "\n";
+			String className = entry.getValue().getRef().getClass().getName();
+			if(className.equals("java.lang.Class")) {
+				Class<?> classe = (Class<?>) entry.getValue().getRef();
+				className = "The class " + classe.getCanonicalName();
+			} else {
+				className = "An instance of " + className;
+			}
+			res += entry.getKey() + " is referencing: " + className + "\n";
 		}
 		
 		return res;
@@ -50,6 +57,14 @@ public class Environment {
 			if(s.startsWith(prefix) && !s.equals("space")) toDelete.add(s);
 		});
 		toDelete.forEach((s) -> references.remove(s));
+	}
+	
+	public Map<String, List<String>> scriptsMap() {
+		Map<String, List<String>> map = new HashMap<>();
+		references.forEach((s,r) -> {
+			map.put(s, r.availableScript());
+		});
+		return map;
 	}
 
 }

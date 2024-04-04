@@ -94,7 +94,7 @@ public class Interpreter {
 			msg += " Error: " + e.getMessage();
 		}
 		
-		server.sendResponse(new Response(msg, imgToB64(snapshot()), nodeToString(expr), env.toString()));
+		server.sendResponse(new Response(msg, imgToB64(snapshot()), nodeToString(expr), env.toString(), env.scriptsMap()));
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}

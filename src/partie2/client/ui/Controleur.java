@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.List;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -276,7 +278,7 @@ public class Controleur {
 			FXMLLoader loader = new FXMLLoader(url);
 			VBox root = (VBox) loader.load();
 			debug = loader.getController();
-			Scene scene = new Scene(root, 504, 200);
+			Scene scene = new Scene(root, 840, 200);
 			stage.setScene(scene);
 			stage.setTitle("IDE ROBI - Debug info");
 			stage.show();
@@ -291,7 +293,7 @@ public class Controleur {
 			((Stage)event.getSource()).close();
 			debug = null;
 		} catch(Exception e) {
-			if(!e.getMessage().startsWith("pipeline already created")) e.printStackTrace();
+			if(!e.getMessage().startsWith(" pipeline already created")) e.printStackTrace();
 		}
 		
 		
@@ -308,6 +310,10 @@ public class Controleur {
 
 	public void callReceipt(String call) {
 		if(isDebugging()) debug.addCall(call);
+	}
+
+	public void scriptsMapReceipt(Map<String, List<String>> scriptsMap) {
+		if(isDebugging()) debug.loadScriptsMap(scriptsMap);
 	}
 
 }

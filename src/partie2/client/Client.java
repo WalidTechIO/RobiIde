@@ -91,6 +91,7 @@ public class Client implements Runnable {
 					if(controller.isDebugging()) {
 						controller.envReceipt(res.environment());
 						controller.callReceipt(res.expr());
+						controller.scriptsMapReceipt(res.scriptsMap());
 					}
 				});
 			} catch(IOException|ClassNotFoundException e) {

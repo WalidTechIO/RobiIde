@@ -64,5 +64,9 @@ public class Reference {
 	public void deleteScript(String name) {
 		scripts.remove(name);
 	}
+	
+	public List<String> availableScript() {
+		return new ArrayList<>(scripts.keySet());
+	}
 
 }
