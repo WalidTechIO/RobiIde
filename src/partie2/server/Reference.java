@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import partie2.io.ReferenceInfo;
+import partie2.io.ScriptInfo;
 import partie2.server.commands.Command;
 import stree.parser.SNode;
 
@@ -67,6 +69,25 @@ public class Reference {
 	
 	public List<String> availableScript() {
 		return new ArrayList<>(scripts.keySet());
+	}
+	
+	ReferenceInfo info(Interpreter interpreter) {
+		String className = reference.getClass().getCanonicalName();
+		if(className.equals("java.lang.Class")) {
+			Class<?> classe = (Class<?>) reference;
+			className = "The class " + classe.getCanonicalName();
+		} else {
+			className = "An instance of " + className;
+		}
+		List<String> primitivesName = new ArrayList<>(primitives.keySet());
+		Map<String, ScriptInfo> scriptsInfo = new HashMap<>();
+		scripts.forEach((n,s) -> {
+			String expr = interpreter.nodeToString(s.getExpr());
+			String proto = interpreter.nodeToString(s.getProto());
+			scriptsInfo.put(n, new ScriptInfo(s.nbParams(), expr, proto));
+		});
+		
+		return new ReferenceInfo(className, primitivesName, scriptsInfo);
 	}
 
 }

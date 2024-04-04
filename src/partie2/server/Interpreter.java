@@ -16,6 +16,7 @@ import graphicLayer.GOval;
 import graphicLayer.GRect;
 import graphicLayer.GSpace;
 import graphicLayer.GString;
+import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
 import partie2.io.Response;
@@ -94,7 +95,7 @@ public class Interpreter {
 			msg += " Error: " + e.getMessage();
 		}
 		
-		server.sendResponse(new Response(msg, imgToB64(snapshot()), nodeToString(expr), env.toString(), env.scriptsMap()));
+		server.sendResponse(new Response(msg, imgToB64(snapshot()), new DebugInfo(nodeToString(expr), env.info(this))));
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}
@@ -157,7 +158,7 @@ public class Interpreter {
 		return status;
 	}
 	
-	private String nodeToString(SNode node) {
+	String nodeToString(SNode node) {
 		if(node.isLeaf()) {
 			return node.contents() + " ";
 		} else {

@@ -1,11 +1,12 @@
 package partie2.client.ui;
 
-import java.util.List;
-import java.util.Map;
-
 import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import partie2.io.DebugInfo;
+import partie2.io.ReferenceInfo;
+import partie2.io.ScriptInfo;
 
 public class DebugControleur {
 	
@@ -18,20 +19,23 @@ public class DebugControleur {
 	@FXML
 	private ListView<String> scripts;
 	
-	private Map<String, List<String>> scriptsMap = null;
+	@FXML
+	private TextArea info;
+	
+	private DebugInfo dbginfo;
+	
+	public void initialize() {
+		env.setOnMouseClicked(this::onReferenceSelected);
+		scripts.setOnMouseClicked(this::onScriptSelected);
+	}
+	
+	public void setInfo(String message) {
+		info.setText(message);
+	}
 	
 	public void addCall(String expr) {
 		call.getItems().add(expr);
 		call.scrollTo(call.getItems().size());
-	}
-	
-	public void displayEnv(String environment) {
-		env.getItems().clear();
-		for(String s : environment.split("\n")) env.getItems().add(s);
-	}
-	
-	public void initialize() {
-		env.setOnMouseClicked(this::onReferenceSelected);
 	}
 	
 	public void onReferenceSelected(MouseEvent e) {
@@ -39,12 +43,35 @@ public class DebugControleur {
 		scripts.getItems().clear();
 		if(ref != null) {
 			ref = ref.split(" ")[0];
-			scriptsMap.get(ref).forEach((s) -> scripts.getItems().add(s));
+			ReferenceInfo refInfo = dbginfo.env().get(ref);
+			refInfo.scripts().forEach((n,s) -> {
+				scripts.getItems().add(n);
+			});
+			String infoMsg = "Nom: " + ref + "\nClasse: " + refInfo.className() + "\nListe des primitives:\n";
+			for(String s : refInfo.primitives()) infoMsg += "\t- " + s + "\n"; 
+			setInfo(infoMsg);
 		}
 	}
-
-	public void loadScriptsMap(Map<String, List<String>> scriptsMap) {
-		this.scriptsMap = scriptsMap;
+	
+	public void onScriptSelected(MouseEvent e) {
+		String ref = env.getSelectionModel().getSelectedItem();
+		String scriptName = scripts.getSelectionModel().getSelectedItem();
+		if(ref != null && scriptName != null) {
+			ref = ref.split(" ")[0];
+			ScriptInfo scriptInfo = dbginfo.env().get(ref).scripts().get(scriptName);
+			String infoMsg = "Nom: " + scriptName + "\nNb de parametres: " + scriptInfo.nbParams() + "\nPrototpye: " + scriptInfo.proto() +"\nExpression complète:\n" + scriptInfo.expr();
+			setInfo(infoMsg);
+		}
+		
+	}
+	
+	public void debugReceipt(DebugInfo dbginfo) {
+		this.dbginfo = dbginfo;
+		addCall(dbginfo.expr());
+		env.getItems().clear();
+		dbginfo.env().forEach((n,r) -> {
+			env.getItems().add(n + " is referencing: " + r.className());
+		});
 	}
 
 }

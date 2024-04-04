@@ -8,8 +8,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javafx.embed.swing.SwingFXUtils;
@@ -32,6 +30,7 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import partie2.client.Client;
+import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
 
@@ -278,7 +277,7 @@ public class Controleur {
 			FXMLLoader loader = new FXMLLoader(url);
 			VBox root = (VBox) loader.load();
 			debug = loader.getController();
-			Scene scene = new Scene(root, 840, 200);
+			Scene scene = new Scene(root, 1334, 200);
 			stage.setScene(scene);
 			stage.setTitle("IDE ROBI - Debug info");
 			stage.show();
@@ -304,16 +303,8 @@ public class Controleur {
 		return debug != null;
 	}
 
-	public void envReceipt(String env) {
-		if(isDebugging()) debug.displayEnv(env);
-	}
-
-	public void callReceipt(String call) {
-		if(isDebugging()) debug.addCall(call);
-	}
-
-	public void scriptsMapReceipt(Map<String, List<String>> scriptsMap) {
-		if(isDebugging()) debug.loadScriptsMap(scriptsMap);
+	public void debugReceipt(DebugInfo info) {
+		if(isDebugging()) debug.debugReceipt(info);
 	}
 
 }

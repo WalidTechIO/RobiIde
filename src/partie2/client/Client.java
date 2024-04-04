@@ -89,9 +89,7 @@ public class Client implements Runnable {
 					controller.commandFeedBack(res.feedback());
 					controller.imageReceipt(img);
 					if(controller.isDebugging()) {
-						controller.envReceipt(res.environment());
-						controller.callReceipt(res.expr());
-						controller.scriptsMapReceipt(res.scriptsMap());
+						controller.debugReceipt(res.info());
 					}
 				});
 			} catch(IOException|ClassNotFoundException e) {

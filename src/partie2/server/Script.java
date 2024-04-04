@@ -9,7 +9,9 @@ import stree.parser.SNode;
 
 public class Script {
 
+	private final SNode proto;
 	private final SNode script;
+	private SNode replaced;
 	private final String refName;
 	private final Map<Integer, String> params = new HashMap<>();
 	
@@ -24,7 +26,8 @@ public class Script {
 			params.put(pos++, node.contents());
 		}
 		
-		//On stock le script sans le prototype
+		//On stock le script et le prototype
+		this.proto = script.get(0);
 		this.script = new SDefaultNode();
 		for(int i = 1; i<script.size(); i++) this.script.addChild(script.get(i));
 	}
@@ -38,9 +41,11 @@ public class Script {
 		replaceValues.put(params.get(0), refName);
 		for(int i = 0; i<args.size(); i++) replaceValues.put(params.get(i+1), args.get(i));
 		
-		replace(script, replaceValues);
+		replaced = copy(script);
 		
-		for(SNode children : script.children()) {
+		replace(replaced, replaceValues);
+		
+		for(SNode children : replaced.children()) {
 			interpreter.compute(children);
 		}
 		
@@ -66,4 +71,29 @@ public class Script {
 			}
 		}
 	}
+	
+	public int nbParams() {
+		return params.size() - 1;
+	}
+
+	public SNode getExpr() {
+		return script;
+	}
+	
+	public SNode getProto() {
+		return proto;
+	}
+	
+	private SNode copy(SNode original) {
+		if(original.isLeaf()) {
+			SNode node = new SDefaultNode();
+			node.setContents(original.contents());
+			return node;
+		} else {
+			SNode node = new SDefaultNode();
+			for(SNode children : original.children()) node.addChild(copy(children));
+			return node;
+		}
+	}
+	
 }

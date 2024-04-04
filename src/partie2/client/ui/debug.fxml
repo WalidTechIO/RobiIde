@@ -3,29 +3,36 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="838.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="partie2.client.ui.DebugControleur">
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="195.0" prefWidth="1334.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="partie2.client.ui.DebugControleur">
    <children>
-      <SplitPane dividerPositions="0.333333333333, 0.666666666666" prefHeight="188.0" prefWidth="250.0">
+      <SplitPane dividerPositions="0.25, 0.5, 0.75" prefHeight="188.0" prefWidth="250.0">
         <items>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ListView fx:id="call" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="276.0" />
+                  <ListView fx:id="call" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="327.0" />
                   <Label prefHeight="17.0" prefWidth="137.0" text="Historique des appels : " />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
-                  <ListView fx:id="env" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="272.0" />
+                  <ListView fx:id="env" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="327.0" />
                   <Label prefHeight="17.0" prefWidth="90.0" text="Environnement :" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="186.0" prefWidth="371.0">
                <children>
-                  <ListView fx:id="scripts" editable="false" layoutX="2.0" layoutY="21.0" prefHeight="165.0" prefWidth="272.0" />
+                  <ListView fx:id="scripts" editable="false" layoutX="2.0" layoutY="21.0" prefHeight="165.0" prefWidth="327.0" />
                   <Label prefHeight="17.0" prefWidth="90.0" text="Scripts :" />
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="186.0" prefWidth="371.0">
+               <children>
+                  <Label prefHeight="17.0" prefWidth="90.0" text="Infos :" />
+                  <TextArea fx:id="info" editable="false" layoutY="22.0" prefHeight="165.0" prefWidth="330.0" />
                </children>
             </AnchorPane>
         </items>

@@ -6,13 +6,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import partie2.io.ReferenceInfo;
+
 public class Environment {
 	
 	private final Map<String, Reference> references = new HashMap<>();
-	
-	public Environment() {
-		
-	}
 	
 	public void addReference(String name, Reference reference) {
 		references.put(name, reference);
@@ -32,24 +30,6 @@ public class Environment {
 	public Reference deleteReference(String name) {
 		return references.remove(name);
 	}
-	
-	@Override
-	public String toString() {
-		String res = "";
-		
-		for(Entry<String, Reference> entry : references.entrySet()) {
-			String className = entry.getValue().getRef().getClass().getName();
-			if(className.equals("java.lang.Class")) {
-				Class<?> classe = (Class<?>) entry.getValue().getRef();
-				className = "The class " + classe.getCanonicalName();
-			} else {
-				className = "An instance of " + className;
-			}
-			res += entry.getKey() + " is referencing: " + className + "\n";
-		}
-		
-		return res;
-	}
 
 	public void clear(String prefix) {
 		List<String> toDelete = new ArrayList<>();
@@ -59,11 +39,9 @@ public class Environment {
 		toDelete.forEach((s) -> references.remove(s));
 	}
 	
-	public Map<String, List<String>> scriptsMap() {
-		Map<String, List<String>> map = new HashMap<>();
-		references.forEach((s,r) -> {
-			map.put(s, r.availableScript());
-		});
+	public Map<String, ReferenceInfo> info(Interpreter interpreter) {
+		Map<String, ReferenceInfo> map = new HashMap<>();
+		references.forEach((n,r) -> map.put(n, r.info(interpreter)));
 		return map;
 	}
 
