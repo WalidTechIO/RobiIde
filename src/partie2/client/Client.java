@@ -1,15 +1,11 @@
 package partie2.client;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Base64;
-
-import javax.imageio.ImageIO;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -18,6 +14,7 @@ import javafx.scene.control.Alert;
 import partie2.client.ui.Controleur;
 import partie2.io.Program;
 import partie2.io.Response;
+import partie2.utils.UIUtils;
 
 /**
  * Client
@@ -42,6 +39,8 @@ public class Client implements Runnable {
 	private Controleur controller;
 	
 	private boolean working = true;
+	
+	private String lastResponse = null;
 	
 	/**
 	 * Contructeur.
@@ -83,34 +82,25 @@ public class Client implements Runnable {
 		while(working) {
 			try {
 				if(!(in.readObject() instanceof String msg)) throw new IOException();
+				else lastResponse = msg;
 				
 				ObjectMapper mapper = new ObjectMapper();
 				Response res = mapper.readValue(msg, Response.class);
 				
-				BufferedImage img = b64ToImg(res.image());
+				BufferedImage img = UIUtils.b64ToImg(res.image());
 				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {
 					controller.commandFeedBack(res.feedback());
 					controller.imageReceipt(img);
-					if(controller.isDebugging()) {
-						controller.debugReceipt(res.info());
-					}
+					if(controller.isDebugging()) controller.debugReceipt(res.info());
 				});
 			} catch(IOException|ClassNotFoundException e) {
-				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception.").showAndWait());
+				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Déconnecté").showAndWait());
 				break;
 			}
 		}
 		//TODO: Notifier controller de fermer l'application apres avoir proposer de sauvegarder si contenu dans code
-	}
-	
-	private BufferedImage b64ToImg(String b64) {
-		ByteArrayInputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
-		try {
-			return ImageIO.read(is);
-		} catch (IOException e) {
-			return null;
-		}
+		
 	}
 	
 	public void close() {
@@ -119,5 +109,8 @@ public class Client implements Runnable {
 			s.close();
 		} catch(IOException ignored) {}
 	}
-
+	
+	public String getLastResponse() {
+		return lastResponse;
+	}
 }

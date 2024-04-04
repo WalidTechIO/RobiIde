@@ -10,6 +10,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ResourceBundle;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -30,6 +32,7 @@ import partie2.client.Client;
 import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
+import partie2.io.Response;
 import partie2.utils.SceneWrapper;
 import partie2.utils.UIUtils;
 
@@ -93,6 +96,18 @@ public class Controleur {
 	 * Bouton MenuBar Logout.
 	 */
 	@FXML
+	private MenuItem exportDebug;
+	
+	/**
+	 * Bouton MenuBar Logout.
+	 */
+	@FXML
+	private MenuItem importDebug;
+	
+	/**
+	 * Bouton MenuBar Logout.
+	 */
+	@FXML
 	private MenuItem buttonLogout;
 	
 	/**
@@ -150,6 +165,8 @@ public class Controleur {
 		buttonLoad.setOnAction(this::load);
 		buttonSave.setOnAction(this::save);
 		buttonLogout.setOnAction(this::logout);
+		exportDebug.setOnAction(this::exportDebug);
+		importDebug.setOnAction(this::importDebug);
 		feedbackArea.setEditable(false);
 		mode = Mode.DIRECT;
 	}
@@ -242,9 +259,7 @@ public class Controleur {
 			File f = fc.showSaveDialog(null);
 			if(f == null) return;
 			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
-			for(String line : codeTextArea.getText().split("\n")) {
-				bw.append(line + "\n");
-			}
+			bw.append(codeTextArea.getText());
 			bw.close();
 		} catch(Exception ex) {
 			new Alert(AlertType.ERROR, "Impossible de sauvegarder").show();
@@ -299,6 +314,51 @@ public class Controleur {
 			new Alert(Alert.AlertType.ERROR, "Impossible d'ouvrir la fenetre de debug").show();
 		}
 		
+	}
+	
+	public void exportDebug(ActionEvent e) {
+		String resp = client.getLastResponse();
+		ExtensionFilter filter = new ExtensionFilter("Robi Response Export (*.rre)", "*.rre");
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Choisissez un emplacement de sauvegarde");
+		fc.getExtensionFilters().add(filter);
+		
+		try {
+			File f = fc.showSaveDialog(null);
+			if(f == null) return;
+			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
+			bw.append(resp);
+			bw.close();
+		} catch(IOException ex) {
+			new Alert(Alert.AlertType.ERROR, "Export impossible").show();
+		}
+	}
+	
+	public void importDebug(ActionEvent e) {
+		ExtensionFilter filter = new ExtensionFilter("Robi Response Export (*.rre)", "*.rre");
+		FileChooser fc = new FileChooser();
+		fc.setTitle("Choisissez un export ROBI a ouvrir");
+		fc.getExtensionFilters().add(filter);
+		try {
+			File f = fc.showOpenDialog(null);
+			if(f == null) return;
+			String json = Files.readAllLines(Paths.get(f.getAbsolutePath())).stream().reduce((a,s) -> a+=s+"\n").get();
+			ObjectMapper mapper = new ObjectMapper();
+			Response res = mapper.readValue(json, Response.class);
+			SceneWrapper<DebugControleur> debugWrapper = UIUtils.debug();
+			SceneWrapper<RreViewportControleur> rreWrapper = UIUtils.rreViewPort();
+			Stage stage1 = new Stage();
+			Stage stage2 = new Stage();
+			stage1.setScene(debugWrapper.scene());
+			stage1.setTitle("IDE ROBI - Debug info");
+			stage2.setScene(rreWrapper.scene());
+			stage2.setTitle("IDE ROBI - RRE Viewport");
+			stage1.show();
+			stage2.show();
+			rreWrapper.controller().setViewport(res.image(), res.feedback());;
+			debugWrapper.controller().debugReceipt(res.info());
+		} catch(IOException ex) {
+		}
 	}
 
 	private Object endDebug(WindowEvent event) {
