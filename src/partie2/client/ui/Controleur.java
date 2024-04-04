@@ -235,6 +235,7 @@ public class Controleur {
 		try {
 			if(codeTextArea.getText().isBlank()) throw new IOException();
 			File f = fc.showSaveDialog(null);
+			if(f == null) return;
 			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
 			for(String line : codeTextArea.getText().split("\n")) {
 				bw.append(line + "\n");
@@ -258,6 +259,7 @@ public class Controleur {
 		}
 		try {
 			File f = fc.showOpenDialog(null);
+			if(f == null) return;
 			codeTextArea.clear();
 			codeTextArea.setText("");
 			for(String line : Files.readAllLines(Paths.get(f.getAbsolutePath()))) {
@@ -270,6 +272,7 @@ public class Controleur {
 	}
 	
 	public void debug(ActionEvent e) {
+		if(isDebugging()) return;
 		try {
 			Stage stage = new Stage();
 			stage.setOnCloseRequest(this::endDebug);
@@ -288,13 +291,13 @@ public class Controleur {
 	}
 
 	private Object endDebug(WindowEvent event) {
+		if(!isDebugging()) return null;
 		try {
 			((Stage)event.getSource()).close();
 			debug = null;
 		} catch(Exception e) {
-			if(!e.getMessage().startsWith(" pipeline already created")) e.printStackTrace();
+			e.printStackTrace();
 		}
-		
 		
 		return null;
 	}

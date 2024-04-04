@@ -1,5 +1,6 @@
 package partie2.server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,7 +87,47 @@ public class Script {
 	}
 	
 	public ScriptInfo info() {
-		return new ScriptInfo(params.size()-1, Interpreter.nodeToString(script), Interpreter.nodeToString(proto));
+		
+		int indentLevel = 0;
+		String indentationChars = "  ";
+		String finalExpr = "";
+		
+		String expr = Interpreter.nodeToString(script);
+		for(int i=0; i<expr.length(); i++) {
+			Character c = expr.charAt(i);
+			if(c.equals('(')) {
+				finalExpr += "\n";
+				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
+				finalExpr += "(\n";
+				indentLevel++;
+				continue;
+			}
+			if(c.equals(')')) {
+				indentLevel--;
+				finalExpr += "\n";
+				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
+				finalExpr += ")\n";
+				continue;
+			}
+			finalExpr += c;
+		}
+		indentLevel = 0;
+		String lines[] = finalExpr.split("\n");
+		List<String> newLines = new ArrayList<>();
+		for(String line : lines) {
+			if(line.contains("(")) indentLevel++;
+			if(line.contains(")")) indentLevel--;
+			if(!line.contains("(") && !line.contains(")")) {
+				String newLine = "";
+				for(int j=0; j<indentLevel; j++) newLine += indentationChars;
+				newLines.add(newLine + line);
+			} else {
+				newLines.add(line);
+			}
+		}
+		
+		finalExpr = newLines.stream().reduce((a,s) -> a+=s+"\n").get();
+		return new ScriptInfo(params.size()-1, finalExpr, Interpreter.nodeToString(proto));
 	}
 	
 	private SNode copy(SNode original) {
