@@ -295,8 +295,8 @@ public class Controleur {
 		try {
 			((Stage)event.getSource()).close();
 			debug = null;
-		} catch(Exception e) {
-			e.printStackTrace();
+		} catch(Exception ignored) {
+			
 		}
 		
 		return null;

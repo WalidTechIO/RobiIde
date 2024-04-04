@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
@@ -172,6 +173,53 @@ public class Interpreter {
 			for(SNode children : node.children()) res += nodeToString(children);
 			return res + ") ";
 		}
+	}
+	
+	public static String nodeToFormattedString(SNode node, String indentationChars) {
+		int indentLevel = 0;
+		String finalExpr = "";
+		
+		String expr = nodeToString(node);
+		for(int i=0; i<expr.length(); i++) {
+			Character c = expr.charAt(i);
+			if(c.equals('(')) {
+				finalExpr += "\n";
+				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
+				finalExpr += "(";
+				indentLevel++;
+				continue;
+			}
+			if(c.equals(')')) {
+				indentLevel--;
+				//finalExpr += "\n";
+				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
+				finalExpr += ")\n";
+				continue;
+			}
+			finalExpr += c;
+		}
+		indentLevel = 0;
+		String lines[] = finalExpr.split("\n");
+		List<String> newLines = new ArrayList<>();
+		for(String line : lines) {
+			if(line.contains("(")) indentLevel++;
+			if(line.contains(")")) indentLevel--;
+			if(!line.contains("(") && !line.contains(")")) {
+				String newLine = "";
+				for(int j=0; j<indentLevel; j++) newLine += indentationChars;
+				newLines.add(newLine + line);
+			} else {
+				newLines.add(line);
+			}
+		}
+		
+		return newLines.stream()
+				.reduce((a,s) -> a+=s+"\n")
+				.get();
+	}
+	
+	public static String nodeToFormattedString(SNode node) {
+		return nodeToFormattedString(node, "  ");
 	}
 
 }
