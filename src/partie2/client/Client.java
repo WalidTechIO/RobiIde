@@ -11,6 +11,8 @@ import java.util.Base64;
 
 import javax.imageio.ImageIO;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import partie2.client.ui.Controleur;
@@ -82,7 +84,11 @@ public class Client implements Runnable {
 	public void run() {
 		while(true) {
 			try {
-				if(!(in.readObject() instanceof Response res)) throw new IOException();
+				if(!(in.readObject() instanceof String msg)) throw new IOException();
+				
+				ObjectMapper mapper = new ObjectMapper();
+				Response res = mapper.readValue(msg, Response.class);
+				
 				BufferedImage img = b64ToImg(res.image());
 				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {

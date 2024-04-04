@@ -8,7 +8,6 @@ import java.net.Socket;
 
 
 import partie2.io.Program;
-import partie2.io.Response;
 
 public class Server implements Runnable {
 	
@@ -54,7 +53,7 @@ public class Server implements Runnable {
 		return false;
 	}
 	
-	public void sendResponse(Response response) {
+	public void sendResponse(String response) {
 		try {
 			out.writeObject(response);
 		} catch (IOException ignored) {}

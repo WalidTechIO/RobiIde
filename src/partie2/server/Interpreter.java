@@ -11,6 +11,10 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+
 import graphicLayer.GImage;
 import graphicLayer.GOval;
 import graphicLayer.GRect;
@@ -81,6 +85,7 @@ public class Interpreter {
 	}
 	
 	public Reference compute(SNode expr) {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String receiverName = expr.get(0).contents();
 		String msg = receiverName + "->" + expr.get(1).contents();
 		Reference receiver = env.getReferenceByName(receiverName);
@@ -96,7 +101,12 @@ public class Interpreter {
 			msg += " Error: " + e.getMessage();
 		}
 		
-		server.sendResponse(new Response(msg, snapshot(), new DebugInfo(NodeUtils.nodeToString(expr), env.info())));
+		try {
+			Response resp = new Response(msg, snapshot(), new DebugInfo(NodeUtils.nodeToString(expr), env.info()));
+			server.sendResponse(ow.writeValueAsString(resp));
+		} catch (JsonProcessingException e) {
+			server.sendResponse(null);
+		}
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}
