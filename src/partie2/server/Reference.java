@@ -71,7 +71,7 @@ public class Reference {
 		return new ArrayList<>(scripts.keySet());
 	}
 	
-	ReferenceInfo info(Interpreter interpreter) {
+	ReferenceInfo info() {
 		String className = reference.getClass().getCanonicalName();
 		if(className.equals("java.lang.Class")) {
 			Class<?> classe = (Class<?>) reference;
@@ -82,9 +82,7 @@ public class Reference {
 		List<String> primitivesName = new ArrayList<>(primitives.keySet());
 		Map<String, ScriptInfo> scriptsInfo = new HashMap<>();
 		scripts.forEach((n,s) -> {
-			String expr = interpreter.nodeToString(s.getExpr());
-			String proto = interpreter.nodeToString(s.getProto());
-			scriptsInfo.put(n, new ScriptInfo(s.nbParams(), expr, proto));
+			scriptsInfo.put(n, s.info());
 		});
 		
 		return new ReferenceInfo(className, primitivesName, scriptsInfo);

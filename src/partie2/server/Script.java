@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import partie2.io.ScriptInfo;
 import stree.parser.SDefaultNode;
 import stree.parser.SNode;
 
@@ -84,16 +85,18 @@ public class Script {
 		return proto;
 	}
 	
+	public ScriptInfo info() {
+		return new ScriptInfo(params.size()-1, Interpreter.nodeToString(script), Interpreter.nodeToString(proto));
+	}
+	
 	private SNode copy(SNode original) {
+		SNode node = new SDefaultNode();
 		if(original.isLeaf()) {
-			SNode node = new SDefaultNode();
 			node.setContents(original.contents());
-			return node;
 		} else {
-			SNode node = new SDefaultNode();
 			for(SNode children : original.children()) node.addChild(copy(children));
-			return node;
 		}
+		return node;
 	}
 	
 }

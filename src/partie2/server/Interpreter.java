@@ -95,7 +95,7 @@ public class Interpreter {
 			msg += " Error: " + e.getMessage();
 		}
 		
-		server.sendResponse(new Response(msg, imgToB64(snapshot()), new DebugInfo(nodeToString(expr), env.info(this))));
+		server.sendResponse(new Response(msg, snapshot(), new DebugInfo(nodeToString(expr), env.info())));
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}
@@ -109,14 +109,20 @@ public class Interpreter {
 		return env;
 	}
 
-	public BufferedImage snapshot() {
+	private String snapshot() {
+		final ByteArrayOutputStream os = new ByteArrayOutputStream();
 	    int w = space.getWidth();
 	    int h = space.getHeight();
 	    BufferedImage bi = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
 	    Graphics2D g = bi.createGraphics();
 	    space.print(g);
 	    g.dispose();
-	    return bi;
+	    try {
+			ImageIO.write(bi, "png", os);
+			return Base64.getEncoder().encodeToString(os.toByteArray());
+		} catch(Exception e) {
+			return null;
+		}
 	}
 	
 	public void setProgram(Program program) {
@@ -158,24 +164,13 @@ public class Interpreter {
 		return status;
 	}
 	
-	String nodeToString(SNode node) {
+	public static String nodeToString(SNode node) {
 		if(node.isLeaf()) {
 			return node.contents() + " ";
 		} else {
 			String res = "( ";
 			for(SNode children : node.children()) res += nodeToString(children);
 			return res + ") ";
-		}
-	}
-	
-	private String imgToB64(BufferedImage image) {
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		
-		try {
-			ImageIO.write(image, "png", os);
-			return Base64.getEncoder().encodeToString(os.toByteArray());
-		} catch(Exception e) {
-			return null;
 		}
 	}
 

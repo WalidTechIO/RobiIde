@@ -39,9 +39,9 @@ public class Environment {
 		toDelete.forEach((s) -> references.remove(s));
 	}
 	
-	public Map<String, ReferenceInfo> info(Interpreter interpreter) {
+	public Map<String, ReferenceInfo> info() {
 		Map<String, ReferenceInfo> map = new HashMap<>();
-		references.forEach((n,r) -> map.put(n, r.info(interpreter)));
+		references.forEach((n,r) -> map.put(n, r.info()));
 		return map;
 	}
 
