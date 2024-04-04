@@ -27,8 +27,8 @@
           <Menu mnemonicParsing="false" text="Debug" >
           	<items>
           		<MenuItem fx:id="buttonDebug" mnemonicParsing="false" text="Debug" />
-          		<MenuItem fx:id="exportDebug" mnemonicParsing="false" text="Exporter la derniere reponse" />
-          		<MenuItem fx:id="importDebug" mnemonicParsing="false" text="Consulter un export de reponse" />
+          		<MenuItem fx:id="exportDebug" mnemonicParsing="false" text="Exporter l'etat" />
+          		<MenuItem fx:id="importDebug" mnemonicParsing="false" text="Consulter un export d'etat" />
           	</items>
           </Menu>
             <Menu mnemonicParsing="false" text="Aide">

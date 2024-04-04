@@ -48,7 +48,7 @@ public class UIUtils {
 		FXMLLoader fxmlLoader = new FXMLLoader(url);
 		VBox root = (VBox) fxmlLoader.load();
 		
-		return new SceneWrapper<RreViewportControleur>(new Scene(root, 406, 274), fxmlLoader.getController());
+		return new SceneWrapper<RreViewportControleur>(new Scene(root, 410, 540), fxmlLoader.getController());
 	}
 	
 	public static BufferedImage b64ToImg(String b64) {

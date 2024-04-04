@@ -8,12 +8,16 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import partie2.client.ui.Controleur;
 import partie2.io.Program;
+import partie2.io.Request;
+import partie2.io.Request.RequestType;
 import partie2.io.Response;
+import partie2.io.State;
 import partie2.utils.UIUtils;
 
 /**
@@ -40,7 +44,9 @@ public class Client implements Runnable {
 	
 	private boolean working = true;
 	
-	private String lastResponse = null;
+	private Request lastRequest = null;
+	
+	private Response lastResponse = null;
 	
 	/**
 	 * Contructeur.
@@ -59,18 +65,23 @@ public class Client implements Runnable {
 	 * Envoie un Exe au serveur.
 	 */
 	public void execute() {
+		
 		try {
-			out.writeObject("Exe");
+			lastRequest = new Request(RequestType.EXE, null);
+			out.writeObject(toJson(lastRequest));
 		} catch (IOException ignored) {
-			new Alert(Alert.AlertType.ERROR, "Erreur lors de la tranmission de la commande.").show();
+			new Alert(Alert.AlertType.ERROR, "Erreur lors de la transmission de la commande.").show();
 		}
 	}
 	
 	public void sendProgram(Program program) {
+		
 		try {
-			out.writeObject(program);
+			lastRequest = new Request(RequestType.PROG, program);
+			out.writeObject(toJson(lastRequest));
+			new Alert(Alert.AlertType.INFORMATION, "Le programme a bien été transmis.").show();
 		} catch (IOException ignored) {
-			new Alert(Alert.AlertType.ERROR, "Erreur lors de la tranmission du programme.").show();
+			new Alert(Alert.AlertType.ERROR, "Erreur lors de la transmission du programme.").show();
 		}
 	}
 	
@@ -82,17 +93,16 @@ public class Client implements Runnable {
 		while(working) {
 			try {
 				if(!(in.readObject() instanceof String msg)) throw new IOException();
-				else lastResponse = msg;
 				
 				ObjectMapper mapper = new ObjectMapper();
-				Response res = mapper.readValue(msg, Response.class);
+				lastResponse = mapper.readValue(msg, Response.class);
 				
-				BufferedImage img = UIUtils.b64ToImg(res.image());
+				BufferedImage img = UIUtils.b64ToImg(lastResponse.image());
 				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {
-					controller.commandFeedBack(res.feedback());
+					controller.commandFeedBack(lastResponse.feedback());
 					controller.imageReceipt(img);
-					if(controller.isDebugging()) controller.debugReceipt(res.info());
+					if(controller.isDebugging()) controller.debugReceipt(lastResponse.info());
 				});
 			} catch(IOException|ClassNotFoundException e) {
 				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Déconnecté").showAndWait());
@@ -100,7 +110,6 @@ public class Client implements Runnable {
 			}
 		}
 		//TODO: Notifier controller de fermer l'application apres avoir proposer de sauvegarder si contenu dans code
-		
 	}
 	
 	public void close() {
@@ -110,7 +119,16 @@ public class Client implements Runnable {
 		} catch(IOException ignored) {}
 	}
 	
-	public String getLastResponse() {
-		return lastResponse;
+	public String exportState() {
+		try {
+			return toJson(new State(lastRequest, lastResponse));
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
+	public String toJson(Object obj) throws IOException {
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		return ow.writeValueAsString(obj);
 	}
 }

@@ -24,7 +24,7 @@ public class GSpace extends JPanel implements GContainer, KeyListener, MouseList
 	private List<GElement> elements = new LinkedList<GElement>();
 	private List<KeyListener> keyListeners = new LinkedList<KeyListener>();
 
-	String name = "";
+	protected String name = "";
 
 	public GSpace(String name, Dimension dim) {
 		this.name = name;

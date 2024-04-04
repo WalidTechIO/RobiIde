@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import graphicLayer.GImage;
 import graphicLayer.GOval;
 import graphicLayer.GRect;
-import graphicLayer.GSpace;
 import graphicLayer.GString;
 import partie2.io.DebugInfo;
 import partie2.io.Mode;
@@ -36,6 +35,7 @@ import partie2.server.commands.NewString;
 import partie2.server.commands.SetColor;
 import partie2.server.commands.SetDimension;
 import partie2.server.commands.Sleep;
+import partie2.utils.CustomGSpace;
 import partie2.utils.NodeUtils;
 import stree.parser.SNode;
 import stree.parser.SParser;
@@ -43,18 +43,19 @@ import stree.parser.SParser;
 public class Interpreter {
 	
 	private final Environment env = new Environment();
-	private final GSpace space;
-	private final ClientManager server;
+	private final CustomGSpace space;
+	private final ClientManager clientManager;
 	private boolean sbs = false;
 	private boolean status = false;
 	private boolean sbsend = false;
 	private List<SNode> program = null;
 	
-	public Interpreter(ClientManager server) {
-		this.server = server;
+	public Interpreter(ClientManager clientManager) {
+		this.clientManager = clientManager;
 		
-		space = new GSpace("Server", new Dimension(200, 100));
+		space = new CustomGSpace("Server", new Dimension(200, 100));
 		space.open();
+		SwingUtilities.getWindowAncestor(space).dispose();
 
 		Reference spaceRef = new Reference(space);
 		Reference rectClassRef = new Reference(GRect.class);
@@ -86,29 +87,30 @@ public class Interpreter {
 	}
 	
 	public Reference compute(SNode expr) {
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String receiverName = expr.get(0).contents();
-		String msg = receiverName + "->" + expr.get(1).contents();
-		Reference receiver = env.getReferenceByName(receiverName);
-		
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();		
 		Reference ref = null;
+		String msg = null;
 		
 		try {
+			String receiverName = expr.get(0).contents();
+			msg = receiverName + "->" + expr.get(1).contents();
+			Reference receiver = env.getReferenceByName(receiverName);
 			if(receiver == null) throw new NullPointerException("Environment doesn't know \"" + receiverName + "\" reference.");
 			ref = receiver.run(this, expr);
 			msg += " Success";
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
-			msg += " Error: " + e.getMessage();
+			if(msg != null) msg += " Error: " + e.getMessage();
+			else msg = "Error: Expression need at least one reference and one primitive/scriptName";
 		}
 		
 		try {
 			Response resp = new Response(msg, snapshot(), new DebugInfo(NodeUtils.nodeToString(expr), env.info()));
-			server.sendResponse(ow.writeValueAsString(resp));
+			clientManager.sendResponse(ow.writeValueAsString(resp));
 		} catch (JsonProcessingException e) {
-			server.sendResponse(null);
+			clientManager.sendResponse(null);
 		}
-		if(sbs && !server.receiveData()) sbsend = true;
+		if(sbs && !clientManager.receiveData()) sbsend = true;
 		return ref;
 	}
 
@@ -174,10 +176,6 @@ public class Interpreter {
 	
 	public boolean isRunning() {
 		return status;
-	}
-	
-	public void stop() {
-		SwingUtilities.getWindowAncestor((GSpace)env.getReferenceByName("space").getRef()).dispose();
 	}
 
 }

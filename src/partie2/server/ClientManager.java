@@ -5,8 +5,11 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import partie2.io.Program;
+import partie2.io.Request;
+import partie2.io.Request.RequestType;
 
 public class ClientManager implements Runnable {
 	
@@ -15,7 +18,6 @@ public class ClientManager implements Runnable {
 	private final ObjectInputStream in;
 	private final ObjectOutputStream out;
 	
-	private int fail = 0;
 	private boolean working = true;
 	
 	public ClientManager(Socket client) throws IOException {
@@ -40,9 +42,26 @@ public class ClientManager implements Runnable {
 				interpreter.setProgram(prg);
 				return false;
 			}
-		} catch(IOException|ClassNotFoundException ignored) {}
-		fail++;
-		if(fail == 3) stop();
+			
+			if(obj instanceof String msg) {
+				ObjectMapper mapper = new ObjectMapper();
+				Request req = mapper.readValue(msg, Request.class);
+				if(req.type() == RequestType.EXE) {
+					if(interpreter.isRunning()) return true;
+					else {
+						interpreter.runProgram();
+						return false;
+					}
+				} else if(req.type() == RequestType.PROG) {
+					interpreter.setProgram(req.program());
+					return false;
+				}
+			}
+		
+			
+		} catch(IOException|ClassNotFoundException e) {
+			stop();
+		}
 		return false;
 	}
 	
@@ -61,7 +80,7 @@ public class ClientManager implements Runnable {
 	
 	public void stop() {
 		working = false;
-		interpreter.stop();
+		System.out.println("Disconnected: " + s.getInetAddress().getHostAddress() + ":" + s.getPort());
 		try {
 			s.close();
 		} catch(IOException ignored) {}

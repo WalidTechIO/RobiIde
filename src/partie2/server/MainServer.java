@@ -2,6 +2,7 @@ package partie2.server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
+import java.net.Socket;
 
 public class MainServer {
 
@@ -31,12 +32,18 @@ public class MainServer {
 			System.exit(1);
 		}
 	
+		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
+		
 		while(true) {
 			try {
+				Socket client = serverSocket.accept();
+				System.out.println("Accepted: " + client.getInetAddress().getHostAddress() + ":" + client.getPort());
 				if(mode.equals("mono")) {
-					new ClientManager(serverSocket.accept()).run();
+					System.out.println("Mode Mono: Start ClientManager, other clients will be put on waiting queue");
+					new ClientManager(client).run();
 				} else {
-					new Thread(new ClientManager(serverSocket.accept())).start();
+					new Thread(new ClientManager(client)).start();
+					System.out.println("Mode Multi: New Thread started");
 				}
 			} catch(IOException e) {
 				break;

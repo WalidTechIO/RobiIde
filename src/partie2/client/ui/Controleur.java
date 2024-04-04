@@ -32,7 +32,7 @@ import partie2.client.Client;
 import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
-import partie2.io.Response;
+import partie2.io.State;
 import partie2.utils.SceneWrapper;
 import partie2.utils.UIUtils;
 
@@ -317,8 +317,8 @@ public class Controleur {
 	}
 	
 	public void exportDebug(ActionEvent e) {
-		String resp = client.getLastResponse();
-		ExtensionFilter filter = new ExtensionFilter("Robi Response Export (*.rre)", "*.rre");
+		String resp = client.exportState();
+		ExtensionFilter filter = new ExtensionFilter("JSON file (*.json)", "*.json");
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Choisissez un emplacement de sauvegarde");
 		fc.getExtensionFilters().add(filter);
@@ -336,7 +336,7 @@ public class Controleur {
 	
 	public void importDebug(ActionEvent e) {
 		//Prepare FileChooser with extension filter
-		ExtensionFilter filter = new ExtensionFilter("Robi Response Export (*.rre)", "*.rre");
+		ExtensionFilter filter = new ExtensionFilter("JSON file (*.json)", "*.json");
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Choisissez un export ROBI a ouvrir");
 		fc.getExtensionFilters().add(filter);
@@ -348,7 +348,7 @@ public class Controleur {
 			//Turn file into Response object
 			String json = Files.readAllLines(Paths.get(f.getAbsolutePath())).stream().reduce((a,s) -> a+=s+"\n").get();
 			ObjectMapper mapper = new ObjectMapper();
-			Response res = mapper.readValue(json, Response.class);
+			State res = mapper.readValue(json, State.class);
 			
 			//Prepare viewport window which will display env values
 			SceneWrapper<DebugControleur> debugWrapper = UIUtils.debug();
@@ -376,11 +376,14 @@ public class Controleur {
 			stage1.show();
 			stage2.show();
 			
-			//Send response data to both controller of the both windows
-			rreWrapper.controller().setViewport(res.image(), res.feedback());;
-			debugWrapper.controller().debugReceipt(res.info());
+			if(res.request() == null && res.response() == null) throw new Exception();
 			
-		} catch(IOException ex) {
+			//Send response data to both controller of the both windows
+			rreWrapper.controller().setViewport(res);
+			if(res.response() != null) debugWrapper.controller().debugReceipt(res.response().info());
+			
+		} catch(Exception ex) {
+			new Alert(Alert.AlertType.ERROR, "Impossible d'ouvrir l'export.").show();;
 		}
 	}
 
