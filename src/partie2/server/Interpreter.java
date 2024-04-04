@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.imageio.ImageIO;
+import javax.swing.SwingUtilities;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -43,13 +44,13 @@ public class Interpreter {
 	
 	private final Environment env = new Environment();
 	private final GSpace space;
-	private final Server server;
+	private final ClientManager server;
 	private boolean sbs = false;
 	private boolean status = false;
 	private boolean sbsend = false;
 	private List<SNode> program = null;
 	
-	public Interpreter(Server server) {
+	public Interpreter(ClientManager server) {
 		this.server = server;
 		
 		space = new GSpace("Server", new Dimension(200, 100));
@@ -173,6 +174,10 @@ public class Interpreter {
 	
 	public boolean isRunning() {
 		return status;
+	}
+	
+	public void stop() {
+		SwingUtilities.getWindowAncestor((GSpace)env.getReferenceByName("space").getRef()).dispose();
 	}
 
 }

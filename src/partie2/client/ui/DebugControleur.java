@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import partie2.io.DebugInfo;
 import partie2.io.ReferenceInfo;
 import partie2.io.ScriptInfo;
@@ -84,6 +85,9 @@ public class DebugControleur {
 		});
 	}
 	
+	public void close() {
+		((Stage)env.getScene().getWindow()).close();
+	}
 	
 
 }

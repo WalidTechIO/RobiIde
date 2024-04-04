@@ -1,0 +1,40 @@
+package partie2.utils;
+
+import java.io.IOException;
+import java.net.URL;
+
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
+import javafx.scene.layout.VBox;
+import partie2.client.ui.Controleur;
+import partie2.client.ui.DebugControleur;
+import partie2.client.ui.IHMRobiMain;
+import partie2.client.ui.LoginControleur;
+
+public class UIUtils {
+	
+	public static SceneWrapper<LoginControleur> login() throws IOException {
+		URL url = IHMRobiMain.class.getResource("login.fxml");
+		FXMLLoader fxmlLoader = new FXMLLoader(url);
+		VBox root = (VBox) fxmlLoader.load();
+		
+		return new SceneWrapper<LoginControleur>(new Scene(root, 600, 380), fxmlLoader.getController());
+	}
+	
+	public static SceneWrapper<DebugControleur> debug() throws IOException {
+		URL url = IHMRobiMain.class.getResource("debug.fxml");
+		FXMLLoader fxmlLoader = new FXMLLoader(url);
+		VBox root = (VBox) fxmlLoader.load();
+		
+		return new SceneWrapper<DebugControleur>(new Scene(root, 1334, 200), fxmlLoader.getController());
+	}
+	
+	public static SceneWrapper<Controleur> main() throws IOException {
+		URL url = IHMRobiMain.class.getResource("ui.fxml");
+		FXMLLoader fxmlLoader = new FXMLLoader(url);
+		VBox root = (VBox) fxmlLoader.load();
+		
+		return new SceneWrapper<Controleur>(new Scene(root, 680, 492), fxmlLoader.getController());
+	}
+
+}

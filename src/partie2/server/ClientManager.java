@@ -3,13 +3,12 @@ package partie2.server;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 
 import partie2.io.Program;
 
-public class Server implements Runnable {
+public class ClientManager implements Runnable {
 	
 	private final Interpreter interpreter;
 	private final Socket s;
@@ -17,13 +16,11 @@ public class Server implements Runnable {
 	private final ObjectOutputStream out;
 	
 	private int fail = 0;
+	private boolean working = true;
 	
-	public Server(int port) throws IOException {
+	public ClientManager(Socket client) throws IOException {
 		this.interpreter = new Interpreter(this);
-		
-		ServerSocket ss = new ServerSocket(port);
-		s = ss.accept();
-		ss.close();
+		s = client;
 		
 		in = new ObjectInputStream(s.getInputStream());
 		out = new ObjectOutputStream(s.getOutputStream());
@@ -44,12 +41,8 @@ public class Server implements Runnable {
 				return false;
 			}
 		} catch(IOException|ClassNotFoundException ignored) {}
-		
-		System.err.println("Connection lost or received incorrect data");
 		fail++;
-		if(fail == 3) {
-			System.exit(1);
-		}
+		if(fail == 3) stop();
 		return false;
 	}
 	
@@ -61,8 +54,16 @@ public class Server implements Runnable {
 
 	@Override
 	public void run() {
-		while(true) {
+		while(working) {
 			receiveData();
 		}
+	}
+	
+	public void stop() {
+		working = false;
+		interpreter.stop();
+		try {
+			s.close();
+		} catch(IOException ignored) {}
 	}
 }

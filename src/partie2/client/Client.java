@@ -5,7 +5,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Base64;
 
@@ -41,20 +41,18 @@ public class Client implements Runnable {
 	 */
 	private Controleur controller;
 	
+	private boolean working = true;
+	
 	/**
 	 * Contructeur.
 	 * @param port
 	 * @param controller
 	 */
-	public Client(int port, Controleur controller) {
-		try {
-			this.controller = controller;
-			s = new Socket(InetAddress.getLocalHost(), port);
-			out = new ObjectOutputStream(s.getOutputStream());
-			in = new ObjectInputStream(s.getInputStream());
-		} catch (IOException e) {
-			System.exit(1);
-		}
+	public Client(InetSocketAddress adr, Controleur controller) throws IOException {
+		this.controller = controller;
+		s = new Socket(adr.getAddress(), adr.getPort());
+		out = new ObjectOutputStream(s.getOutputStream());
+		in = new ObjectInputStream(s.getInputStream());
 		new Thread(this).start();
 	}
 	
@@ -82,7 +80,7 @@ public class Client implements Runnable {
 	 */
 	@Override
 	public void run() {
-		while(true) {
+		while(working) {
 			try {
 				if(!(in.readObject() instanceof String msg)) throw new IOException();
 				
@@ -99,9 +97,11 @@ public class Client implements Runnable {
 					}
 				});
 			} catch(IOException|ClassNotFoundException e) {
-				Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de la reponse du serveur.").show());
+				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception.").showAndWait());
+				break;
 			}
 		}
+		//TODO: Notifier controller de fermer l'application apres avoir proposer de sauvegarder si contenu dans code
 	}
 	
 	private BufferedImage b64ToImg(String b64) {
@@ -111,6 +111,13 @@ public class Client implements Runnable {
 		} catch (IOException e) {
 			return null;
 		}
+	}
+	
+	public void close() {
+		working = false;
+		try {
+			s.close();
+		} catch(IOException ignored) {}
 	}
 
 }

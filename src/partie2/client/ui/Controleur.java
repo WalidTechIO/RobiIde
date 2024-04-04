@@ -13,8 +13,6 @@ import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,7 +22,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
@@ -33,6 +30,8 @@ import partie2.client.Client;
 import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
+import partie2.utils.SceneWrapper;
+import partie2.utils.UIUtils;
 
 /**
  * Controleur de l'UI.
@@ -91,6 +90,12 @@ public class Controleur {
 	private MenuItem buttonDebug;
 	
 	/**
+	 * Bouton MenuBar Logout.
+	 */
+	@FXML
+	private MenuItem buttonLogout;
+	
+	/**
 	 * Zone de code.
 	 */
 	@FXML
@@ -144,8 +149,8 @@ public class Controleur {
 		buttonAbout.setOnAction(this::about);
 		buttonLoad.setOnAction(this::load);
 		buttonSave.setOnAction(this::save);
+		buttonLogout.setOnAction(this::logout);
 		feedbackArea.setEditable(false);
-		client = new Client(7777, this);
 		mode = Mode.DIRECT;
 	}
 	
@@ -271,17 +276,23 @@ public class Controleur {
 		}
 	}
 	
+	public void logout(ActionEvent e) {
+		endDebug(null);
+		try {
+			client.close();
+			SceneWrapper<LoginControleur> loginWrapper = UIUtils.login();
+			((Stage)buttonExecute.getScene().getWindow()).setScene(loginWrapper.scene());
+		} catch (IOException ignored) {}
+	}
+	
 	public void debug(ActionEvent e) {
 		if(isDebugging()) return;
 		try {
+			SceneWrapper<DebugControleur> debugWrapper = UIUtils.debug();
 			Stage stage = new Stage();
 			stage.setOnCloseRequest(this::endDebug);
-			URL url = IHMRobiMain.class.getResource("debug.fxml");
-			FXMLLoader loader = new FXMLLoader(url);
-			VBox root = (VBox) loader.load();
-			debug = loader.getController();
-			Scene scene = new Scene(root, 1334, 200);
-			stage.setScene(scene);
+			debug = debugWrapper.controller();
+			stage.setScene(debugWrapper.scene());
 			stage.setTitle("IDE ROBI - Debug info");
 			stage.show();
 		} catch(Exception ex) {
@@ -292,13 +303,8 @@ public class Controleur {
 
 	private Object endDebug(WindowEvent event) {
 		if(!isDebugging()) return null;
-		try {
-			((Stage)event.getSource()).close();
-			debug = null;
-		} catch(Exception ignored) {
-			
-		}
-		
+		debug.close();
+		debug = null;
 		return null;
 	}
 
@@ -308,6 +314,10 @@ public class Controleur {
 
 	public void debugReceipt(DebugInfo info) {
 		if(isDebugging()) debug.debugReceipt(info);
+	}
+	
+	public void setClient(Client client) {
+		this.client = client;
 	}
 
 }

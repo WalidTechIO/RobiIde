@@ -1,13 +1,11 @@
 package partie2.client.ui;
 
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import partie2.utils.SceneWrapper;
+import partie2.utils.UIUtils;
 
 import java.io.IOException;
-import java.net.URL;
 
 /**
  * Point de demarrage de l'UI.
@@ -17,15 +15,12 @@ public class IHMRobiMain extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			URL url = IHMRobiMain.class.getResource("ui.fxml");
-			FXMLLoader fxmlLoader = new FXMLLoader(url);
-			VBox root = (VBox) fxmlLoader.load();
 			
-			Scene scene = new Scene(root, 680, 492);
+			SceneWrapper<LoginControleur> loginWrapper = UIUtils.login();
 			
 			primaryStage.setOnCloseRequest(e -> System.exit(0));
 			
-			primaryStage.setScene(scene);
+			primaryStage.setScene(loginWrapper.scene());
 			primaryStage.setResizable(true);
 			primaryStage.setTitle("IDE ROBI");
 			primaryStage.show();

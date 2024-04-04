@@ -21,6 +21,7 @@
             <items>
               <MenuItem fx:id="buttonLoad" mnemonicParsing="false" text="Charger" />
                   <MenuItem fx:id="buttonSave" mnemonicParsing="false" text="Sauvegarder" />
+                  		<MenuItem fx:id="buttonLogout" mnemonicParsing="false" text="Déconnexion" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Debug" >
