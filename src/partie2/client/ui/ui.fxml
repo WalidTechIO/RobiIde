@@ -23,11 +23,16 @@
                   <MenuItem fx:id="buttonSave" mnemonicParsing="false" text="Sauvegarder" />
             </items>
           </Menu>
-          <Menu mnemonicParsing="false" text="Aide">
-            <items>
-              <MenuItem fx:id="buttonAbout" mnemonicParsing="false" text="A propos" />
-            </items>
+          <Menu mnemonicParsing="false" text="Debug" >
+          	<items>
+          		<MenuItem fx:id="buttonDebug" mnemonicParsing="false" text="Debug" />
+          	</items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Aide">
+               <items>
+                  <MenuItem fx:id="buttonAbout" mnemonicParsing="false" text="A propos" />
+               </items>
+            </Menu>
         </menus>
       </MenuBar>
       <HBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="466.0" prefWidth="678.0">

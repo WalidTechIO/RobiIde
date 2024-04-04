@@ -79,18 +79,22 @@ public class Interpreter {
 	}
 	
 	public Reference compute(SNode expr) {
-		Reference ref = null;
 		String receiverName = expr.get(0).contents();
-		String callName = receiverName + "->" + expr.get(1).contents();
+		String msg = receiverName + "->" + expr.get(1).contents();
 		Reference receiver = env.getReferenceByName(receiverName);
+		
+		Reference ref = null;
+		
 		try {
 			if(receiver == null) throw new NullPointerException("Environment doesn't know \"" + receiverName + "\" reference.");
 			ref = receiver.run(this, expr);
-			server.sendResponse(new Response(callName + " Success", imgToB64(snapshot())));
+			msg += " Success";
 		} catch(Exception e) {
 			System.err.println(e.getMessage() + "\n");
-			server.sendResponse(new Response(callName + " Error: " + e.getMessage(), imgToB64(snapshot())));
+			msg += " Error: " + e.getMessage();
 		}
+		
+		server.sendResponse(new Response(msg, imgToB64(snapshot()), nodeToString(expr), env.toString()));
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}
@@ -151,6 +155,16 @@ public class Interpreter {
 	
 	public boolean isRunning() {
 		return status;
+	}
+	
+	private String nodeToString(SNode node) {
+		if(node.isLeaf()) {
+			return node.contents() + " ";
+		} else {
+			String res = "( ";
+			for(SNode children : node.children()) res += nodeToString(children);
+			return res + ") ";
+		}
 	}
 	
 	private String imgToB64(BufferedImage image) {

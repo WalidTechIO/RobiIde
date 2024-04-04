@@ -1,0 +1,23 @@
+(space addScript addImage (
+	(self filename)
+	(self add im (Image new filename))
+))
+
+(space addImage alien.gif)
+
+(space sleep 1500)
+
+(space clear)
+
+(space addScript addRect (
+	(self name w c)
+	(self add name (Rect new))
+	(self.name setDim w w)
+	(self.name setColor c)
+))
+
+(space addRect monRect 25 10)
+
+(space sleep 1500)
+
+(space clear)

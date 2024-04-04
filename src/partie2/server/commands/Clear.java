@@ -17,6 +17,7 @@ public class Clear implements Command {
 		Objects.requireNonNull(reference);
 		
 		((GContainer)reference.getRef()).clear();
+		interpreter.getEnvironment().clear(method.get(0).contents());
 		
 		return reference;
 	}

@@ -13,6 +13,8 @@ import java.util.ResourceBundle;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -22,8 +24,11 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
+import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import partie2.client.Client;
 import partie2.io.Mode;
 import partie2.io.Program;
@@ -32,6 +37,11 @@ import partie2.io.Program;
  * Controleur de l'UI.
  */
 public class Controleur {
+	
+	/**
+	 * Controleur de la vue de debug.
+	 */
+	private DebugControleur debug = null;
 	
 	/**
 	 * Client logique.
@@ -72,6 +82,12 @@ public class Controleur {
 	 */
 	@FXML
 	private MenuItem buttonAbout;
+	
+	/**
+	 * Bouton MenuBar Debug View.
+	 */
+	@FXML
+	private MenuItem buttonDebug;
 	
 	/**
 	 * Zone de code.
@@ -123,6 +139,7 @@ public class Controleur {
 		buttonMode.setOnMouseClicked(this::clickStepByStep);
 		buttonExecute.setOnMouseClicked(this::execute);
 		buttonSendProgram.setOnMouseClicked(this::sendProgram);
+		buttonDebug.setOnAction(this::debug);
 		buttonAbout.setOnAction(this::about);
 		buttonLoad.setOnAction(this::load);
 		buttonSave.setOnAction(this::save);
@@ -249,6 +266,42 @@ public class Controleur {
 			new Alert(AlertType.ERROR, "Impossible de charger").show();
 			return;
 		}
+	}
+	
+	public void debug(ActionEvent e) {
+		try {
+			Stage stage = new Stage();
+			stage.setOnCloseRequest(this::endDebug);
+			URL url = IHMRobiMain.class.getResource("debug.fxml");
+			FXMLLoader loader = new FXMLLoader(url);
+			VBox root = (VBox) loader.load();
+			debug = loader.getController();
+			Scene scene = new Scene(root, 504, 200);
+			stage.setScene(scene);
+			stage.setTitle("IDE ROBI - Debug info");
+			stage.show();
+		} catch(Exception ex) {
+			ex.printStackTrace();
+		}
+		
+	}
+
+	private Object endDebug(WindowEvent event) {
+		((Stage)event.getSource()).close();
+		debug = null;
+		return null;
+	}
+
+	public boolean isDebugging() {
+		return debug != null;
+	}
+
+	public void envReceipt(String env) {
+		if(isDebugging()) debug.displayEnv(env);
+	}
+
+	public void callReceipt(String call) {
+		if(isDebugging()) debug.addCall(call);
 	}
 
 }
