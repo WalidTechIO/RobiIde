@@ -281,14 +281,20 @@ public class Controleur {
 			stage.setTitle("IDE ROBI - Debug info");
 			stage.show();
 		} catch(Exception ex) {
-			ex.printStackTrace();
+			new Alert(Alert.AlertType.ERROR, "Impossible d'ouvrir la fenetre de debug").show();
 		}
 		
 	}
 
 	private Object endDebug(WindowEvent event) {
-		((Stage)event.getSource()).close();
-		debug = null;
+		try {
+			((Stage)event.getSource()).close();
+			debug = null;
+		} catch(Exception e) {
+			if(!e.getMessage().startsWith("pipeline already created")) e.printStackTrace();
+		}
+		
+		
 		return null;
 	}
 

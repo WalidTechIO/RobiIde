@@ -85,12 +85,14 @@ public class Client implements Runnable {
 				if(!(in.readObject() instanceof Response res)) throw new IOException();
 				BufferedImage img = b64ToImg(res.image());
 				if(img == null) throw new IOException(); 
-				controller.commandFeedBack(res.feedback());
-				controller.imageReceipt(img);
-				if(controller.isDebugging()) {
-					controller.envReceipt(res.environment());
-					controller.callReceipt(res.expr());
-				}
+				Platform.runLater(() -> {
+					controller.commandFeedBack(res.feedback());
+					controller.imageReceipt(img);
+					if(controller.isDebugging()) {
+						controller.envReceipt(res.environment());
+						controller.callReceipt(res.expr());
+					}
+				});
 			} catch(IOException|ClassNotFoundException e) {
 				Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Erreur lors de la reception de la reponse du serveur.").show());
 			}
