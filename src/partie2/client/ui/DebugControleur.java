@@ -7,6 +7,7 @@ import javafx.scene.input.MouseEvent;
 import partie2.io.DebugInfo;
 import partie2.io.ReferenceInfo;
 import partie2.io.ScriptInfo;
+import partie2.utils.NodeUtils;
 
 public class DebugControleur {
 	
@@ -27,6 +28,7 @@ public class DebugControleur {
 	public void initialize() {
 		env.setOnMouseClicked(this::onReferenceSelected);
 		scripts.setOnMouseClicked(this::onScriptSelected);
+		call.setOnMouseClicked(this::onExpressionSelected);
 	}
 	
 	public void setInfo(String message) {
@@ -64,13 +66,24 @@ public class DebugControleur {
 		
 	}
 	
+	public void onExpressionSelected(MouseEvent e) {
+		String expr = call.getSelectionModel().getSelectedItem();
+		if(expr != null) {
+			String infoMsg = "Type: Expression\nFormattage:\n" + NodeUtils.stringToFormattedString(expr);
+			setInfo(infoMsg);
+		}
+	}
+	
 	public void debugReceipt(DebugInfo dbginfo) {
 		this.dbginfo = dbginfo;
 		addCall(dbginfo.expr());
 		env.getItems().clear();
+		scripts.getItems().clear();
 		dbginfo.env().forEach((n,r) -> {
 			env.getItems().add(n);
 		});
 	}
+	
+	
 
 }

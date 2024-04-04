@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import partie2.io.ScriptInfo;
+import partie2.utils.NodeUtils;
 import stree.parser.SDefaultNode;
 import stree.parser.SNode;
 
@@ -75,7 +76,7 @@ public class Script {
 	
 	//Renvoie les infos du script
 	public ScriptInfo info() {
-		return new ScriptInfo(params.size()-1, Interpreter.nodeToFormattedString(script), Interpreter.nodeToString(proto));
+		return new ScriptInfo(params.size()-1, NodeUtils.nodeToFormattedString(script), NodeUtils.nodeToString(proto));
 	}
 	
 	//Renvoie une copie en profondeur de l'arbre original

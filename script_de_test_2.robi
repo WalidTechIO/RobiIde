@@ -16,6 +16,11 @@
 
 (space.monRect translate 50 50)
 
-(space sleep 2000)
+(space.monRect addScript rmfrom (
+	(self parent)
+	(parent del self)
+))
+
+(space.monRect rmfrom space)
 
 (space clear)

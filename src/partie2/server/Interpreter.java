@@ -5,7 +5,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
@@ -32,6 +31,7 @@ import partie2.server.commands.NewString;
 import partie2.server.commands.SetColor;
 import partie2.server.commands.SetDimension;
 import partie2.server.commands.Sleep;
+import partie2.utils.NodeUtils;
 import stree.parser.SNode;
 import stree.parser.SParser;
 
@@ -96,7 +96,7 @@ public class Interpreter {
 			msg += " Error: " + e.getMessage();
 		}
 		
-		server.sendResponse(new Response(msg, snapshot(), new DebugInfo(nodeToString(expr), env.info())));
+		server.sendResponse(new Response(msg, snapshot(), new DebugInfo(NodeUtils.nodeToString(expr), env.info())));
 		if(sbs && !server.receiveData()) sbsend = true;
 		return ref;
 	}
@@ -163,63 +163,6 @@ public class Interpreter {
 	
 	public boolean isRunning() {
 		return status;
-	}
-	
-	public static String nodeToString(SNode node) {
-		if(node.isLeaf()) {
-			return node.contents() + " ";
-		} else {
-			String res = "( ";
-			for(SNode children : node.children()) res += nodeToString(children);
-			return res + ") ";
-		}
-	}
-	
-	public static String nodeToFormattedString(SNode node, String indentationChars) {
-		int indentLevel = 0;
-		String finalExpr = "";
-		
-		String expr = nodeToString(node);
-		for(int i=0; i<expr.length(); i++) {
-			Character c = expr.charAt(i);
-			if(c.equals('(')) {
-				finalExpr += "\n";
-				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
-				finalExpr += "(";
-				indentLevel++;
-				continue;
-			}
-			if(c.equals(')')) {
-				indentLevel--;
-				//finalExpr += "\n";
-				for(int j=0; j<indentLevel; j++) finalExpr += indentationChars;
-				finalExpr += ")\n";
-				continue;
-			}
-			finalExpr += c;
-		}
-		indentLevel = 0;
-		String lines[] = finalExpr.split("\n");
-		List<String> newLines = new ArrayList<>();
-		for(String line : lines) {
-			if(line.contains("(")) indentLevel++;
-			if(line.contains(")")) indentLevel--;
-			if(!line.contains("(") && !line.contains(")")) {
-				String newLine = "";
-				for(int j=0; j<indentLevel; j++) newLine += indentationChars;
-				newLines.add(newLine + line);
-			} else {
-				newLines.add(line);
-			}
-		}
-		
-		return newLines.stream()
-				.reduce((a,s) -> a+=s+"\n")
-				.get();
-	}
-	
-	public static String nodeToFormattedString(SNode node) {
-		return nodeToFormattedString(node, "  ");
 	}
 
 }
