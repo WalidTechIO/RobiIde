@@ -42,12 +42,11 @@ public class DebugControleur {
 		String ref = env.getSelectionModel().getSelectedItem();
 		scripts.getItems().clear();
 		if(ref != null) {
-			ref = ref.split(" ")[0];
 			ReferenceInfo refInfo = dbginfo.env().get(ref);
 			refInfo.scripts().forEach((n,s) -> {
 				scripts.getItems().add(n);
 			});
-			String infoMsg = "Nom: " + ref + "\nClasse: " + refInfo.className() + "\nListe des primitives:\n";
+			String infoMsg = "Type: Reference\nNom: " + ref + "\nReference type: " + refInfo.className() + "\nListe des primitives:\n";
 			for(String s : refInfo.primitives()) infoMsg += "\t- " + s + "\n"; 
 			setInfo(infoMsg);
 		}
@@ -59,7 +58,7 @@ public class DebugControleur {
 		if(ref != null && scriptName != null) {
 			ref = ref.split(" ")[0];
 			ScriptInfo scriptInfo = dbginfo.env().get(ref).scripts().get(scriptName);
-			String infoMsg = "Nom: " + scriptName + "\nNb de parametres: " + scriptInfo.nbParams() + "\nPrototpye: " + scriptInfo.proto() +"\nExpression complète:\n" + scriptInfo.expr();
+			String infoMsg = "Type: Script\nNom: " + scriptName + "\nNb de parametres: " + scriptInfo.nbParams() + "\nPrototpye: " + scriptInfo.proto() +"\nExpression complète:\n" + scriptInfo.expr();
 			setInfo(infoMsg);
 		}
 		
@@ -70,7 +69,7 @@ public class DebugControleur {
 		addCall(dbginfo.expr());
 		env.getItems().clear();
 		dbginfo.env().forEach((n,r) -> {
-			env.getItems().add(n + " is referencing: " + r.className());
+			env.getItems().add(n);
 		});
 	}
 
