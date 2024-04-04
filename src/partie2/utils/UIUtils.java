@@ -20,7 +20,7 @@ import partie2.client.ui.RreViewportControleur;
 public class UIUtils {
 	
 	public static SceneWrapper<LoginControleur> login() throws IOException {
-		URL url = IHMRobiMain.class.getResource("login.fxml");
+		URL url = IHMRobiMain.class.getResource("resources/login.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(url);
 		VBox root = (VBox) fxmlLoader.load();
 		
@@ -28,7 +28,7 @@ public class UIUtils {
 	}
 	
 	public static SceneWrapper<DebugControleur> debug() throws IOException {
-		URL url = IHMRobiMain.class.getResource("debug.fxml");
+		URL url = IHMRobiMain.class.getResource("resources/debug.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(url);
 		VBox root = (VBox) fxmlLoader.load();
 		
@@ -36,7 +36,7 @@ public class UIUtils {
 	}
 	
 	public static SceneWrapper<Controleur> main() throws IOException {
-		URL url = IHMRobiMain.class.getResource("ui.fxml");
+		URL url = IHMRobiMain.class.getResource("resources/ui.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(url);
 		VBox root = (VBox) fxmlLoader.load();
 		
@@ -44,7 +44,7 @@ public class UIUtils {
 	}
 	
 	public static SceneWrapper<RreViewportControleur> rreViewPort() throws IOException {
-		URL url = IHMRobiMain.class.getResource("rreViewPort.fxml");
+		URL url = IHMRobiMain.class.getResource("resources/rreViewPort.fxml");
 		FXMLLoader fxmlLoader = new FXMLLoader(url);
 		VBox root = (VBox) fxmlLoader.load();
 		

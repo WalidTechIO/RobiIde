@@ -335,28 +335,51 @@ public class Controleur {
 	}
 	
 	public void importDebug(ActionEvent e) {
+		//Prepare FileChooser with extension filter
 		ExtensionFilter filter = new ExtensionFilter("Robi Response Export (*.rre)", "*.rre");
 		FileChooser fc = new FileChooser();
 		fc.setTitle("Choisissez un export ROBI a ouvrir");
 		fc.getExtensionFilters().add(filter);
 		try {
+			//Get filepath (return if null)
 			File f = fc.showOpenDialog(null);
 			if(f == null) return;
+			
+			//Turn file into Response object
 			String json = Files.readAllLines(Paths.get(f.getAbsolutePath())).stream().reduce((a,s) -> a+=s+"\n").get();
 			ObjectMapper mapper = new ObjectMapper();
 			Response res = mapper.readValue(json, Response.class);
+			
+			//Prepare viewport window which will display env values
 			SceneWrapper<DebugControleur> debugWrapper = UIUtils.debug();
-			SceneWrapper<RreViewportControleur> rreWrapper = UIUtils.rreViewPort();
-			Stage stage1 = new Stage();
-			Stage stage2 = new Stage();
+			final Stage stage1 = new Stage();
 			stage1.setScene(debugWrapper.scene());
-			stage1.setTitle("IDE ROBI - Debug info");
+			stage1.setTitle("IDE ROBI - RRE Viewport");
+			
+			//Prepare viewport window which will display image and feedback of the response
+			SceneWrapper<RreViewportControleur> rreWrapper = UIUtils.rreViewPort();
+			final Stage stage2 = new Stage();
 			stage2.setScene(rreWrapper.scene());
 			stage2.setTitle("IDE ROBI - RRE Viewport");
+			
+			//Add Close Event Listener on both windows
+			stage1.setOnCloseRequest(event -> {
+				stage1.close();
+				stage2.close();
+			});
+			stage2.setOnCloseRequest(event -> {
+				stage1.close();
+				stage2.close();
+			});
+			
+			//Show windows
 			stage1.show();
 			stage2.show();
+			
+			//Send response data to both controller of the both windows
 			rreWrapper.controller().setViewport(res.image(), res.feedback());;
 			debugWrapper.controller().debugReceipt(res.info());
+			
 		} catch(IOException ex) {
 		}
 	}
