@@ -3,6 +3,7 @@ package partie2.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import stree.parser.SDefaultNode;
 import stree.parser.SNode;
 
 public class NodeUtils {
@@ -69,6 +70,17 @@ public class NodeUtils {
 			for(SNode children : node.children()) res += nodeToString(children);
 			return res + ") ";
 		}
+	}
+	
+	//Renvoie une copie en profondeur de l'arbre original
+	public static SNode copy(SNode original) {
+		SNode node = new SDefaultNode();
+		if(original.isLeaf()) {
+			node.setContents(original.contents());
+		} else {
+			for(SNode children : original.children()) node.addChild(copy(children));
+		}
+		return node;
 	}
 
 }

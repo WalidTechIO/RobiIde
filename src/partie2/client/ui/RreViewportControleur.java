@@ -4,12 +4,14 @@ import java.awt.image.BufferedImage;
 
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import partie2.io.Request.RequestType;
 import partie2.io.State;
 import partie2.utils.GraphicsUtils;
+import partie2.utils.GraphicsUtils.RendererException;
 import partie2.utils.UIUtils;
 
 public class RreViewportControleur {
@@ -25,7 +27,12 @@ public class RreViewportControleur {
 	
 	public void setViewport(State state) {
 		if(state.response() != null) {
-			BufferedImage img = UIUtils.b64ToImg(GraphicsUtils.compute(state.response().world()));
+			BufferedImage img = null;
+			try {
+				img = UIUtils.b64ToImg(GraphicsUtils.compute(state.response().world()));
+			} catch (RendererException e) {
+				new Alert(Alert.AlertType.ERROR, "Erreur de rendu: " + e.getMessage()).show();
+			}
 			if(img != null) image.setImage(SwingFXUtils.toFXImage(img, null));
 			feedback.setText(state.response().feedback());
 		}

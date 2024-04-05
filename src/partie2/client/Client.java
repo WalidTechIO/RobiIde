@@ -19,6 +19,7 @@ import partie2.io.Request.RequestType;
 import partie2.io.Response;
 import partie2.io.State;
 import partie2.utils.GraphicsUtils;
+import partie2.utils.GraphicsUtils.RendererException;
 import partie2.utils.UIUtils;
 
 /**
@@ -97,14 +98,21 @@ public class Client implements Runnable {
 				
 				ObjectMapper mapper = new ObjectMapper();
 				final Response res = mapper.readValue(msg, Response.class);
+				try {
+					BufferedImage render = UIUtils.b64ToImg(GraphicsUtils.compute(res.world()));
+					Platform.runLater(() -> {				
+						controller.imageReceipt(render);
+					});
+				} catch(RendererException e) {
+					Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Impossible d'effectuer le rendu: " + e.getMessage()).showAndWait());
+					e.printStackTrace();
+				}
 				
-				BufferedImage img = UIUtils.b64ToImg(GraphicsUtils.compute(res.world()));
-				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {
 					controller.commandFeedBack(res.feedback());
-					controller.imageReceipt(img);
 					if(controller.isDebugging()) controller.debugReceipt(res.info());
 				});
+				
 				lastResponse = res;
 			} catch(IOException|ClassNotFoundException e) {
 				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Déconnecté").showAndWait());

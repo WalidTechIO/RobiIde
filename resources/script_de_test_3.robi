@@ -1,0 +1,23 @@
+(space add rect (Rect new))
+(space add rect (Rect new))
+
+(space.rect addScript rm (
+	(self parent)
+	(parent del self)
+))
+
+(space sleep 2000)
+
+(space.rect rm space)
+
+(space add oval (Oval new))
+
+(space add text (Label new "Hello World"))
+
+(space.oval translate 100 100)
+
+(space sleep 5000)
+
+(space clear)
+
+(space setColor red)

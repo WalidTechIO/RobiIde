@@ -2,8 +2,8 @@ package partie2.io.graphics;
 
 import java.awt.Dimension;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -34,7 +34,7 @@ public abstract class GObject implements Serializable {
 	public Dimension dimension = new Dimension(50, 50);
 	public Dimension position = new Dimension(0, 0);
 	public String color = "blue";
-	public List<GObject> childrens = new ArrayList<>();
+	public Set<GObject> childrens = new HashSet<>();
 	
 	public static enum Type {
 		WORLD,
@@ -64,7 +64,7 @@ public abstract class GObject implements Serializable {
 		return color;
 	}
 	
-	public List<GObject> childrens() {
+	public Set<GObject> childrens() {
 		return childrens;
 	}
 	

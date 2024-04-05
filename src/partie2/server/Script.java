@@ -43,7 +43,7 @@ public class Script {
 		replaceValues.put(params.get(0), refName);
 		for(int i = 0; i<args.size(); i++) replaceValues.put(params.get(i+1), args.get(i));
 		
-		replaced = copy(script);
+		replaced = NodeUtils.copy(script);
 		
 		replace(replaced, replaceValues);
 		
@@ -77,17 +77,6 @@ public class Script {
 	//Renvoie les infos du script
 	public ScriptInfo info() {
 		return new ScriptInfo(params.size()-1, NodeUtils.nodeToFormattedString(script), NodeUtils.nodeToString(proto));
-	}
-	
-	//Renvoie une copie en profondeur de l'arbre original
-	private SNode copy(SNode original) {
-		SNode node = new SDefaultNode();
-		if(original.isLeaf()) {
-			node.setContents(original.contents());
-		} else {
-			for(SNode children : original.children()) node.addChild(copy(children));
-		}
-		return node;
 	}
 	
 }

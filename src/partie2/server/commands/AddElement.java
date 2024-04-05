@@ -8,6 +8,7 @@ import partie2.server.Reference;
 
 import java.util.Objects;
 
+import stree.parser.SDefaultNode;
 import stree.parser.SNode;
 
 public class AddElement implements Command {
@@ -20,7 +21,8 @@ public class AddElement implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		String refName = method.get(0).contents() + "." + method.get(2).contents();
+		String refParent = method.get(0).contents();
+		String refName = refParent + "." + method.get(2).contents();
 		Reference newRef = interpreter.compute(method.get(3));
 		
 		if(newRef == null) return null;
@@ -38,8 +40,16 @@ public class AddElement implements Command {
 			newRef.addCommand("clear", new Clear());
 		}
 		
-		((GObject) reference.getRef()).add(element);
+		//On prend le partie d'override la reference si elle etait deja presente
+		if(env.getReferenceByName(refName) != null) {
+			SNode delMethod = new SDefaultNode();
+			for(int i=0;i<3;i++) delMethod.addChild(new SDefaultNode());
+			delMethod.get(0).setContents(refParent);
+			delMethod.get(2).setContents(refName);
+			new DelElement().run(interpreter, delMethod);
+		}
 		
+		((GObject) reference.getRef()).add(element);
 		env.addReference(refName, newRef);
 		
 		return newRef;

@@ -26,19 +26,24 @@ import partie2.io.graphics.GWorld;
 
 public class GraphicsUtils {
 	
-	public static String compute(GWorld world) {
-		CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
-		space.open();
-		SwingUtilities.getWindowAncestor(space).dispose();
+	public static String compute(GWorld world) throws RendererException {
 		
-		space.changeWindowSize(world.dimension());
-		space.setColor(getColorFromName(world.color()));
-		
-		world.childrens().forEach((c) -> computeObject(space, c));
-		
-		space.repaint();
-		
-		return snapshot(space);
+		try {
+			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
+			space.open();
+			SwingUtilities.getWindowAncestor(space).dispose();
+			
+			space.changeWindowSize(world.dimension());
+			space.setColor(getColorFromName(world.color()));
+			
+			world.childrens().forEach((c) -> computeObject(space, c));
+			
+			space.repaint();
+			
+			return snapshot(space);
+		} catch(Exception e) {
+			throw new RendererException(e.getMessage());
+		}
 		
 	}
 	
@@ -105,6 +110,16 @@ public class GraphicsUtils {
 		} catch(Exception e) {
 			return null;
 		}
+	}
+	
+	public static class RendererException extends Exception {
+
+		private static final long serialVersionUID = -651413780878138481L;
+		
+		public RendererException(String msg) {
+			super(msg);
+		}
+		
 	}
 
 }
