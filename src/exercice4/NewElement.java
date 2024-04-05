@@ -12,8 +12,6 @@ if(method.size() != 2) throw new IllegalArgumentException("new called with wrong
 			@SuppressWarnings("unchecked")
 			GElement e = ((Class<GElement>) reference.getRef()).getDeclaredConstructor().newInstance();
 			Reference ref = new Reference(e);
-			ref.addCommand("setColor", new SetColor());
-			ref.addCommand("translate", new Translate());
 			return ref;
 		} catch (Exception e) {
 			e.printStackTrace();

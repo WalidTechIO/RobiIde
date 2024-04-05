@@ -17,6 +17,8 @@ public class AddElement implements Command {
 		
 		Reference obj = new Interpreter().compute(environment, method.get(3));
 		GElement element = (GElement) obj.getRef();
+		obj.addCommand("translate", new Translate());
+		obj.addCommand("setColor", new SetColor());
 		((GSpace) reference.getRef()).addElement(element);
 		((GSpace) reference.getRef()).repaint();
 		environment.addReference(method.get(2).contents(), obj);
