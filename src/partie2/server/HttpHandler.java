@@ -33,22 +33,19 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 			Interpreter interpreter = new Interpreter(this);
 			ObjectReader reader = new ObjectMapper().reader();
 			String json = new String(t.getRequestBody().readAllBytes());
-			System.out.println("Getted env");
 			
 			Request req = reader.readValue(json, Request.class);
-			System.out.println("Getted request");
+			System.out.println("HTTP Endpoint: Receipt HTTP Request");
 			
 			interpreter.setProgram(req.program());
 			interpreter.runProgram();
-			
-			System.out.println("ROBI Program ended");
 			
 	        t.sendResponseHeaders(200, computedResponse.length());
 	        os = t.getResponseBody();
 	        os.write(computedResponse.getBytes());
 	        os.close();
 	        
-	        System.out.println("Response sent");
+	        System.out.println("HTTP Endpoint: HTTP Response sent");
 		} catch (IOException e) {
 			e.printStackTrace();
 			t.sendResponseHeaders(400, computedResponse.length());
