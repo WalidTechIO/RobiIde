@@ -29,7 +29,7 @@ public class RreViewportControleur {
 		if(state.response() != null) {
 			BufferedImage img = null;
 			try {
-				img = UIUtils.b64ToImg(GraphicsUtils.compute(state.response().world()));
+				img = UIUtils.b64ToImg(GraphicsUtils.render(state.response().world()));
 			} catch (RendererException e) {
 				new Alert(Alert.AlertType.ERROR, "Erreur de rendu: " + e.getMessage()).show();
 			}

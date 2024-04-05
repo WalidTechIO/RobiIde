@@ -31,7 +31,7 @@ public abstract class GObject implements Serializable {
 	public final Type type;
 	
 	public final UUID uuid = UUID.randomUUID();
-	public Dimension dimension = new Dimension(50, 50);
+	public Dimension dimension = new Dimension(-1, -1);
 	public Dimension position = new Dimension(0, 0);
 	public String color = "blue";
 	public Set<GObject> childrens = new HashSet<>();

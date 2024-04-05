@@ -99,7 +99,7 @@ public class Client implements Runnable {
 				ObjectMapper mapper = new ObjectMapper();
 				final Response res = mapper.readValue(msg, Response.class);
 				try {
-					BufferedImage render = UIUtils.b64ToImg(GraphicsUtils.compute(res.world()));
+					BufferedImage render = UIUtils.b64ToImg(GraphicsUtils.render(res.world()));
 					Platform.runLater(() -> {				
 						controller.imageReceipt(render);
 					});

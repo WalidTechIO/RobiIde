@@ -28,7 +28,13 @@ import partie2.io.graphics.GWorld;
 
 public class GraphicsUtils {
 	
-	public static String compute(GWorld world) throws RendererException {
+	/**
+	 * Render a world.
+	 * @param world to render.
+	 * @return String in Base64 format representing the world rendered as a png.
+	 * @throws RendererException If a render exception happens.
+	 */
+	public static String render(GWorld world) throws RendererException {
 		
 		try {
 			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
@@ -37,7 +43,7 @@ public class GraphicsUtils {
 			space.changeWindowSize(world.dimension());
 			space.setColor(getColorFromName(world.color()));
 			
-			world.childrens().forEach((c) -> computeObject(space, c));
+			world.childrens().forEach((c) -> render(space, c));
 			
 			space.repaint();
 			
@@ -52,7 +58,7 @@ public class GraphicsUtils {
 		
 	}
 	
-	private static void computeObject(GContainer container, GObject child) {
+	private static void render(GContainer container, GObject child) {
 		
 		GElement element = null;
 		
@@ -85,8 +91,8 @@ public class GraphicsUtils {
 		element.setColor(getColorFromName(child.color()));
 		element.translate(new Point(child.position().width, child.position().height));
 		if(element instanceof GBounded gbounded) {
-			gbounded.setDimension(child.dimension());
-			for(GObject c : child.childrens()) computeObject(gbounded, c);
+			if(child.dimension().height > 0 && child.dimension().width > 0) gbounded.setDimension(child.dimension());
+			for(GObject c : child.childrens()) render(gbounded, c);
 		}
 		
 		container.addElement(element);
