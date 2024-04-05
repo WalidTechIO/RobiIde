@@ -26,7 +26,7 @@ public class NewImage implements Command {
 		try {
 			rawImage = ImageIO.read(path);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("Invalid path for image");
 		}
 		
 		return new Reference(new GImage(rawImage));

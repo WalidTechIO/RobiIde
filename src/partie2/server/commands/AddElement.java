@@ -22,30 +22,29 @@ public class AddElement implements Command {
 		Objects.requireNonNull(reference);
 		
 		String refName = method.get(0).contents() + "." + method.get(2).contents();
-		Reference ref = interpreter.compute(method.get(3));
-		if(ref == null) {
-			return null;
-		}
+		Reference newRef = interpreter.compute(method.get(3));
 		
-		GElement element = (GElement) ref.getRef();
+		if(newRef == null) return null;
 		
-		ref.addCommand("setColor", new SetColor());
-		ref.addCommand("translate", new Translate());
-		ref.addCommand("addScript", new AddScript());
-		ref.addCommand("delScript", new DeleteScript());
+		GElement element = (GElement) newRef.getRef();
+		
+		newRef.addCommand("setColor", new SetColor());
+		newRef.addCommand("translate", new Translate());
+		newRef.addCommand("addScript", new AddScript());
+		newRef.addCommand("delScript", new DeleteScript());
 		if(element instanceof GBounded) {
-			ref.addCommand("setDim", new SetDimension());
-			ref.addCommand("add", new AddElement());
-			ref.addCommand("del", new DelElement());
-			ref.addCommand("clear", new Clear());
+			newRef.addCommand("setDim", new SetDimension());
+			newRef.addCommand("add", new AddElement());
+			newRef.addCommand("del", new DelElement());
+			newRef.addCommand("clear", new Clear());
 		}
 		
 		((GContainer) reference.getRef()).addElement(element);
 		((GContainer) reference.getRef()).repaint();
 		
-		env.addReference(refName, ref);
+		env.addReference(refName, newRef);
 		
-		return ref;
+		return newRef;
 	}
 
 }
