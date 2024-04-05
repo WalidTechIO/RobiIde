@@ -1,6 +1,7 @@
 package partie2.utils;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.util.Base64;
 
 import javax.imageio.ImageIO;
+import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import graphicLayer.GBounded;
@@ -31,7 +33,6 @@ public class GraphicsUtils {
 		try {
 			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
 			space.open();
-			SwingUtilities.getWindowAncestor(space).dispose();
 			
 			space.changeWindowSize(world.dimension());
 			space.setColor(getColorFromName(world.color()));
@@ -40,7 +41,11 @@ public class GraphicsUtils {
 			
 			space.repaint();
 			
-			return snapshot(space);
+			String snapshot = snapshot(space);
+			
+			space.end();
+			
+			return snapshot;
 		} catch(Exception e) {
 			throw new RendererException(e.getMessage());
 		}
@@ -121,5 +126,27 @@ public class GraphicsUtils {
 		}
 		
 	}
+	
+	private static class CustomGSpace extends GSpace {
+
+		private static final long serialVersionUID = -619926373478257073L;
+
+		public CustomGSpace(String name, Dimension dim) {
+			super(name, dim);
+		}
+		
+		public void open() {
+			JFrame frame = new JFrame(name);
+			frame.getContentPane().add(this);
+			frame.pack();
+		}
+		
+		public void end() {
+			JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
+			frame.dispose();
+		}
+
+	}
+
 
 }
