@@ -44,13 +44,13 @@ public class Interpreter {
 	
 	private final Environment env = new Environment();
 	private final CustomGSpace space;
-	private final ClientManager clientManager;
+	private final canSendResponse clientManager;
 	private boolean sbs = false;
 	private boolean status = false;
 	private boolean sbsend = false;
 	private List<SNode> program = null;
 	
-	public Interpreter(ClientManager clientManager) {
+	public Interpreter(canSendResponse clientManager) {
 		this.clientManager = clientManager;
 		
 		space = new CustomGSpace("Server", new Dimension(200, 100));
@@ -110,7 +110,7 @@ public class Interpreter {
 		} catch (JsonProcessingException e) {
 			clientManager.sendResponse(null);
 		}
-		if(sbs && !clientManager.receiveData()) sbsend = true;
+		if(clientManager instanceof ClientManager && sbs && !((ClientManager)clientManager).receiveData()) sbsend = true;
 		return ref;
 	}
 

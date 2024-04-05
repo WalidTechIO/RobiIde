@@ -7,11 +7,9 @@ import java.net.Socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import partie2.io.Program;
 import partie2.io.Request;
 import partie2.io.Request.RequestType;
-
-public class ClientManager implements Runnable {
+public class ClientManager implements Runnable, canSendResponse {
 	
 	private final Interpreter interpreter;
 	private final Socket s;
@@ -30,19 +28,7 @@ public class ClientManager implements Runnable {
 	
 	boolean receiveData() {
 		try {
-			Object obj = in.readObject();
-			if(obj instanceof String && obj.equals("Exe")) {
-				if(interpreter.isRunning()) return true;
-				else {
-					interpreter.runProgram();
-					return false;
-				}
-			} 
-			if(obj instanceof Program prg) {
-				interpreter.setProgram(prg);
-				return false;
-			}
-			
+			Object obj = in.readObject();			
 			if(obj instanceof String msg) {
 				ObjectMapper mapper = new ObjectMapper();
 				Request req = mapper.readValue(msg, Request.class);

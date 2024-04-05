@@ -34,6 +34,11 @@ public class MainServer {
 	
 		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
 		
+		System.out.println("Starting HTTP Endpoint on port 8080");
+		final Thread httpServer = new Thread(() -> HttpServer.launch(8080));
+		httpServer.start();
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.interrupt()));
+		
 		while(true) {
 			try {
 				Socket client = serverSocket.accept();
