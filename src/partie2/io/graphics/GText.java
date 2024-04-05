@@ -6,9 +6,13 @@ public class GText extends GObject {
 	
 	private final String text;
 	
-	GText(String text) {
+	public GText(String text) {
 		super(Type.TEXT);
 		this.text = text;
+	}
+	
+	public String text() {
+		return text;
 	}
 
 }

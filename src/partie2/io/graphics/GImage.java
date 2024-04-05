@@ -6,9 +6,13 @@ public class GImage extends GObject {
 	
 	private String path;
 
-	GImage(String path) {
+	public GImage(String path) {
 		super(Type.IMAGE);
 		this.path = path;
+	}
+	
+	public String path() {
+		return path;
 	}
 
 }
