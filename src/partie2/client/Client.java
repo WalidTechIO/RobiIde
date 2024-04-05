@@ -18,6 +18,7 @@ import partie2.io.Request;
 import partie2.io.Request.RequestType;
 import partie2.io.Response;
 import partie2.io.State;
+import partie2.utils.GraphicsUtils;
 import partie2.utils.UIUtils;
 
 /**
@@ -97,7 +98,7 @@ public class Client implements Runnable {
 				ObjectMapper mapper = new ObjectMapper();
 				final Response res = mapper.readValue(msg, Response.class);
 				
-				BufferedImage img = UIUtils.b64ToImg(res.image());
+				BufferedImage img = UIUtils.b64ToImg(GraphicsUtils.compute(res.world()));
 				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {
 					controller.commandFeedBack(res.feedback());

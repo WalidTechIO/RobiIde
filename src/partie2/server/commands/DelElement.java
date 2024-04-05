@@ -1,13 +1,12 @@
 package partie2.server.commands;
 
+import partie2.io.graphics.GObject;
 import partie2.server.Environment;
 import partie2.server.Interpreter;
 import partie2.server.Reference;
 
 import java.util.Objects;
 
-import graphicLayer.GContainer;
-import graphicLayer.GElement;
 import stree.parser.SNode;
 
 public class DelElement implements Command {
@@ -20,10 +19,9 @@ public class DelElement implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		GElement element = (GElement) env.getReferenceByName(method.get(2).contents()).getRef();
-		((GContainer) reference.getRef()).removeElement(element);
-		((GContainer) reference.getRef()).repaint();
-		env.deleteReference(method.get(2).contents());
+		GObject element = (GObject) env.getReferenceByName(method.get(2).contents()).getRef();
+		((GObject) reference.getRef()).del(element);
+		env.clear(method.get(2).contents()); //Unreference element and all his children
 		
 		return reference;
 	}

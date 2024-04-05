@@ -1,7 +1,6 @@
 package partie2.utils;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
@@ -28,7 +27,7 @@ import partie2.io.graphics.GWorld;
 public class GraphicsUtils {
 	
 	public static String compute(GWorld world) {
-		CustomGSpace space = new CustomGSpace("Renderer", new Dimension(200, 100));
+		CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
 		space.open();
 		SwingUtilities.getWindowAncestor(space).dispose();
 		

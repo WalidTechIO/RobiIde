@@ -6,17 +6,35 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-public abstract class GObject implements Serializable {
-	
-	private static final long serialVersionUID = 1L;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
-	final Type type;
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonSubTypes({
+    @JsonSubTypes.Type(value = GImage.class, name = "IMAGE"),
+
+    @JsonSubTypes.Type(value = GOval.class, name = "OVAL"),
+    
+    @JsonSubTypes.Type(value = GRect.class, name = "RECT"),
+    
+    @JsonSubTypes.Type(value = GText.class, name = "TEXT"),
+    
+    @JsonSubTypes.Type(value = GWorld.class, name = "WORLD"),
+    
+})
+public abstract class GObject implements Serializable {
+
+	private static final long serialVersionUID = -2898754037405728359L;
+
+	public final Type type;
 	
-	final UUID uuid = UUID.randomUUID();
-	Dimension dimension = new Dimension(50, 50);
-	Dimension position = new Dimension(0, 0);
-	String color = "blue";
-	List<GObject> childrens = new ArrayList<>();
+	public final UUID uuid = UUID.randomUUID();
+	public Dimension dimension = new Dimension(50, 50);
+	public Dimension position = new Dimension(0, 0);
+	public String color = "blue";
+	public List<GObject> childrens = new ArrayList<>();
 	
 	public static enum Type {
 		WORLD,
@@ -56,6 +74,7 @@ public abstract class GObject implements Serializable {
 	}
 	
 	public void setDim(int x, int y) {
+		if(type == Type.IMAGE) throw new UnsupportedOperationException("Can't setDimension of an image");
 		dimension.width += x;
 		dimension.height += y;
 	}
@@ -72,10 +91,11 @@ public abstract class GObject implements Serializable {
 	
 	public void del(GObject object) {
 		if(type == Type.IMAGE) throw new UnsupportedOperationException("Can't delete children of an image");
-		childrens.remove(object);
+		childrens.remove(object); //Searching by UUID so no pb
 	}
 	
 	public void clear() {
+		if(type == Type.IMAGE) throw new UnsupportedOperationException("Can't delete children of an image");
 		childrens.clear();
 	}
 	

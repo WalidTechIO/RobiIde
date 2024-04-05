@@ -9,6 +9,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import partie2.io.Request.RequestType;
 import partie2.io.State;
+import partie2.utils.GraphicsUtils;
 import partie2.utils.UIUtils;
 
 public class RreViewportControleur {
@@ -24,7 +25,7 @@ public class RreViewportControleur {
 	
 	public void setViewport(State state) {
 		if(state.response() != null) {
-			BufferedImage img = UIUtils.b64ToImg(state.response().image());
+			BufferedImage img = UIUtils.b64ToImg(GraphicsUtils.compute(state.response().world()));
 			if(img != null) image.setImage(SwingFXUtils.toFXImage(img, null));
 			feedback.setText(state.response().feedback());
 		}

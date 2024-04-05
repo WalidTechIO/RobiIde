@@ -3,8 +3,7 @@ package partie2.server.commands;
 import java.awt.Dimension;
 import java.util.Objects;
 
-import graphicLayer.GBounded;
-import graphicLayer.GSpace;
+import partie2.io.graphics.GObject;
 import partie2.server.Interpreter;
 import partie2.server.Reference;
 import stree.parser.SNode;
@@ -24,14 +23,8 @@ public class SetDimension implements Command {
 		} catch(NumberFormatException e) {
 			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid dimension value.");
 		}
-		if(reference.getRef() instanceof GBounded bndref) {
-			bndref.setWidth(dim.width);
-			bndref.setHeight(dim.height);
-		}
 		
-		if(reference.getRef() instanceof GSpace sparef) {
-			sparef.changeWindowSize(dim);
-		}
+		((GObject)reference.getRef()).setDim(dim.width, dim.height);
 		
 		return reference;
 	}

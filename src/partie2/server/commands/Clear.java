@@ -2,7 +2,7 @@ package partie2.server.commands;
 
 import java.util.Objects;
 
-import graphicLayer.GContainer;
+import partie2.io.graphics.GObject;
 import partie2.server.Interpreter;
 import partie2.server.Reference;
 import stree.parser.SNode;
@@ -16,7 +16,7 @@ public class Clear implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		((GContainer)reference.getRef()).clear();
+		((GObject)reference.getRef()).clear();
 		interpreter.getEnvironment().clear(method.get(0).contents());
 		
 		return reference;

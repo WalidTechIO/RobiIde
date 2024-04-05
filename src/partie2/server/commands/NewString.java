@@ -2,7 +2,7 @@ package partie2.server.commands;
 
 import java.util.Objects;
 
-import graphicLayer.GString;
+import partie2.io.graphics.GText;
 import partie2.server.Interpreter;
 import partie2.server.Reference;
 import stree.parser.SNode;
@@ -17,8 +17,8 @@ public class NewString implements Command {
 		Objects.requireNonNull(reference);
 		
 		String msg = method.get(3).contents();
-		msg = msg.substring(1, msg.length() - 1);
-		GString obj = new GString(msg);
+		msg = msg.substring(1, msg.length() - 1); //Remove double quote from start and end
+		GText obj = new GText(msg);
 		
 		return new Reference(obj);
 	}

@@ -1,14 +1,13 @@
 package partie2.server.commands;
 
+import partie2.io.graphics.GImage;
+import partie2.io.graphics.GObject;
 import partie2.server.Environment;
 import partie2.server.Interpreter;
 import partie2.server.Reference;
 
 import java.util.Objects;
 
-import graphicLayer.GBounded;
-import graphicLayer.GContainer;
-import graphicLayer.GElement;
 import stree.parser.SNode;
 
 public class AddElement implements Command {
@@ -26,21 +25,20 @@ public class AddElement implements Command {
 		
 		if(newRef == null) return null;
 		
-		GElement element = (GElement) newRef.getRef();
+		GObject element = (GObject) newRef.getRef();
 		
 		newRef.addCommand("setColor", new SetColor());
 		newRef.addCommand("translate", new Translate());
 		newRef.addCommand("addScript", new AddScript());
 		newRef.addCommand("delScript", new DeleteScript());
-		if(element instanceof GBounded) {
+		if(!(element instanceof GImage)) {
 			newRef.addCommand("setDim", new SetDimension());
 			newRef.addCommand("add", new AddElement());
 			newRef.addCommand("del", new DelElement());
 			newRef.addCommand("clear", new Clear());
 		}
 		
-		((GContainer) reference.getRef()).addElement(element);
-		((GContainer) reference.getRef()).repaint();
+		((GObject) reference.getRef()).add(element);
 		
 		env.addReference(refName, newRef);
 		
