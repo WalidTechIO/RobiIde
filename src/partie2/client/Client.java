@@ -95,15 +95,16 @@ public class Client implements Runnable {
 				if(!(in.readObject() instanceof String msg)) throw new IOException();
 				
 				ObjectMapper mapper = new ObjectMapper();
-				lastResponse = mapper.readValue(msg, Response.class);
+				final Response res = mapper.readValue(msg, Response.class);
 				
-				BufferedImage img = UIUtils.b64ToImg(lastResponse.image());
+				BufferedImage img = UIUtils.b64ToImg(res.image());
 				if(img == null) throw new IOException(); 
 				Platform.runLater(() -> {
-					controller.commandFeedBack(lastResponse.feedback());
+					controller.commandFeedBack(res.feedback());
 					controller.imageReceipt(img);
-					if(controller.isDebugging()) controller.debugReceipt(lastResponse.info());
+					if(controller.isDebugging()) controller.debugReceipt(res.info());
 				});
+				lastResponse = res;
 			} catch(IOException|ClassNotFoundException e) {
 				if(working) Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Déconnecté").showAndWait());
 				break;
