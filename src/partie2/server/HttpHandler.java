@@ -102,10 +102,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 							<img id="renderer" alt="renderer" />
 						</div>
 						<script id="animationScript" defer>
-							const launchAnimation = () => {
-								%s
-							}
-							launchAnimation()
+							%s
 						</script>
 					</body>
 				</html>
