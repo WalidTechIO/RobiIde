@@ -77,8 +77,8 @@ public class GraphicsUtils {
 				if(!file.exists()) {
 					try {
 						rawImage = b64ToImg(path);
-					} catch(Exception ignored) {
-						ignored.printStackTrace();
+					} catch(IllegalArgumentException e) {
+						System.err.println("Rendu cote serveur: L'image reçue n'est ni au format Base64 ni présente cote serveur"); 
 					}
 					
 					if(rawImage == null) return;
