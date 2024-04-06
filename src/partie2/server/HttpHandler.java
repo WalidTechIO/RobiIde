@@ -59,6 +59,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 			imgs.clear();
 			currentDelay = 0;
 			
+			t.getResponseHeaders().add("Access-Control-Allow-Origin", "*");
 	        t.sendResponseHeaders(200, computedResponse.length());
 	        os = t.getResponseBody();
 	        os.write(computedResponse.getBytes());
@@ -100,8 +101,11 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 						<div style="margin:auto;">
 							<img id="renderer" alt="renderer" />
 						</div>
-						<script defer>
-							%s
+						<script id="animationScript" defer>
+							const launchAnimation = () => {
+								%s
+							}
+							launchAnimation()
 						</script>
 					</body>
 				</html>

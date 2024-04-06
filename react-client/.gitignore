@@ -1,11 +1,3 @@
-lib/
-bin/
-out/
-.idea/
-*.iml
-.classpath
-.settings/
-
 # Logs
 /react-client/logs
 /react-client/*.log
