@@ -5,11 +5,11 @@ function App() {
 
   return (
     <main className="flex gap-2">
-        <div className="container mt-5">
-            <CodingView />
-            <hr />
-            <Renderer />
-        </div>
+      <div className="container mt-5">
+        <CodingView />
+        <hr />
+        <Renderer />
+      </div>
     </main>
   )
 }

@@ -35,6 +35,7 @@ export default function CodingView() {
     }
 
     return <>
+        <p>Note: Ce client ne gere pas toutes les images car le rendu est effectue cote serveur. Vous pouvez voir les images disponibles sur le serveur à l'adresse http://{ip === '' ? "adresse" : ip}:{port === '' ? "port" : port}/images/list</p>
         <h1>Espace code</h1>
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
@@ -47,9 +48,7 @@ export default function CodingView() {
             </div>
             <div className="mb-3">
                 <label htmlFor="port" className="form-label">Programme robi:</label>
-                <textarea className="form-control" id="program" name="program">
-
-                </textarea>
+                <textarea className="form-control" id="program" name="program"></textarea>
             </div>
             <button className="btn btn-primary" type="submit">{"Executer l'animation"}</button>
         </form>

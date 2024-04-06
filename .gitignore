@@ -7,26 +7,26 @@ out/
 .settings/
 
 # Logs
-/react-client/logs
-/react-client/*.log
-/react-client/npm-debug.log*
-/react-client/yarn-debug.log*
-/react-client/yarn-error.log*
-/react-client/pnpm-debug.log*
-/react-client/lerna-debug.log*
+/alternative_clients/react-client/logs
+/alternative_clients/react-client/*.log
+/alternative_clients/react-client/npm-debug.log*
+/alternative_clients/react-client/yarn-debug.log*
+/alternative_clients/react-client/yarn-error.log*
+/alternative_clients/react-client/pnpm-debug.log*
+/alternative_clients/react-client/lerna-debug.log*
 
-/react-client/node_modules
-/react-client/dist
-/react-client/dist-ssr
-/react-client/*.local
+/alternative_clients/react-client/node_modules
+/alternative_clients/react-client/dist
+/alternative_clients/react-client/dist-ssr
+/alternative_clients/react-client/*.local
 
 # Editor directories and files
-/react-client/.vscode/*
-/react-client/!.vscode/extensions.json
-/react-client/.idea
-/react-client/.DS_Store
-/react-client/*.suo
-/react-client/*.ntvs*
-/react-client/*.njsproj
-/react-client/*.sln
-/react-client/*.sw?
+/alternative_clients/react-client/.vscode/*
+/alternative_clients/react-client/!.vscode/extensions.json
+/alternative_clients/react-client/.idea
+/alternative_clients/react-client/.DS_Store
+/alternative_clients/react-client/*.suo
+/alternative_clients/react-client/*.ntvs*
+/alternative_clients/react-client/*.njsproj
+/alternative_clients/react-client/*.sln
+/alternative_clients/react-client/*.sw?

@@ -40,10 +40,12 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 	
 	private int currentDelay = 0;
 
+	//Gere les echanges HTTP arrivant sur l'endpoint
 	@Override
 	public void handle(HttpExchange t) throws IOException {
 		OutputStream os;
 		try {
+			if(!t.getRequestMethod().equals("POST")) throw new Exception("Invalid HTTP method");
 			Interpreter interpreter = new Interpreter(this);
 			ObjectReader reader = new ObjectMapper().reader();
 			String json = new String(t.getRequestBody().readAllBytes());
@@ -54,7 +56,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 			interpreter.setProgram(req.program());
 			interpreter.runProgram();
 			
-			computedResponse = buildResponse(buildScript());
+			computedResponse = buildResponse();
 			
 			imgs.clear();
 			currentDelay = 0;
@@ -68,6 +70,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 	        System.out.println("HTTP Endpoint: HTTP Response sent");
 		} catch (Exception e) {
 			e.printStackTrace();
+			computedResponse = e.getMessage();
 			t.sendResponseHeaders(400, computedResponse.length());
 			os = t.getResponseBody();
 			os.write(computedResponse.getBytes());
@@ -75,6 +78,8 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		}
 	}
 
+	//Genere une chaine qui est une liste de timeout
+	//Chaque timeout affichera un rendu apres un certain delai
 	private String buildScript() {
 		
 		Function<ImageWrapper, String> mapper = (img) -> {
@@ -90,7 +95,8 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		
 	}
 
-	private String buildResponse(String script) {
+	//Genere une page html avec une balise image et le script genere
+	private String buildResponse() {
 		return  """
 				<!DOCTYPE html>
 				<html>
@@ -106,7 +112,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 						</script>
 					</body>
 				</html>
-				""".formatted(script);
+				""".formatted(buildScript());
 	}
 
 	@Override
@@ -114,6 +120,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		//Do nothing for now
 	}
 
+	//Ajoute une image qui s'affichera apres le delai
 	public void addImage(GWorld space, int delay) {
 		try {
 			String image = GraphicsUtils.render(space, false);

@@ -9,6 +9,7 @@ public class HttpServer {
 		try {
 			com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(port),0);
 			server.createContext("/endpoint", new HttpHandler());
+			server.createContext("/images/list", new ImagesListHandler());
 			server.setExecutor(null);
 			server.start();
 		} catch (IOException e) {

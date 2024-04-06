@@ -35,11 +35,11 @@ public class GraphicsUtils {
 	/**
 	 * Render a world.
 	 * @param world to render.
-	 * @param ignore image rendering.
+	 * @param ignore image rendering if false.
 	 * @return String in Base64 format representing the world rendered as a png.
 	 * @throws RendererException If a render exception happens.
 	 */
-	public static String render(GWorld world, boolean renderImage) throws RendererException {
+	public static String render(GWorld world, boolean clientRender) throws RendererException {
 		
 		try {
 			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
@@ -48,7 +48,7 @@ public class GraphicsUtils {
 			space.changeWindowSize(world.dimension());
 			space.setColor(getColorFromName(world.color()));
 			
-			world.childrens().forEach((c) -> render(space, c, renderImage));
+			world.childrens().forEach((c) -> render(space, c, clientRender));
 			
 			space.repaint();
 			
@@ -63,17 +63,21 @@ public class GraphicsUtils {
 		
 	}
 	
-	private static void render(GContainer container, GObject child, boolean renderImage) {
+	private static void render(GContainer container, GObject child, boolean clientRender) {
 		
 		GElement element = null;
 		
 		switch(child.type()) {
 		case IMAGE:
-			if(!renderImage) break;
-			File path = new File(((partie2.io.graphics.GImage)child).path());
+			File file = new File(((partie2.io.graphics.GImage)child).path());
+			if(!clientRender) {
+				if(!file.exists()) {
+					break;
+				}
+			}
 			BufferedImage rawImage = null;
 			try {
-				rawImage = ImageIO.read(path);
+				rawImage = ImageIO.read(file);
 			} catch (IOException e) {
 				throw new IllegalArgumentException("Invalid path for image");
 			}
@@ -98,7 +102,7 @@ public class GraphicsUtils {
 		element.translate(new Point(child.position().width, child.position().height));
 		if(element instanceof GBounded gbounded) {
 			if(child.dimension().height > 0 && child.dimension().width > 0) gbounded.setDimension(child.dimension());
-			for(GObject c : child.childrens()) render(gbounded, c, renderImage);
+			for(GObject c : child.childrens()) render(gbounded, c, clientRender);
 		}
 		
 		container.addElement(element);
