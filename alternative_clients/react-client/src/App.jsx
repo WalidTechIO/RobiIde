@@ -1,15 +1,10 @@
-import Renderer from './components/Renderer.jsx'
-import CodingView from "./components/CodingView.jsx";
+import RobiIdeView from "./components/RobiIdeView"
 
 function App() {
 
   return (
     <main className="flex gap-2">
-      <div className="container mt-5">
-        <CodingView />
-        <hr />
-        <Renderer />
-      </div>
+      <RobiIdeView />
     </main>
   )
 }

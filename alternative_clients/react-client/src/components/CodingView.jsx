@@ -52,7 +52,7 @@ export default function CodingView() {
             }
         })
 
-        computeProgram.then(program => fetchScript(data.get("ip"), data.get("port"), {
+        computeProgram.then(program => fetchScript({
             type: "PROG",
             program: {
                 mode: "DIRECT",
