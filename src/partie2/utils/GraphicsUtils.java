@@ -28,13 +28,18 @@ import partie2.io.graphics.GWorld;
 
 public class GraphicsUtils {
 	
+	public static String render(GWorld world) throws RendererException {
+		return render(world, true);
+	}
+	
 	/**
 	 * Render a world.
 	 * @param world to render.
+	 * @param ignore image rendering.
 	 * @return String in Base64 format representing the world rendered as a png.
 	 * @throws RendererException If a render exception happens.
 	 */
-	public static String render(GWorld world) throws RendererException {
+	public static String render(GWorld world, boolean renderImage) throws RendererException {
 		
 		try {
 			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
@@ -43,7 +48,7 @@ public class GraphicsUtils {
 			space.changeWindowSize(world.dimension());
 			space.setColor(getColorFromName(world.color()));
 			
-			world.childrens().forEach((c) -> render(space, c));
+			world.childrens().forEach((c) -> render(space, c, renderImage));
 			
 			space.repaint();
 			
@@ -58,12 +63,13 @@ public class GraphicsUtils {
 		
 	}
 	
-	private static void render(GContainer container, GObject child) {
+	private static void render(GContainer container, GObject child, boolean renderImage) {
 		
 		GElement element = null;
 		
 		switch(child.type()) {
 		case IMAGE:
+			if(!renderImage) break;
 			File path = new File(((partie2.io.graphics.GImage)child).path());
 			BufferedImage rawImage = null;
 			try {
@@ -92,7 +98,7 @@ public class GraphicsUtils {
 		element.translate(new Point(child.position().width, child.position().height));
 		if(element instanceof GBounded gbounded) {
 			if(child.dimension().height > 0 && child.dimension().width > 0) gbounded.setDimension(child.dimension());
-			for(GObject c : child.childrens()) render(gbounded, c);
+			for(GObject c : child.childrens()) render(gbounded, c, renderImage);
 		}
 		
 		container.addElement(element);
@@ -152,6 +158,10 @@ public class GraphicsUtils {
 			frame.dispose();
 		}
 
+	}
+	
+	public static String b64ImageToHtmlSrc(String img) {
+		return "src=\"data:image/png;base64, " + img.trim() + " \" />";
 	}
 
 

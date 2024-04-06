@@ -5,10 +5,6 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
-
 import partie2.io.DebugInfo;
 import partie2.io.Mode;
 import partie2.io.Program;
@@ -77,8 +73,7 @@ public class Interpreter {
 		env.addReference("Label", stringClassRef);
 	}
 	
-	public Reference compute(SNode expr) {
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();		
+	public Reference compute(SNode expr) {	
 		Reference ref = null;
 		String msg = null;
 		
@@ -94,14 +89,8 @@ public class Interpreter {
 			if(msg != null) msg += " Error: " + e.getMessage();
 			else msg = "Error: Expression need at least one reference and one primitive/scriptName";
 		}
-		
-		try {
-			Response resp = new Response(msg, space, new DebugInfo(NodeUtils.nodeToString(expr), env.info()));
-			clientManager.sendResponse(ow.writeValueAsString(resp));
-		} catch (JsonProcessingException e) {
-			clientManager.sendResponse("{\n\"status\": \"error\"\n}");
-			e.printStackTrace();
-		}
+		Response resp = new Response(msg, space, new DebugInfo(NodeUtils.nodeToString(expr), env.info()));
+		clientManager.sendResponse(resp);
 		if(clientManager instanceof ClientManager && sbs && !((ClientManager)clientManager).receiveData()) sbsend = true;
 		return ref;
 	}
@@ -147,11 +136,26 @@ public class Interpreter {
 			}
 		}
 		
+		if(clientManager instanceof HttpHandler httphandler) httphandler.addImage(space, 0);
+		
 		status = false;
+	}
+	
+	public GWorld getWorld() {
+		return space;
+	}
+	
+	public void registerPause(int delay) {
+		if(clientManager instanceof HttpHandler httphandler) httphandler.addImage(space, delay);
+	}
+	
+	public boolean isRunningFromHttpRequest() {
+		return clientManager instanceof HttpHandler;
 	}
 	
 	public boolean isRunning() {
 		return status;
 	}
 
+	
 }

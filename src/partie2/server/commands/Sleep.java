@@ -21,10 +21,15 @@ public class Sleep implements Command {
 		} catch(NumberFormatException e) {
 			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid delay.");
 		}
-		try {
-			Thread.sleep(delay);
-		} catch(InterruptedException ignored) {
-			
+		
+		if(interpreter.isRunningFromHttpRequest()) {
+			interpreter.registerPause(delay);
+		} else {
+			try {
+				Thread.sleep(delay);
+			} catch(InterruptedException ignored) {
+				
+			}
 		}
 		
 		return reference;

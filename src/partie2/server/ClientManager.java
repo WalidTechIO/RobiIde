@@ -5,10 +5,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
 
 import partie2.io.Request;
 import partie2.io.Request.RequestType;
+import partie2.io.Response;
 public class ClientManager implements Runnable, canSendResponse {
 	
 	private final Interpreter interpreter;
@@ -51,10 +54,22 @@ public class ClientManager implements Runnable, canSendResponse {
 		return false;
 	}
 	
-	public void sendResponse(String response) {
+	public void sendResponse(Response response) {		
+		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
+		String res = null;
+		
 		try {
-			out.writeObject(response);
-		} catch (IOException ignored) {}
+			res = ow.writeValueAsString(response);
+		} catch(JsonProcessingException e) {
+			res = "{\n\"status\": \"error\"\n}";
+			e.printStackTrace();
+		}
+		
+		try {
+			out.writeObject(res);
+		} catch(IOException e) {
+			stop();
+		}
 	}
 
 	@Override
