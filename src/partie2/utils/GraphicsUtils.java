@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -69,15 +70,23 @@ public class GraphicsUtils {
 		
 		switch(child.type()) {
 		case IMAGE:
-			File file = new File(((partie2.io.graphics.GImage)child).path());
+			BufferedImage rawImage = null;
+			String path = ((partie2.io.graphics.GImage)child).path();
+			File file = new File(path);
 			if(!clientRender) {
 				if(!file.exists()) {
-					break;
+					try {
+						rawImage = b64ToImg(path);
+					} catch(Exception ignored) {
+						ignored.printStackTrace();
+					}
+					
+					if(rawImage == null) return;
 				}
 			}
-			BufferedImage rawImage = null;
+			
 			try {
-				rawImage = ImageIO.read(file);
+				if(rawImage == null) rawImage = ImageIO.read(file);
 			} catch (IOException e) {
 				throw new IllegalArgumentException("Invalid path for image");
 			}
@@ -166,6 +175,15 @@ public class GraphicsUtils {
 	
 	public static String b64ImageToHtmlSrc(String img) {
 		return "src=\"data:image/png;base64, " + img.trim() + " \" />";
+	}
+	
+	public static BufferedImage b64ToImg(String b64) {
+		ByteArrayInputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
+		try {
+			return ImageIO.read(is);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 
 

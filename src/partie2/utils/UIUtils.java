@@ -1,12 +1,7 @@
 package partie2.utils;
 
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Base64;
-
-import javax.imageio.ImageIO;
 
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -49,15 +44,6 @@ public class UIUtils {
 		VBox root = (VBox) fxmlLoader.load();
 		
 		return new SceneWrapper<RreViewportControleur>(new Scene(root, 410, 540), fxmlLoader.getController());
-	}
-	
-	public static BufferedImage b64ToImg(String b64) {
-		ByteArrayInputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
-		try {
-			return ImageIO.read(is);
-		} catch (IOException e) {
-			return null;
-		}
 	}
 
 }

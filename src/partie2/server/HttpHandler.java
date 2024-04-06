@@ -91,7 +91,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		return imgs.stream()
 				.map(mapper)
 				.reduce(String::concat)
-				.orElse("setTimeout(() => { document.getElementById('renderer').alt = 'No images to display' }, 0)");
+				.orElse("setTimeout(() => { document.getElementById('renderer').alt = 'No images to display'; document.getElementById('renderer').src = '' }, 0)");
 		
 	}
 

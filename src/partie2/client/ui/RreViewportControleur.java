@@ -12,7 +12,6 @@ import partie2.io.Request.RequestType;
 import partie2.io.State;
 import partie2.utils.GraphicsUtils;
 import partie2.utils.GraphicsUtils.RendererException;
-import partie2.utils.UIUtils;
 
 public class RreViewportControleur {
 	
@@ -29,7 +28,7 @@ public class RreViewportControleur {
 		if(state.response() != null) {
 			BufferedImage img = null;
 			try {
-				img = UIUtils.b64ToImg(GraphicsUtils.render(state.response().world()));
+				img = GraphicsUtils.b64ToImg(GraphicsUtils.render(state.response().world()));
 			} catch (RendererException e) {
 				new Alert(Alert.AlertType.ERROR, "Erreur de rendu: " + e.getMessage()).show();
 			}

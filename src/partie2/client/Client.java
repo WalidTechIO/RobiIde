@@ -20,7 +20,6 @@ import partie2.io.Response;
 import partie2.io.State;
 import partie2.utils.GraphicsUtils;
 import partie2.utils.GraphicsUtils.RendererException;
-import partie2.utils.UIUtils;
 
 /**
  * Client
@@ -99,7 +98,7 @@ public class Client implements Runnable {
 				ObjectMapper mapper = new ObjectMapper();
 				final Response res = mapper.readValue(msg, Response.class);
 				try {
-					BufferedImage render = UIUtils.b64ToImg(GraphicsUtils.render(res.world()));
+					BufferedImage render = GraphicsUtils.b64ToImg(GraphicsUtils.render(res.world()));
 					Platform.runLater(() -> {				
 						controller.imageReceipt(render);
 					});

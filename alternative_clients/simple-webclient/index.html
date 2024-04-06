@@ -14,7 +14,6 @@
     <div id="root">
         <main class="flex gap-2">
             <div class="container mt-5">
-            	<p>Note: Ce client ne gere pas toutes les images car le rendu est effectue cote serveur. Vous pouvez voir les images disponibles sur le serveur à l'adresse http://adresse:port/images/list</p>
                 <h1>Espace code</h1>
                 <form id="form" method="post">
                     <div class="mb-3">
@@ -29,6 +28,7 @@
                         <label for="program" class="form-label">Programme robi:</label>
                         <textarea class="form-control" id="program" name="program"></textarea>
                     </div>
+                    <input type="file" id="selector" multiple="">
                     <button class="btn btn-primary" type="submit">Executer l'animation</button>
                 </form>
                 <hr />
