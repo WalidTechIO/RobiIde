@@ -142,10 +142,6 @@ public class Interpreter {
 		status = false;
 	}
 	
-	public GWorld getWorld() {
-		return space;
-	}
-	
 	public void registerPause(int delay) {
 		if(clientManager instanceof HttpHandler httphandler) httphandler.registerPause(space, delay);
 	}

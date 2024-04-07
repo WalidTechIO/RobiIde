@@ -1,14 +1,13 @@
-import { useState } from "react";
-import Renderer from './Renderer.jsx'
 import CodingView from "./CodingView.jsx";
+import useRobiClient from '../hooks/useRobiClient.jsx';
 
 export default function RobiIdeView() {
 
-    const [renderLoading, setRenderLoading] = useState(false)
+    const robiclient = useRobiClient()
 
     return <div className="container mt-5">
-        <CodingView setRenderLoading={setRenderLoading}/>
+        <CodingView robiclient={robiclient}/>
         <hr />
-        <Renderer rendererLoading={renderLoading}/>
+        {robiclient.renderer}
     </div>
 }

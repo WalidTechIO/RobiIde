@@ -1,7 +1,7 @@
 package partie2.io.graphics;
 
 import java.awt.Dimension;
-import java.util.Set;
+import java.util.List;
 
 public class GRect extends GObject {
 
@@ -27,7 +27,7 @@ public class GRect extends GObject {
 		return color;
 	}
 	
-	public Set<GObject> childrens() {
+	public List<GObject> childrens() {
 		return childrens;
 	}
 	

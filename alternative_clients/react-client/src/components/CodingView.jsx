@@ -1,93 +1,38 @@
-import {useState} from "react";
+import { useState } from "react";
 
-export default function CodingView({setRenderLoading}) {
-
-    const [ip, setIp] = useState("")
-    const [port, setPort] = useState ("")
-
-    const fetchScript = (programFinal) => {
-        if(document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
-        setRenderLoading(true)
-        fetch(`http://${ip}:${port}/render`, {method: "POST", body: JSON.stringify(programFinal)})
-            .then(rep => rep.text()
-                .then(t => {
-            return new DOMParser().parseFromString(t, "text/html");
-        }))
-        .then(dom => {
-            setRenderLoading(false)
-            const animation = dom.getElementById('animationScript')
-            const script = document.createElement('script')
-            script.defer = true
-            script.id = "animationScript"
-            script.textContent = animation.textContent
-            document.head.appendChild(script)
-        }).catch(error => {
-            setRenderLoading(false)
-            console.log("Error while fetching animation: " + error)
-        })
-    }
+export default function CodingView({robiclient}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
-        const filesArray = document.getElementById("selector").files ?? []
-
-        File.prototype.convertToBase64 = function (callback) {
-            var reader = new FileReader();
-            reader.onloadend = function (e) {
-                callback(e.target.result, e.target.error);
-            };
-            reader.readAsDataURL(this);
-        }
-
-        const computeProgram = new Promise((resolve) => {
-            let program = data.get("program")
-            let fileRemaining = filesArray.length
-            if (fileRemaining === 0) {
-                resolve(program)
-            }
-            for (let i = 0; i < filesArray.length; i++) {
-                filesArray[i].convertToBase64(function (base64) {
-                    program = program.replaceAll("{" + filesArray[i].name + "}", base64.split(',')[1])
-                    fileRemaining--
-                    if (fileRemaining === 0) {
-                        resolve(program)
-                    }
-                })
-            }
-        })
-
-        computeProgram.then(program => fetchScript({
-            type: "PROG",
-            program: {
-                mode: "DIRECT",
-                contenu: program
-            }
-        }))
-
+        robiclient.fetchData(data.get("program"))
     }
 
     return <>
-        <p>Note: Pour utiliser une image dans le programme il faut l'ajouter au file selector et utiliser {"{nomDeLimage.extension}"} dans le script comme chemin</p>
         <h1>Espace code</h1>
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="ip" className="form-label">Adresse du serveur:</label>
-                <input type="text" className="form-control" id="ip" name="ip" value={ip} onChange={(e) => setIp(e.target.value)}/>
+                <input type="text" className="form-control" id="ip" name="ip" value={robiclient.state.ip} onChange={(e) => robiclient.setIp(e.target.value)}/>
             </div>
             <div className="mb-3">
                 <label htmlFor="port" className="form-label">Port du serveur:</label>
-                <input type="text" className="form-control" id="port" name="port" value={port} onChange={(e) => setPort(e.target.value)}/>
+                <input type="text" className="form-control" id="port" name="port" value={robiclient.state.port} onChange={(e) => robiclient.setPort(e.target.value)}/>
             </div>
             <div className="mb-3">
-                <label htmlFor="port" className="form-label">Programme robi:</label>
+                <label htmlFor="mode" className="form-check-label mr-1">Execution directe: </label>
+                <input type="checkbox" className="form-check-input" id="mode" name="mode" checked={robiclient.state.direct} onChange={(e) => robiclient.setDirect(!robiclient.state.direct)} />
+            </div>
+            <div className="mb-3">
+                <label htmlFor="program" className="form-label">Programme robi:</label>
                 <textarea className="form-control" id="program" name="program"></textarea>
             </div>
-            <div class="mb-3">
-                <label for="selector" class="form-label">Images:</label>
+            <div className="mb-3">
+                <label htmlFor="selector" className="form-label mr-1">Images:</label>
                 <input type="file" id="selector" multiple={true}/>
             </div>
-            <button class="btn btn-primary" type="submit">Executer l'animation</button>
+            <button className="btn btn-primary" type="submit">Envoyer le code ROBI au serveur</button>
         </form>
+        <button className="btn mt-2" onClick={robiclient.next}>{robiclient.state.direct ? "Lancer l'animation" : "Executer la prochaine instruction"}</button>
     </>
 }

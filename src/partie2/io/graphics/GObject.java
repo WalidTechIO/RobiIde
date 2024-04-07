@@ -2,8 +2,8 @@ package partie2.io.graphics;
 
 import java.awt.Dimension;
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 @JsonSubTypes({
     @JsonSubTypes.Type(value = GImage.class, name = "IMAGE"),
 
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
     @JsonSubTypes.Type(value = GWorld.class, name = "WORLD"),
     
 })
-public abstract class GObject implements Serializable {
+public abstract class GObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2898754037405728359L;
 
@@ -34,7 +34,7 @@ public abstract class GObject implements Serializable {
 	public Dimension dimension = new Dimension(-1, -1);
 	public Dimension position = new Dimension(0, 0);
 	public String color = "blue";
-	public Set<GObject> childrens = new HashSet<>();
+	public List<GObject> childrens = new ArrayList<>();
 	
 	public static enum Type {
 		WORLD,
@@ -64,7 +64,7 @@ public abstract class GObject implements Serializable {
 		return color;
 	}
 	
-	public Set<GObject> childrens() {
+	public List<GObject> childrens() {
 		return childrens;
 	}
 	
@@ -104,6 +104,23 @@ public abstract class GObject implements Serializable {
 		if(obj == this) return true;
 		if(!(obj instanceof GObject other)) return false;
 		return other.uuid.equals(uuid);
+	}
+	
+	private void setChildrens(List<GObject> childrens) {
+		this.childrens = childrens;
+	}
+	
+	public Object clone() {
+		GObject o = null;
+		try {
+			List<GObject> childrens = new ArrayList<>();
+			o = (GObject) super.clone();
+			this.childrens.forEach(child -> childrens.add(child));
+			o.setChildrens(childrens);
+		} catch(CloneNotSupportedException e) {
+			e.printStackTrace();
+		}
+		return o;
 	}
 
 }

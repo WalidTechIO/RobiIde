@@ -1,7 +1,7 @@
 package partie2.io.graphics;
 
 import java.awt.Dimension;
-import java.util.Set;
+import java.util.List;
 
 public class GWorld extends GObject {
 	
@@ -34,7 +34,7 @@ public class GWorld extends GObject {
 		return color;
 	}
 	
-	public Set<GObject> childrens() {
+	public List<GObject> childrens() {
 		return childrens;
 	}
 	
@@ -62,6 +62,10 @@ public class GWorld extends GObject {
 	
 	public void clear() {
 		childrens.clear();
+	}
+	
+	public GWorld copy() {
+		return (GWorld)clone();
 	}
 	
 }

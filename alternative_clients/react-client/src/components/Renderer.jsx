@@ -1,9 +1,14 @@
-export default function Renderer({rendererLoading}) {
+import ObjectComputer from "./graphics/ObjectComputer.jsx"
+
+export default function Renderer({state}) {
+
+    if(!state.current || !state.current.resp) return <><h1>Espace rendu</h1><p>Aucun rendu</p></>
+
     return <>
         <h1>Espace rendu</h1>
-        {!rendererLoading && <img id="renderer" alt="renderer" className="mb-2 img-fluid"/>}
-        {rendererLoading && <div className="spinner-grow text-primary" role="status">
-            <span className="sr-only"></span>
-        </div>}
+        <p>
+            Feedback: {state.current.resp.feedback}
+        </p>
+        <ObjectComputer object={state.current.resp.world}/>
     </>
 }
