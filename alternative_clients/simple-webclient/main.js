@@ -7,10 +7,13 @@ File.prototype.convertToBase64 = function (callback) {
     reader.readAsDataURL(this);
 }
 
+const loader = '<div class="spinner-grow text-primary" role="status"><span class="sr-only"></span></div>'
+const renderer = '<img alt="renderer" id="renderer" class="mb-2 img-fluid"/>'
+
 //Execute l'animation sur la page repondant au programme et executer sur le server ip:port (necessite image d'id 'renderer')
 const fetchScript = (ip, port, programFinal) => {
     if (document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
-    document.getElementById("renderzone").innerHTML = '<div class="spinner-grow text-primary" role="status"><span class="sr-only"></span></div>'
+    document.getElementById("renderzone").innerHTML = loader
     fetch(`http://${ip}:${port}/endpoint`, { method: "POST", body: JSON.stringify(programFinal) })
         .then(rep => rep.text()
             .then(t => {
@@ -22,10 +25,10 @@ const fetchScript = (ip, port, programFinal) => {
             script.defer = true
             script.id = "animationScript"
             script.textContent = animation.textContent
-            document.getElementById("renderzone").innerHTML = '<img alt="renderer" id="renderer" />'
+            document.getElementById("renderzone").innerHTML = renderer
             document.head.appendChild(script)
         }).catch(error => {
-            document.getElementById("renderzone").innerHTML = '<img alt="renderer" id="renderer" />'
+            document.getElementById("renderzone").innerHTML = renderer
             console.log("Error while fetching animation: " + error)
         })
 }
