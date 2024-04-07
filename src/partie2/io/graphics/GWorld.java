@@ -6,9 +6,7 @@ import java.util.Set;
 public class GWorld extends GObject {
 	
 
-	private static final long serialVersionUID = 1919482233925692703L;
-	
-	public String name = "Render";
+	private static final long serialVersionUID = 1919482233925692763L;
 
 	public GWorld() {
 		super(Type.WORLD);
@@ -16,13 +14,8 @@ public class GWorld extends GObject {
 	
 	public GWorld(String windowName, Dimension dim) {
 		this();
-		name = windowName;
 		setDim(dim.width, dim.height);
 		setColor("unknow"); //Will set world color to default Swing window color
-	}
-	
-	public String name() {
-		return name;
 	}
 	
 	public Type type() {

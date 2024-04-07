@@ -43,7 +43,7 @@ public class GraphicsUtils {
 	public static String render(GWorld world, boolean clientRender) throws RendererException {
 		
 		try {
-			CustomGSpace space = new CustomGSpace(world.name(), world.dimension());
+			CustomGSpace space = new CustomGSpace("Renderer", world.dimension());
 			space.open();
 			
 			space.changeWindowSize(world.dimension());

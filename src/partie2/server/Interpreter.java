@@ -136,7 +136,8 @@ public class Interpreter {
 			}
 		}
 		
-		if(clientManager instanceof HttpHandler httphandler) httphandler.addImage(space, 0);
+		//En mode rendu a la fin du programme on veut envoyer l'etat courant dans tout les cas
+		if(clientManager instanceof HttpHandler httphandler && httphandler.isRendering()) httphandler.registerPause(space, 0);
 		
 		status = false;
 	}
@@ -146,7 +147,7 @@ public class Interpreter {
 	}
 	
 	public void registerPause(int delay) {
-		if(clientManager instanceof HttpHandler httphandler) httphandler.addImage(space, delay);
+		if(clientManager instanceof HttpHandler httphandler) httphandler.registerPause(space, delay);
 	}
 	
 	public boolean isRunningFromHttpRequest() {

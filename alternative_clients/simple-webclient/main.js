@@ -14,7 +14,7 @@ const renderer = '<img alt="renderer" id="renderer" class="mb-2 img-fluid"/>'
 const fetchScript = (ip, port, programFinal) => {
     if (document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
     document.getElementById("renderzone").innerHTML = loader
-    fetch(`http://${ip}:${port}/endpoint`, { method: "POST", body: JSON.stringify(programFinal) })
+    fetch(`http://${ip}:${port}/render`, { method: "POST", body: JSON.stringify(programFinal) })
         .then(rep => rep.text()
             .then(t => {
                 return new DOMParser().parseFromString(t, "text/html");

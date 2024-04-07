@@ -8,7 +8,7 @@ export default function CodingView({setRenderLoading}) {
     const fetchScript = (programFinal) => {
         if(document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
         setRenderLoading(true)
-        fetch(`http://${ip}:${port}/endpoint`, {method: "POST", body: JSON.stringify(programFinal)})
+        fetch(`http://${ip}:${port}/render`, {method: "POST", body: JSON.stringify(programFinal)})
             .then(rep => rep.text()
                 .then(t => {
             return new DOMParser().parseFromString(t, "text/html");

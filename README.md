@@ -23,12 +23,25 @@
 		- Mode multi-client
 		- Rendu graphique effectuer cote client
 		- Recois des requetes sous forme de chaine JSON renvoie les reponses en chaine JSON egalement
-	- Mode Endpoint HTTP (Ne supporte pas le mode Step by Step, effectue le rendu cote serveur)
-		- Genere un script de setTimeout s'executant au bon moment
-		- Chaque setTimeout change la source d'une balise img d'id renderer recuperer depuis le DOM
-		- La source de l'image est l'image encodée en base64 (celle-ci est generee par le serveur)
-		- Image new peut prendre en argument une image au format base 64 plutot qu'un chemin
-		- La reponse est une page HTML contenant le script et une balise img d'id renderer
+	- Mode Endpoint HTTP
+		- /render
+			- Effectue un rendu cote serveur !
+			- Ne supporte pas le mode Step by Step
+			- Genere un script de setTimeout s'executant au bon moment
+			- Chaque setTimeout change la source d'une balise img d'id renderer recuperer depuis le DOM
+			- La source de l'image est l'image encodée en base64
+			- Image new peut prendre en argument une image au format base 64 plutot qu'un chemin
+			- La reponse est une page HTML contenant le script et une balise img d'id renderer
+			
+		- /world
+			- Cet endpoint permet de developper des clients fonctionnant en mode Step by Step
+			- Renvoie en JSON une liste de reponses
+			- Ces reponses sont associées a des delai correspondant au temps apres lequel le programme a 'rendu' ce monde
+			- Chaque reponse est composée:
+				- D'un feedback
+				- D'un monde courant (Arbre d'objects graphique serveur)
+				- De la derniere expression appelee
+				- De l'environnement (references, primitives, scripts)
 		
 ## Clients
 - 3 Clients pour le serveur
