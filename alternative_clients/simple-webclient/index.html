@@ -29,11 +29,16 @@
                         <label for="program" class="form-label">Programme robi:</label>
                         <textarea class="form-control" id="program" name="program"></textarea>
                     </div>
-                    <input type="file" id="selector" multiple="">
+                    <div class="mb-3">
+                        <label for="selector" class="form-label">Images:</label>
+                        <input type="file" id="selector" multiple="true">
+                    </div>
                     <button class="btn btn-primary" type="submit">Executer l'animation</button>
                 </form>
                 <hr />
-                <img alt="renderer" id="renderer" />
+                <div id="renderzone">
+                    <img alt="renderer" id="renderer" />
+                </div>
             </div>
         </main>
     </div>

@@ -1,25 +1,30 @@
 import {useState} from "react";
 
-export default function CodingView() {
+export default function CodingView({setRenderLoading}) {
 
     const [ip, setIp] = useState("")
     const [port, setPort] = useState ("")
 
     const fetchScript = (programFinal) => {
         if(document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
+        setRenderLoading(true)
         fetch(`http://${ip}:${port}/endpoint`, {method: "POST", body: JSON.stringify(programFinal)})
             .then(rep => rep.text()
                 .then(t => {
             return new DOMParser().parseFromString(t, "text/html");
         }))
-            .then(dom => {
+        .then(dom => {
+            setRenderLoading(false)
             const animation = dom.getElementById('animationScript')
             const script = document.createElement('script')
             script.defer = true
             script.id = "animationScript"
             script.textContent = animation.textContent
             document.head.appendChild(script)
-        }).catch(error => console.log("Error while fetching animation: " + error))
+        }).catch(error => {
+            setRenderLoading(false)
+            console.log("Error while fetching animation: " + error)
+        })
     }
 
     const handleSubmit = (e) => {
@@ -78,8 +83,11 @@ export default function CodingView() {
                 <label htmlFor="port" className="form-label">Programme robi:</label>
                 <textarea className="form-control" id="program" name="program"></textarea>
             </div>
-            <input type="file" id="selector" multiple=""></input>
-            <button className="btn btn-primary" type="submit">{"Executer l'animation"}</button>
+            <div class="mb-3">
+                <label for="selector" class="form-label">Images:</label>
+                <input type="file" id="selector" multiple={true}/>
+            </div>
+            <button class="btn btn-primary" type="submit">Executer l'animation</button>
         </form>
     </>
 }
