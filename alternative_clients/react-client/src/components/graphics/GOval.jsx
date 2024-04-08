@@ -1,3 +1,5 @@
+import ObjectComputer from "./ObjectRenderer.jsx";
+
 export default function GOval({oval, images}) {
 
     if (oval.dimension.width < 0) {

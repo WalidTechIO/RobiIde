@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-export const GImage = ({image, images}) => {
+export default function GImage({image, images}) {
 
   const [img, setImg] = useState(<img alt="Loading..." />)
 

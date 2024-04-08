@@ -1,0 +1,8 @@
+(space add label (Label new "Hello World"))
+(space.label setDim 200 40)
+(space setDim 800 800)
+(space add image (Image new explosion.gif))
+(space.image translate 100 100)
+(space addScript rmImage ( (self image) (self del self.image)))
+(space sleep 2000)
+(space rmImage image)
