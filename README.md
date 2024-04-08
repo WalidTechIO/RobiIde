@@ -60,5 +60,5 @@
 		- Gere le mode etape par etape et animation
 		- Rendu cote client
 		- Interprete les images cote client uniquement
-		- Permet de consulter l'environnement(references, scripts et primitives des references) - WIP
-		- Permet de consulter la pile des appels de S-expr - WIP
+		- Permet de consulter l'environnement(references, scripts et primitives des references)
+		- Permet de consulter la pile des appels de S-expr

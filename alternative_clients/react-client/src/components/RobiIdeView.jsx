@@ -7,8 +7,7 @@ export default function RobiIdeView() {
 
     return <div className="container mt-5">
         <CodingView robiclient={robiclient}/>
-        <hr />
-        {robiclient.env}
+        {robiclient.debug}
         {robiclient.renderer}
     </div>
 }

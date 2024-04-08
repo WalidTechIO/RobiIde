@@ -36,7 +36,7 @@ export default function CodingView({robiclient}) {
             </div>
             <div className="h-stack">
                 <button className="btn btn-primary mx-1" type="submit">{robiclient.state.direct ? "Lancer l'animation" : "Transmettre le programme"}</button>
-                {!robiclient.state.direct && <button type="button" className="btn btn-dark mx-1" onClick={robiclient.next}>Executer la prochaine instruction</button>}
+                {!robiclient.state.direct && <button type="button" className="btn btn-dark mx-1" onClick={robiclient.next}>{robiclient.state.instPtr != robiclient.state.data.length ? "Executer la prochaine instruction" : "Reset"}</button>}
                 {robiclient.reset}
             </div>
         </form>
