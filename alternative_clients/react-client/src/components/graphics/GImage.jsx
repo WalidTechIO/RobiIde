@@ -24,11 +24,16 @@ export const GImage = ({image, images}) => {
     }
   }
 
-  if(!hasLoadedImage && imgindex != -1) {
-    images[imgindex].convertToBase64((base64) => {
-      setImg(<img src={base64} />)
+  if(!hasLoadedImage){
+    if(imgindex != -1) {
+      images[imgindex].convertToBase64((base64) => {
+        setImg(<img src={base64} />)
+        setHasLoadedImage(true)
+      })
+    } else {
+      setImg(<img alt="Image not found in images list" />)
       setHasLoadedImage(true)
-    })
+    }
   }
   
 
