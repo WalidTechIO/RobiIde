@@ -153,6 +153,9 @@ public class Interpreter {
 	public boolean isRunning() {
 		return status;
 	}
-
+	
+	public boolean isStepByStep() {
+		return sbs;
+	}
 	
 }

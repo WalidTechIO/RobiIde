@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 export default function CodingView({robiclient}) {
 
     const handleSubmit = (e) => {
@@ -29,10 +27,13 @@ export default function CodingView({robiclient}) {
             </div>
             <div className="mb-3">
                 <label htmlFor="selector" className="form-label mr-1">Images:</label>
-                <input type="file" id="selector" multiple={true}/>
+                <input type="file" id="selector" multiple={true} onChange={(e) => robiclient.setFiles(e.target.files)}/>
             </div>
-            <button className="btn btn-primary" type="submit">Envoyer le code ROBI au serveur</button>
+            <div className="h-stack">
+                <button className="btn btn-primary mx-1" type="submit">{robiclient.state.direct ? "Lancer l'animation" : "Transmettre le programme"}</button>
+                {!robiclient.state.direct && <button type="button" className="btn btn-dark mx-1" onClick={robiclient.next}>Executer la prochaine instruction</button>}
+                {robiclient.reset}
+            </div>
         </form>
-        <button className="btn mt-2" onClick={robiclient.next}>{robiclient.state.direct ? "Lancer l'animation" : "Executer la prochaine instruction"}</button>
     </>
 }

@@ -1,6 +1,6 @@
-import ObjectComputer from "./ObjectComputer.jsx";
+import ObjectComputer from "./ObjectRenderer.jsx";
 
-export default function Rect({rectangle}) {
+export default function Rect({rectangle, images}) {
 
     if(rectangle.dimension.width < 0){
         rectangle.dimension.width = 24
@@ -20,7 +20,7 @@ export default function Rect({rectangle}) {
 
     return <div style={style}>
         {rectangle.childrens.map(children => {
-            return (<ObjectComputer key={children} object={children}/>)
+            return (<ObjectComputer key={children} object={children} images={images}/>)
         })}
     </div>
 }

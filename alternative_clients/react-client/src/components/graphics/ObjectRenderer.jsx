@@ -1,6 +1,7 @@
 import Rect from "./Rect.jsx";
+import { GImage } from "./GImage.jsx";
 
-export default function ObjectComputer({object, images}) {
+export default function ObjectRenderer({object, images}) {
 
     //World rendering
     if(object.type === "WORLD") {
@@ -21,15 +22,16 @@ export default function ObjectComputer({object, images}) {
 
         return <div style={style}>
             {object.childrens.map(children => {
-                return (<ObjectComputer key={children} object={children} />)
+                return (<ObjectRenderer key={children} object={children} images={images} />)
             })}
         </div>
     }
 
     //Common objects
     return <>
-        {object.type === "RECT" && <Rect rectangle={object} />}
-        {object.type === "IMAGE" && <Image image={object} images={images} />}
+        {object.type === "RECT" && <Rect rectangle={object} images={images}/>}
+        {object.type === "IMAGE" && <GImage image={object} images={images} />}
+        {/*TODO*/}
     </>
 
 }

@@ -25,10 +25,10 @@ public class Sleep implements Command {
 		if(interpreter.isRunningFromHttpRequest()) {
 			interpreter.registerPause(delay);
 		} else {
-			try {
-				Thread.sleep(delay);
-			} catch(InterruptedException ignored) {
-				
+			if(!interpreter.isStepByStep())
+				try {
+					Thread.sleep(delay);
+				} catch(InterruptedException ignored) {
 			}
 		}
 		

@@ -1,6 +1,6 @@
-import { useReducer } from "react"
+import { useReducer, useEffect } from "react"
 import Renderer from "../components/Renderer.jsx"
-import { useEffect } from "react"
+import Loader from "../components/Loader.jsx"
 
 function reducer(state, action) {
     switch (action.type) {
@@ -48,23 +48,26 @@ function reducer(state, action) {
             }
         }
 
+        case 'SET_FILES': {
+            return {
+                ...state,
+                files: action.files
+            }
+        }
+
         case 'NEXT': {
             if(state.instPtr < state.data.length) {
-                const delay = state.data[state.instPtr].delay - (state.data[state.instPtr - 1] ? state.data[state.instPtr - 1].delay : 0)
-                const date = Date.now()
-                let currentDate = null
-                do {
-                    currentDate = Date.now()
-                    if(currentDate - date >= delay) {
-                        return {
-                            ...state,
-                            current: state.data[state.instPtr],
-                            instPtr: state.instPtr + 1,
-                        }
-                    }
-                } while(currentDate - date < delay)
+                return {
+                    ...state,
+                    current: state.data[state.instPtr],
+                    instPtr: state.instPtr + 1,
+                }
             }
-            return state
+            return {
+                ...state,
+                current: {},
+                instPtr: 0
+            }
         }
     }
 }
@@ -76,13 +79,15 @@ export default function useRobiClient(initial = {
     port: "",
     direct: true,
     data: {},
-    current: {}
+    current: {},
+    files: []
 }) {
     const [state, dispatch] = useReducer(reducer, initial)
 
     useEffect(() => {
-        if(state.data.length > state.instPtr && state.direct) {
-            next()
+        if(state.direct && state.data.length > state.instPtr) {
+            const delay = state.data[state.instPtr].delay - (state.data[state.instPtr - 1] ? state.data[state.instPtr - 1].delay : 0)
+            setTimeout(next, delay)
         }
     }, [state.current])
 
@@ -100,8 +105,11 @@ export default function useRobiClient(initial = {
         )})
         .then(r => r.json())
         .then(json => dispatch({type: "SET_DATA", data: json}))
+        .catch(() => console.log("Error while fetching data"))
         .finally(() => dispatch({type: "SET_LOADING", loading: false}))
     }
+
+    const reset = (state.direct && state.data.length == state.instPtr && state.data.length != 0) ? <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Reset</button> : <></>
 
     const setProgram = (program) => {
         dispatch({type: "SET_PROGRAM", program: program})
@@ -119,11 +127,15 @@ export default function useRobiClient(initial = {
         dispatch({type: "SET_DIRECT", value: value})
     }
 
+    const setFiles = (files) => {
+        dispatch({type: "SET_FILES", files: files})
+    }
+
     const next = () => {
         dispatch({ type: "NEXT"})
     }
 
-    const renderer = <Renderer state={state}/>
+    const renderer = (!state.loading && <Renderer state={state}/>) || <Loader />
 
     return {
         state,
@@ -131,8 +143,10 @@ export default function useRobiClient(initial = {
         setIp,
         setProgram,
         setDirect,
+        setFiles,
         fetchData,
         renderer,
-        next
+        next,
+        reset
     }
 }
