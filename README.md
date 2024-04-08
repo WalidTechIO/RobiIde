@@ -26,7 +26,7 @@
 	- Mode Endpoint HTTP
 		- /render
 			- Effectue un rendu cote serveur !
-			- Ne supporte pas le mode Step by Step
+			- Ne supporte pas le mode etape par etape
 			- Genere un script de setTimeout s'executant au bon moment
 			- Chaque setTimeout change la source d'une balise img d'id renderer recuperer depuis le DOM
 			- La source de l'image est l'image encodée en base64
@@ -34,7 +34,7 @@
 			- La reponse est une page HTML contenant le script et une balise img d'id renderer
 			
 		- /world
-			- Cet endpoint permet de developper des clients fonctionnant en mode Step by Step
+			- Cet endpoint permet de developper des clients fonctionnant en mode etape par etape
 			- Renvoie en JSON une liste de reponses
 			- Ces reponses sont associées a des delai correspondant au temps apres lequel le programme a 'rendu' ce monde
 			- Chaque reponse est composée:
@@ -46,7 +46,7 @@
 ## Clients
 - 3 Clients pour le serveur
 	- JAVA:
-		- Gere le mode Step by Step
+		- Gere le mode etape par etape et animation
 		- Permet de consulter l'environnement(references, scripts et primitives des references)
 		- Permet de consulter la pile des appels de S-expr
 		- Permet d'exporter la derniere requete/response au format JSON et de les consulter dans une UI
@@ -57,4 +57,9 @@
 		- Rendu cote serveur
 		- Pour transmettre les images au serveur un systeme de template et de pre-compilation du programme ROBI a ete mis en place
 	- Web React:
-		- Comme le Web Simple mais encapsuler dans une app react (evolutif)
+		- Gere le mode etape par etape et animation
+		- Rendu cote client
+		- Interprete les images cote client uniquement
+		- Permet de consulter l'environnement(references, scripts et primitives des references) - WIP
+		- Permet de consulter la pile des appels de S-expr - WIP
+		- N'interprete pas encore les Texte et Oval - WIP
