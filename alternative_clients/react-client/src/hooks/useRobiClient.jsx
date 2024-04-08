@@ -1,6 +1,7 @@
 import { useReducer, useEffect } from "react"
 import Renderer from "../components/Renderer.jsx"
 import Loader from "../components/Loader.jsx"
+import Environment from "../components/Environment.jsx"
 
 function reducer(state, action) {
     switch (action.type) {
@@ -40,12 +41,20 @@ function reducer(state, action) {
                     ...state,
                     current: state.data[state.instPtr],
                     instPtr: state.instPtr + 1,
+                    env: {
+                        stack: [...state.env.stack, state.data[state.instPtr].resp.info.expr],
+                        env: state.data[state.instPtr].resp.info.env
+                    }
                 }
             }
             return {
                 ...state,
                 current: {},
-                instPtr: 0
+                instPtr: 0,
+                env: {
+                    stack: [],
+                    env: {}
+                }
             }
         }
     }
@@ -57,7 +66,11 @@ export default function useRobiClient(initial = {
     direct: true,
     data: {},
     current: {},
-    files: []
+    files: [],
+    env: {
+        stack: [],
+        env: {}
+    }
 }) {
     const [state, dispatch] = useReducer(reducer, initial)
 
@@ -86,19 +99,11 @@ export default function useRobiClient(initial = {
         .finally(() => dispatch({type: "SET_LOADING", loading: false}))
     }
 
+    const renderer = <><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</>
+
     const reset = (state.direct && state.data.length == state.instPtr && state.data.length != 0) ? <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Reset</button> : <></>
 
-    const setProgram = (program) => {
-        dispatch({type: "SET_PROGRAM", program: program})
-    }
-
-    const setIp = (ip) => {
-        dispatch({ type: "SET_IP", ip: ip })
-    }
-
-    const setPort = (port) => {
-        dispatch({ type: "SET_PORT", port: port })
-    }
+    const env = (state.env && state.env.stack.length > 0  && <Environment env={state.env} />) || <></>
 
     const setDirect = (value) =>  {
         dispatch({type: "SET_DIRECT", value: value})
@@ -112,18 +117,14 @@ export default function useRobiClient(initial = {
         dispatch({ type: "NEXT"})
     }
 
-    const renderer = <><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state}/>) || <Loader />}</>
-
     return {
         state,
-        setPort,
-        setIp,
-        setProgram,
-        setDirect,
-        setFiles,
         fetchData,
         renderer,
+        reset,
+        env,
+        setDirect,
+        setFiles,
         next,
-        reset
     }
 }
