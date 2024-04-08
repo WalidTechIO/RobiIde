@@ -1,0 +1,7 @@
+{
+    "type": "PROG",
+    "program": {
+        "mode": "DIRECT",
+        "contenu": "(space setColor red) (space sleep 1000) (space add im (Image new image.jpg)) (space add rect (Rect new))"
+    }
+}
