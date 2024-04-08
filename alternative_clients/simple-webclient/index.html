@@ -7,14 +7,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <title>ROBI React Client</title>
+    <title>ROBI Client</title>
 </head>
 
 <body>
     <div id="root">
         <main class="flex gap-2">
             <div class="container mt-5">
-            	<p>Note: Pour utiliser une image dans le programme il faut l'ajouter au file selector et utiliser {nomDeLimage.extension} dans le script comme chemin</p>
+            	<p>Note: Pour utiliser une image dans le programme il faut l'ajouter au file selector et utiliser {NomImage} dans le script comme chemin</p>
                 <h1>Espace code</h1>
                 <form id="form" method="post">
                     <div class="mb-3">
@@ -31,12 +31,12 @@
                     </div>
                     <div class="mb-3">
                         <label for="selector" class="form-label">Images:</label>
-                        <input type="file" id="selector" multiple="true">
+                        <input class="form-control" type="file" id="selector" multiple="true">
                     </div>
                     <button class="btn btn-primary" type="submit">Executer l'animation</button>
                 </form>
                 <hr />
-                <h1>Espace rendu</h1>
+                <h1>Espace de rendu</h1>
                 <div id="renderzone">
                     <img alt="renderer" id="renderer" class="mb-2 img-fluid" />
                 </div>

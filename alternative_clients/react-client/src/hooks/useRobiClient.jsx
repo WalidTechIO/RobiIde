@@ -135,7 +135,7 @@ export default function useRobiClient(initial = {
         dispatch({ type: "NEXT"})
     }
 
-    const renderer = (!state.loading && <Renderer state={state}/>) || <Loader />
+    const renderer = <><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state}/>) || <Loader />}</>
 
     return {
         state,
