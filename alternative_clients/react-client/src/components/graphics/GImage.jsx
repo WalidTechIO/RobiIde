@@ -12,8 +12,6 @@ export default function GImage({image, images}) {
     reader.readAsDataURL(this);
   }
 
-  
-
   useEffect(() => {
     let imgindex = -1
 
@@ -27,7 +25,7 @@ export default function GImage({image, images}) {
 
     if (imgindex != -1) {
       images[imgindex].convertToBase64((base64) => {
-        setImg(<img src={base64} />)
+        setImg(<img src={base64} width={image.dimension.width} height={image.dimension.height} />)
       })
     } else {
       setImg(<img alt="Image not found in images list" />)
@@ -37,7 +35,10 @@ export default function GImage({image, images}) {
   const style = {
     position: "absolute",
     top: image.position.height,
-    left: image.position.width
+    left: image.position.width,
+    maxWidth: 'calc(100% - ' + image.position.width + 'px)',
+    maxHeight: 'calc(100% - ' + image.position.height + 'px)',
+    overflow: 'hidden'
   }
 
   return <div style={style}>

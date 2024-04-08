@@ -34,7 +34,7 @@ export default function ObjectRenderer({object, images}) {
         {object.type === "RECT" && <GRect rectangle={object} images={images}/>}
         {object.type === "IMAGE" && <GImage image={object} images={images} />}
         {object.type === "OVAL" && <GOval oval={object} images={images} />}
-        {object.type === "TEXT" && <GText text={object} images={images} />}
+        {object.type === "TEXT" && <GText text={object} />}
     </>
 
 }

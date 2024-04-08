@@ -1,6 +1,4 @@
-import ObjectComputer from "./ObjectRenderer.jsx";
-
-export default function GText({ text, images }) {
+export default function GText({ text }) {
     const width = text.dimension.width < 0 ? 24 : text.dimension.width;
     const height = text.dimension.height < 0 ? 24 : text.dimension.height;
 
@@ -22,9 +20,6 @@ export default function GText({ text, images }) {
     return (
         <div style={styles}>
             {text.text}
-            {text.childrens.map(children => {
-                return (<ObjectComputer key={children.uuid} object={children} images={images} />)
-            })}
         </div>
     );
 }
