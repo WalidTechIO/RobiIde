@@ -115,12 +115,22 @@ public abstract class GObject implements Serializable, Cloneable {
 		try {
 			List<GObject> childrens = new ArrayList<>();
 			o = (GObject) super.clone();
-			this.childrens.forEach(child -> childrens.add(child));
+			this.childrens.forEach(child -> childrens.add((GObject)child.clone()));
 			o.setChildrens(childrens);
+			o.setDimension(dimension);
+			o.setPosition(position);
 		} catch(CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
 		return o;
+	}
+
+	private void setPosition(Dimension position) {
+		this.position = new Dimension(position.width, position.height);
+	}
+
+	private void setDimension(Dimension dimension) {
+		this.dimension = new Dimension(dimension.width, dimension.height);
 	}
 
 }

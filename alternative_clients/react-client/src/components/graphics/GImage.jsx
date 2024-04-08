@@ -1,10 +1,8 @@
-import React from 'react'
-import { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 export const GImage = ({image, images}) => {
 
   const [img, setImg] = useState(<img alt="Loading..." />)
-  const [hasLoadedImage, setHasLoadedImage] = useState(false)
 
   File.prototype.convertToBase64 = function (callback) {
     var reader = new FileReader();
@@ -14,28 +12,27 @@ export const GImage = ({image, images}) => {
     reader.readAsDataURL(this);
   }
 
-  let imgindex = -1
+  
 
-  if(images) {
-    for(let i=0; i<images.length;i++) {
-      if(images[i].name === image.path) {
-        imgindex = i
+  useEffect(() => {
+    let imgindex = -1
+
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        if (images[i].name === image.path) {
+          imgindex = i
+        }
       }
     }
-  }
 
-  if(!hasLoadedImage){
-    if(imgindex != -1) {
+    if (imgindex != -1) {
       images[imgindex].convertToBase64((base64) => {
         setImg(<img src={base64} />)
-        setHasLoadedImage(true)
       })
     } else {
       setImg(<img alt="Image not found in images list" />)
-      setHasLoadedImage(true)
     }
-  }
-  
+  }, [])
 
   const style = {
     position: "absolute",

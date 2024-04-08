@@ -1,5 +1,6 @@
-import Rect from "./Rect.jsx";
+import GRect from "./GRect.jsx";
 import { GImage } from "./GImage.jsx";
+import GOval from "./GOval.jsx";
 
 export default function ObjectRenderer({object, images}) {
 
@@ -29,8 +30,9 @@ export default function ObjectRenderer({object, images}) {
 
     //Common objects
     return <>
-        {object.type === "RECT" && <Rect rectangle={object} images={images}/>}
+        {object.type === "RECT" && <GRect rectangle={object} images={images}/>}
         {object.type === "IMAGE" && <GImage image={object} images={images} />}
+        {object.type === "OVAL" && <GOval oval={object} images={images} />}
         {/*TODO*/}
     </>
 
