@@ -23,7 +23,7 @@ export default function GText({ text, images }) {
         <div style={styles}>
             {text.text}
             {text.childrens.map(children => {
-                return (<ObjectComputer key={children} object={children} images={images} />)
+                return (<ObjectComputer key={children.uuid} object={children} images={images} />)
             })}
         </div>
     );

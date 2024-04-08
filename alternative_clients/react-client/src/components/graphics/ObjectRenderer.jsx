@@ -24,7 +24,7 @@ export default function ObjectRenderer({object, images}) {
 
         return <div style={style}>
             {object.childrens.map(children => {
-                return (<ObjectRenderer key={children} object={children} images={images} />)
+                return (<ObjectRenderer key={children.uuid} object={children} images={images} />)
             })}
         </div>
     }

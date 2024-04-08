@@ -28,9 +28,6 @@ public class LoginControleur {
 	
 	public void initialize() {
 		login.setOnMouseClicked(this::loginAttempt);
-		//Le temps des test
-		ip.setText("localhost");
-		port.setText("7777");
 	}
 	
 	public void loginAttempt(MouseEvent e) {

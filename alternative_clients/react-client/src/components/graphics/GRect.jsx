@@ -20,7 +20,7 @@ export default function Rect({rectangle, images}) {
 
     return <div style={style}>
         {rectangle.childrens.map(children => {
-            return (<ObjectComputer key={children} object={children} images={images}/>)
+            return (<ObjectComputer key={children.uuid} object={children} images={images}/>)
         })}
     </div>
 }

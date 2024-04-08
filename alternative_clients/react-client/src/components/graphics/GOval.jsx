@@ -21,7 +21,7 @@ export default function GOval({oval, images}) {
 
     return <div style={style}>
         {oval.childrens.map(children => {
-            return (<ObjectComputer key={children} object={children} images={images} />)
+            return (<ObjectComputer key={children.uuid} object={children} images={images} />)
         })}
     </div>
 }
