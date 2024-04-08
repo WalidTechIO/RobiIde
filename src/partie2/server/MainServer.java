@@ -4,26 +4,37 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import partie2.utils.ArgsParser;
+
 public class MainServer {
 
 	public static void main(String args[]) {
 		
 		String usage = """
-				Usage: program port [mode]
-				mode: mono | multi -> Nombre de client géré en même temps
+				Usage: program [-p port] [-e port] [-h] [-m true|false]
+				m: true = multi-client, false = mono-client (Default false)
+				p: port ServerSocket (Default: 7777)
+				e: port Endpoint HTTP (Default: 8080)
+				h: Affiche cette aide
 				""";
 		
-		if(args.length < 1 || args.length > 2 || (args.length == 2 && !args[1].matches("mono|multi"))) {
-			System.out.println(usage);
-			System.exit(1);
-		}
+		ArgsParser argsParser = new ArgsParser("pieihnmb").parse(args);
 		
-		String mode = args.length == 2 ? args[1] : "mono";
+		if(argsParser.hasParsed('h')) System.out.println(usage);
+		
+		String mode = argsParser.hasParsed('m') && ((Boolean)argsParser.get('m')) ? "multi" : "mono";
+		
+		final Integer portTcp = argsParser.hasParsed('p') ? (Integer)argsParser.get('p') : 7777;
+		final Integer portEndpoint = argsParser.hasParsed('e') ? (Integer)argsParser.get('e') : 8080;
 		
 		ServerSocket serverSocket = null;
 		
 		try {
-			serverSocket = new ServerSocket(Integer.parseInt(args[0]));
+			serverSocket = new ServerSocket(portTcp);
+			if(portEndpoint > 65535 || portEndpoint < 0) {
+				serverSocket.close();
+				throw new IllegalArgumentException();
+			}
 		} catch (IllegalArgumentException e) {
 			System.err.println("Port invalid");
 			System.exit(1);
@@ -34,8 +45,8 @@ public class MainServer {
 	
 		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
 		
-		System.out.println("Starting HTTP Endpoint on port 8080");
-		final Thread httpServer = new Thread(() -> HttpServer.launch(8080));
+		System.out.println("Starting HTTP Endpoint on port " + portEndpoint);
+		final Thread httpServer = new Thread(() -> HttpServer.launch(portEndpoint));
 		httpServer.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.interrupt()));
 		
