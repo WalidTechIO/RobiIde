@@ -72,10 +72,10 @@ public class Reference {
 	}
 	
 	ReferenceInfo info() {
-		String className = reference.getClass().getCanonicalName();
-		if(className.equals("java.lang.Class")) {
+		String className = reference.getClass().getSimpleName();
+		if(className.equals("Class")) {
 			Class<?> classe = (Class<?>) reference;
-			className = "The class " + classe.getCanonicalName();
+			className = "The class " + classe.getSimpleName();
 		} else {
 			className = "An instance of " + className;
 		}

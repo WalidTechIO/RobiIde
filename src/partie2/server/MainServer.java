@@ -20,7 +20,10 @@ public class MainServer {
 		
 		ArgsParser argsParser = new ArgsParser("pieihnmb").parse(args);
 		
-		if(argsParser.hasParsed('h')) System.out.println(usage);
+		if(argsParser.hasParsed('h')) {
+			System.out.println(usage);
+			System.exit(0);
+		}
 		
 		String mode = argsParser.hasParsed('m') && ((Boolean)argsParser.get('m')) ? "multi" : "mono";
 		
@@ -45,7 +48,6 @@ public class MainServer {
 	
 		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
 		
-		System.out.println("Starting HTTP Endpoint on port " + portEndpoint);
 		final Thread httpServer = new Thread(() -> HttpServer.launch(portEndpoint));
 		httpServer.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.interrupt()));
