@@ -19,6 +19,7 @@ out/
 /alternative_clients/react-client/dist
 /alternative_clients/react-client/dist-ssr
 /alternative_clients/react-client/*.local
+/alternative_clients/react-client/package-lock.json
 
 # Editor directories and files
 /alternative_clients/react-client/.vscode/*
