@@ -11,27 +11,6 @@ function reducer(state, action) {
             }
         }
 
-        case 'SET_PROGRAM': {
-            return {
-                ...state,
-                program: action.program
-            }
-        }
-
-        case 'SET_IP': {
-            return {
-                ...state,
-                ip: action.ip
-            }
-        }
-
-        case 'SET_PORT': {
-            return {
-                ...state,
-                port: action.port
-            }
-        }
-
         case 'SET_DATA': {
             return {
                 ...state,
@@ -75,8 +54,6 @@ function reducer(state, action) {
 export default function useRobiClient(initial = {
     instPtr: 0,
     loading: false,
-    ip: "",
-    port: "",
     direct: true,
     data: {},
     current: {},
@@ -91,9 +68,9 @@ export default function useRobiClient(initial = {
         }
     }, [state.current])
 
-    const fetchData = (program) => {
+    const fetchData = (ip, port, program) => {
         dispatch({ type: "SET_LOADING", loading: true })
-        fetch(`http://${state.ip}:${state.port}/world`, {
+        fetch(`http://${ip}:${port}/world`, {
             method: "POST", 
             body: JSON.stringify({
                 type: "PROG",
@@ -105,7 +82,7 @@ export default function useRobiClient(initial = {
         )})
         .then(r => r.json())
         .then(json => dispatch({type: "SET_DATA", data: json}))
-        .catch(() => console.log("Error while fetching data"))
+        .catch(() => alert("Error while fetching data"))
         .finally(() => dispatch({type: "SET_LOADING", loading: false}))
     }
 
