@@ -62,4 +62,3 @@
 		- Interprete les images cote client uniquement
 		- Permet de consulter l'environnement(references, scripts et primitives des references) - WIP
 		- Permet de consulter la pile des appels de S-expr - WIP
-		- N'interprete pas encore les Texte et Oval - WIP
