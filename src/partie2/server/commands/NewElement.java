@@ -20,9 +20,7 @@ public class NewElement implements Command {
 			@SuppressWarnings("unchecked")
 			GObject e = ((Class<GObject>) reference.getRef()).getDeclaredConstructor().newInstance();
 			return new Reference(e);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) {	}
 		
 		return null;
 	}

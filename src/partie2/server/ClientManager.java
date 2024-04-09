@@ -60,10 +60,7 @@ public class ClientManager implements Runnable, canSendResponse {
 		
 		try {
 			res = ow.writeValueAsString(response);
-		} catch(JsonProcessingException e) {
-			res = "{\n\"status\": \"error\"\n}";
-			e.printStackTrace();
-		}
+		} catch(JsonProcessingException ignored) {}
 		
 		try {
 			out.writeObject(res);

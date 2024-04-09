@@ -19,7 +19,7 @@ public class HttpServer {
 			server.setExecutor(null);
 			server.start();
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 	}
 

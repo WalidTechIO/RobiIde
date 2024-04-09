@@ -139,7 +139,6 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		} catch (JsonProcessingException e) {
 			//List<ResponseWrapper> is Serializable so this wouldn't happen 
 			System.err.println(e.getMessage());
-			e.printStackTrace();
 		}
 		return "Error";
 	}

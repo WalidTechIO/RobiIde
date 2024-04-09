@@ -74,17 +74,7 @@ public class GraphicsUtils {
 			BufferedImage rawImage = null;
 			String path = ((partie2.io.graphics.GImage)child).path();
 			File file = new File(path);
-			if(!clientRender) {
-				if(!file.exists()) {
-					try {
-						rawImage = b64ToImg(path);
-					} catch(IllegalArgumentException e) {
-						System.err.println("Rendu cote serveur: L'image reçue n'est ni au format Base64 ni présente cote serveur"); 
-					}
-					
-					if(rawImage == null) return;
-				}
-			}
+			if(!clientRender) rawImage = b64ToImg(path);
 			
 			try {
 				if(rawImage == null) rawImage = ImageIO.read(file);
@@ -177,7 +167,7 @@ public class GraphicsUtils {
 		try {
 			return ImageIO.read(is);
 		} catch (IOException e) {
-			return null;
+			throw new IllegalArgumentException();
 		}
 	}
 

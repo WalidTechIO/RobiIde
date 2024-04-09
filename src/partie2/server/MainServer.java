@@ -73,9 +73,7 @@ public class MainServer {
 		
 		try {
 			serverSocket.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		} catch (IOException ignored) {}
 	}
 	
 }

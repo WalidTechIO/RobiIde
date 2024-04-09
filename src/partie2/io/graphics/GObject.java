@@ -9,7 +9,9 @@ import java.util.UUID;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
+//Class simple name will be put in JSON serialized object in a property named 'type' when serializing
 @JsonTypeInfo(use = JsonTypeInfo.Id.SIMPLE_NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
+//Register all sub-types for JSON deserialization
 @JsonSubTypes({
 	@JsonSubTypes.Type(value = GWorld.class),
 	@JsonSubTypes.Type(value = GRect.class),
@@ -62,7 +64,7 @@ public abstract class GObject implements Serializable, Cloneable {
 	}
 	
 	public void del(GObject object) {
-		childrens.remove(object); //Searching by UUID so no pb
+		childrens.remove(object);
 	}
 	
 	public void clear() {
@@ -89,9 +91,7 @@ public abstract class GObject implements Serializable, Cloneable {
 			o.setChildrens(childrens);
 			o.setDimension(dimension);
 			o.setPosition(position);
-		} catch(CloneNotSupportedException e) {
-			e.printStackTrace();
-		}
+		} catch(CloneNotSupportedException ignored) {} //Clone supported, will never be catch
 		return o;
 	}
 

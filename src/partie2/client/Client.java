@@ -104,7 +104,6 @@ public class Client implements Runnable {
 					});
 				} catch(RendererException e) {
 					Platform.runLater(() -> new Alert(Alert.AlertType.ERROR, "Impossible d'effectuer le rendu: " + e.getMessage()).showAndWait());
-					e.printStackTrace();
 				}
 				
 				Platform.runLater(() -> {
@@ -118,7 +117,6 @@ public class Client implements Runnable {
 				break;
 			}
 		}
-		//TODO: Notifier controller de fermer l'application apres avoir proposer de sauvegarder si contenu dans code
 	}
 	
 	public void close() {

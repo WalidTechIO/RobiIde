@@ -115,7 +115,7 @@ public class Interpreter {
 		try {
 			this.program = parser.parse(program.contenu());
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		
 	}

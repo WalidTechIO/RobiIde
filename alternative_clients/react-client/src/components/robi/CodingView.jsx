@@ -11,11 +11,11 @@ export default function CodingView({submitCallback, direct, setDirect, setFiles,
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="ip" className="form-label">Adresse du serveur:</label>
-                <input type="text" className="form-control" id="ip" name="ip" placeholder="localhost" />
+                <input type="text" className="form-control" id="ip" name="ip" />
             </div>
             <div className="mb-3">
                 <label htmlFor="port" className="form-label">Port du serveur:</label>
-                <input type="text" className="form-control" id="port" name="port" placeholder="8080"/>
+                <input type="text" className="form-control" id="port" name="port"/>
             </div>
             <div className="mb-3">
                 <label htmlFor="mode" className="form-check-label">Execution directe: </label>
@@ -31,7 +31,7 @@ export default function CodingView({submitCallback, direct, setDirect, setFiles,
             </div>
             <div>
                 <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Compiler le programme"}</button>
-                {!direct && <button type="button" className="btn btn-dark mx-1" onClick={next}>{!isLast ? "Executer la prochaine instruction" : "Reset"}</button>}
+                {!direct && <button type="button" className="btn btn-dark mx-1" onClick={next}>{!isLast ? "Executer la prochaine instruction" : "Revenir au début"}</button>}
             </div>
         </form>
     </>
