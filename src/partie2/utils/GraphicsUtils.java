@@ -94,17 +94,13 @@ public class GraphicsUtils {
 			element = new GImage(rawImage);
 		}
 		
-		if(childClass == partie2.io.graphics.GOval.class) {
-			element = new GOval();
-		}
+		if(childClass == partie2.io.graphics.GOval.class) element = new GOval();
 
-		if(childClass == partie2.io.graphics.GRect.class) {
-			element = new GRect();
-		}
+		if(childClass == partie2.io.graphics.GRect.class) element = new GRect();
 		
-		if(childClass == partie2.io.graphics.GText.class) {
-			element = new GString(((GText)child).text());
-		}
+		if(childClass == partie2.io.graphics.GText.class) element = new GString(((GText)child).text());
+		
+		if(element == null) return; //If element is unknown don't treat
 		
 		element.setColor(getColorFromName(child.color()));
 		element.translate(new Point(child.position().width, child.position().height));
