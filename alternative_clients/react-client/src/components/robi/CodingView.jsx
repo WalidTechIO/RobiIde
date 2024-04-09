@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-export default function CodingView({submitCallback, reset, direct, setDirect, setFiles, next, isLast}) {
+export default function CodingView({submitCallback, direct, setDirect, setFiles, next, isLast}) {
 
     const [ip, setIp] = useState("")
     const [port, setPort] = useState("")
@@ -34,10 +34,10 @@ export default function CodingView({submitCallback, reset, direct, setDirect, se
                 <label htmlFor="selector" className="form-label">Images:</label>
                 <input className="form-control" type="file" id="selector" multiple={true} onChange={(e) => setFiles(e.target.files)}/>
             </div>
-            <div className="h-stack">
-                <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Transmettre le programme"}</button>
+            <div>
+                <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Compiler le programme"}</button>
                 {!direct && <button type="button" className="btn btn-dark mx-1" onClick={next}>{!isLast ? "Executer la prochaine instruction" : "Reset"}</button>}
-                {reset}
+                {direct && isLast && <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Rejouer</button>}
             </div>
         </form>
     </>

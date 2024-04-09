@@ -123,11 +123,9 @@ export default function useRobiClient(initial = {
 
     const renderer = <div className="mb-3"><hr /><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
 
-    const reset = (state.direct && state.data.length == state.instPtr && state.data.length != 0) ? <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Reset</button> : <></>
-
     const debug = <Debug info={state.info} />
 
-    const codingview = <CodingView submitCallback={fetchData} reset={reset} direct={direct} setDirect={setDirect} setFiles={setFiles} next={next} isLast={isLast} />
+    const codingview = <CodingView submitCallback={fetchData} direct={direct} setDirect={setDirect} setFiles={setFiles} next={next} isLast={isLast} />
 
     const robiclient = <>{codingview}{debug}{renderer}</>
 
