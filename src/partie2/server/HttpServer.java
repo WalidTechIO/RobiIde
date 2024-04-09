@@ -11,7 +11,10 @@ public class HttpServer {
 		try {
 			com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(port),0);
 			System.out.println("Starting HTTP Endpoint on port " + server.getAddress().getPort());
-			if(renderApiOn) server.createContext("/render", new HttpHandler(Mode.RENDER));
+			if(renderApiOn) {
+				System.out.println("HTTP Endpoint: /render endpoint will be accessible");
+				server.createContext("/render", new HttpHandler(Mode.RENDER));
+			}
 			server.createContext("/world", new HttpHandler(Mode.WORLD));
 			server.setExecutor(null);
 			server.start();

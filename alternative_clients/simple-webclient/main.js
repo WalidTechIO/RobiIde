@@ -7,13 +7,15 @@ File.prototype.convertToBase64 = function (callback) {
     reader.readAsDataURL(this);
 }
 
+const renderzone = document.getElementById("renderzone")
 const loader = '<div class="spinner-grow text-primary" role="status"><span class="sr-only"></span></div>'
-const renderer = '<img alt="renderer" id="renderer" class="mb-2 img-fluid"/>'
+const renderer = '<img alt="Aucun rendu" id="renderer" class="mb-2 img-fluid"/>'
+const modal = '<div id="modal" style="position: absolute; bottom: 0; right: 20px"><div class="alert alert-danger alert-dismissible fade show " role="alert">Error while fetching data<button type="button" class="btn-close"></button></div></div>'
 
 //Execute l'animation sur la page repondant au programme et executer sur le server ip:port (necessite image d'id 'renderer')
 const fetchScript = (ip, port, programFinal) => {
     if (document.getElementById("animationScript")) document.head.removeChild(document.getElementById("animationScript"));
-    document.getElementById("renderzone").innerHTML = loader
+    renderzone.innerHTML = loader
     fetch(`http://${ip}:${port}/render`, { method: "POST", body: JSON.stringify(programFinal) })
         .then(rep => rep.text()
             .then(t => {
@@ -25,10 +27,17 @@ const fetchScript = (ip, port, programFinal) => {
             script.defer = true
             script.id = "animationScript"
             script.textContent = animation.textContent
-            document.getElementById("renderzone").innerHTML = renderer
+            renderzone.innerHTML = renderer
             document.head.appendChild(script)
         }).catch(error => {
-            document.getElementById("renderzone").innerHTML = renderer
+            renderzone.innerHTML = 'Aucun rendu' + modal
+            const timeout = setTimeout(() => {
+                renderzone.innerHTML = 'Aucun rendu'
+            }, 1800)
+            document.getElementById("modal").addEventListener("click", () => {
+                renderzone.innerHTML = 'Aucun rendu'
+                clearTimeout(timeout)
+            })
             console.log("Error while fetching animation: " + error)
         })
 }
@@ -72,3 +81,4 @@ const handleSubmit = (e) => {
 }
 
 document.getElementById("form").addEventListener("submit", handleSubmit)
+renderzone.innerHTML = 'Aucun rendu'
