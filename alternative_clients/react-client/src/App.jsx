@@ -1,9 +1,9 @@
-import RobiIdeView from "./components/RobiIdeView"
+import RobiIde from "./components/RobiIde.jsx"
 
 function App() {
   return (
     <main className="flex gap-2">   
-        <RobiIdeView />
+        <RobiIde />
     </main>
   )
 }

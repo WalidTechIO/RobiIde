@@ -1,7 +1,8 @@
 import { useReducer, useEffect } from "react"
-import Renderer from "../components/Renderer.jsx"
-import Loader from "../components/Loader.jsx"
-import Debug from "../components/Debug.jsx"
+import Renderer from "../components/robi/Renderer.jsx"
+import Loader from "../components/robi/Loader.jsx"
+import Debug from "../components/robi/Debug.jsx"
+import CodingView from "../components/robi/CodingView.jsx";
 
 function reducer(state, action) {
     switch (action.type) {
@@ -104,12 +105,6 @@ export default function useRobiClient(initial = {
         .finally(() => dispatch({type: "SET_LOADING", loading: false}))
     }
 
-    const renderer = <div className="mb-3"><hr/><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
-
-    const reset = (state.direct && state.data.length == state.instPtr && state.data.length != 0) ? <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Reset</button> : <></>
-
-    const debug = <Debug info={state.info} />
-
     const setDirect = (value) =>  {
         dispatch({type: "SET_DIRECT", value: value})
     }
@@ -122,14 +117,19 @@ export default function useRobiClient(initial = {
         dispatch({ type: "NEXT"})
     }
 
-    return {
-        state,
-        fetchData,
-        renderer,
-        reset,
-        debug,
-        setDirect,
-        setFiles,
-        next,
-    }
+    const direct = state.direct
+
+    const isLast = state.instPtr === state.data.length
+
+    const renderer = <div className="mb-3"><hr /><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
+
+    const reset = (state.direct && state.data.length == state.instPtr && state.data.length != 0) ? <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Reset</button> : <></>
+
+    const debug = <Debug info={state.info} />
+
+    const codingview = <CodingView submitCallback={fetchData} reset={reset} direct={direct} setDirect={setDirect} setFiles={setFiles} next={next} isLast={isLast} />
+
+    const robiclient = <>{codingview}{debug}{renderer}</>
+
+    return robiclient
 }

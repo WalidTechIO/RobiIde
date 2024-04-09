@@ -15,7 +15,11 @@ export default function Debug({info}) {
     const selectChildrens = [];
 
     Object.keys(info.env).forEach((key) => {
-        selectChildrens[selectChildrens.length] = <option key={key} value={key}>{key}</option>
+        if (key === selectedRef) {
+            selectChildrens[selectChildrens.length] = <option key={key} value={key} selected={true}>{key}</option>
+        } else {
+            selectChildrens[selectChildrens.length] = <option key={key} value={key}>{key}</option>
+        }
     })
 
     return <><hr/><div className="container">
@@ -40,7 +44,7 @@ Scripts:\n`
     return `       -${scriptName}:
             Nb params: ${info.env[selectedRef].scripts[scriptName].nbParams}
             Prototpye: ${info.env[selectedRef].scripts[scriptName].proto}
-            Expression: ${info.env[selectedRef].scripts[scriptName].expr}`
+            Expression: ${info.env[selectedRef].scripts[scriptName].expr.replaceAll("\n", "\n\t\t\t")}`
 }).join("\n"))
 
                     }/>

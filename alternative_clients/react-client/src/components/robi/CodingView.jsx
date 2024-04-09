@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 
-export default function CodingView({robiclient}) {
+export default function CodingView({submitCallback, reset, direct, setDirect, setFiles, next, isLast}) {
 
     const [ip, setIp] = useState("")
     const [port, setPort] = useState("")
@@ -8,7 +8,7 @@ export default function CodingView({robiclient}) {
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
-        robiclient.fetchData(ip, port, data.get("program"))
+        submitCallback(ip, port, data.get("program"))
     }
 
     return <>
@@ -24,7 +24,7 @@ export default function CodingView({robiclient}) {
             </div>
             <div className="mb-3">
                 <label htmlFor="mode" className="form-check-label">Execution directe: </label>
-                <input type="checkbox" className="form-check-input mx-1" id="mode" name="mode" checked={robiclient.state.direct} onChange={(e) => robiclient.setDirect(!robiclient.state.direct)} />
+                <input type="checkbox" className="form-check-input mx-1" id="mode" name="mode" checked={direct} onChange={(e) => setDirect(!direct)} />
             </div>
             <div className="mb-3">
                 <label htmlFor="program" className="form-label">Programme robi:</label>
@@ -32,12 +32,12 @@ export default function CodingView({robiclient}) {
             </div>
             <div className="mb-3">
                 <label htmlFor="selector" className="form-label">Images:</label>
-                <input className="form-control" type="file" id="selector" multiple={true} onChange={(e) => robiclient.setFiles(e.target.files)}/>
+                <input className="form-control" type="file" id="selector" multiple={true} onChange={(e) => setFiles(e.target.files)}/>
             </div>
             <div className="h-stack">
-                <button className="btn btn-primary mx-1" type="submit">{robiclient.state.direct ? "Lancer l'animation" : "Transmettre le programme"}</button>
-                {!robiclient.state.direct && <button type="button" className="btn btn-dark mx-1" onClick={robiclient.next}>{robiclient.state.instPtr != robiclient.state.data.length ? "Executer la prochaine instruction" : "Reset"}</button>}
-                {robiclient.reset}
+                <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Transmettre le programme"}</button>
+                {!direct && <button type="button" className="btn btn-dark mx-1" onClick={next}>{!isLast ? "Executer la prochaine instruction" : "Reset"}</button>}
+                {reset}
             </div>
         </form>
     </>
