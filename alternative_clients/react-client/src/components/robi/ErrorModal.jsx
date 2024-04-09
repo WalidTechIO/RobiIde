@@ -3,8 +3,12 @@ import { useEffect } from "react";
 export default function ErrorModal({error, callback}) {
 
     useEffect(() => {
-        setTimeout(callback, 3000)
-    })
+        const timeout = setTimeout(callback, 1800)
+
+        return () => {
+            clearTimeout(timeout)
+        }
+    }, [])
 
     const style = {
         position: "absolute",
