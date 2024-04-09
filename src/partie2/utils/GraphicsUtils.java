@@ -3,6 +3,7 @@ package partie2.utils;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
@@ -46,7 +47,6 @@ public class GraphicsUtils {
 			CustomGSpace space = new CustomGSpace("Renderer", world.dimension());
 			space.open();
 			
-			space.changeWindowSize(world.dimension());
 			space.setColor(getColorFromName(world.color()));
 			
 			world.childrens().forEach((c) -> render(space, c, clientRender));
@@ -81,7 +81,7 @@ public class GraphicsUtils {
 			} catch (IOException e) {
 				throw new IllegalArgumentException("Invalid path for image");
 			}
-			element = new GImage(rawImage);
+			element = new CustomGImage(rawImage, child.dimension());
 		}
 		
 		if(childClass == partie2.io.graphics.GOval.class) element = new GOval();
@@ -100,7 +100,6 @@ public class GraphicsUtils {
 		}
 		
 		container.addElement(element);
-		
 	}
 
 	private static Color getColorFromName(String colorName) {
@@ -137,12 +136,14 @@ public class GraphicsUtils {
 		
 	}
 	
+	//Make GSpace a bit lighter for system
 	private static class CustomGSpace extends GSpace {
 
 		private static final long serialVersionUID = -619926373478257073L;
 
-		public CustomGSpace(String name, Dimension dim) {
+		CustomGSpace(String name, Dimension dim) {
 			super(name, dim);
+			
 		}
 		
 		public void open() {
@@ -151,11 +152,32 @@ public class GraphicsUtils {
 			frame.pack();
 		}
 		
-		public void end() {
+		void end() {
 			JFrame frame = (JFrame) SwingUtilities.getAncestorOfClass(JFrame.class, this);
 			frame.dispose();
 		}
 
+	}
+	
+	//Permit image to have dimension
+	private static class CustomGImage extends GImage {
+		
+		private final Dimension dim;
+
+		CustomGImage(Image image, Dimension dimension) {
+			super(image);
+			dim = dimension;
+		}
+		
+		@Override
+		public void draw(Graphics2D g) {
+			if(dim.width > 0 && dim.height > 0) {
+				g.drawImage(getRawImage(), getPosition().x, getPosition().y, dim.width, dim.height, null);
+			} else {
+				g.drawImage(getRawImage(), getPosition().x, getPosition().y, null);
+			}
+		}
+		
 	}
 	
 	public static String b64ImageToHtmlSrc(String img) {

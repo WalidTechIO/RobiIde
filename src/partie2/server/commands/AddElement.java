@@ -31,20 +31,21 @@ public class AddElement implements Command {
 		GObject element = (GObject) newRef.getRef();
 		
 		//Images et textes n'ont pas d'enfants (pas d'add, de del ou de clear)
-		//Les images n'ont pas besoin de couleur ni de dimension (Le graphicsLayer n'integere pas de methode permettant de leur assigner une dimension)
+		//Les images n'ont pas de couleur
 		//Tout les objets peuvent avoir ou supprimer des scripts et translater dans l'espace
 		newRef.addCommand("translate", new Translate());
 		newRef.addCommand("addScript", new AddScript());
 		newRef.addCommand("delScript", new DeleteScript());
+		newRef.addCommand("setDim", new SetDimension());
 		if(!(element instanceof GImage)) {
 			newRef.addCommand("setColor", new SetColor());
-			newRef.addCommand("setDim", new SetDimension());
 			if(!(element instanceof GText)) {
 				newRef.addCommand("add", new AddElement());
 				newRef.addCommand("del", new DelElement());
 				newRef.addCommand("clear", new Clear());
 			}
 		}
+		
 		
 		//On prend le partie d'override la reference si elle etait deja presente
 		if(env.getReferenceByName(refName) != null) {
