@@ -48,8 +48,8 @@ public class GText extends GObject {
 	}
 	
 	public void setDim(int x, int y) {
-		dimension.width += x;
-		dimension.height += y;
+		dimension.width = x;
+		dimension.height = y;
 	}
 	
 	public void setColor(String color) {

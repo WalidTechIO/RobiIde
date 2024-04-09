@@ -75,8 +75,8 @@ public abstract class GObject implements Serializable, Cloneable {
 	
 	public void setDim(int x, int y) {
 		if(type == Type.IMAGE) throw new UnsupportedOperationException("Can't setDimension of an image");
-		dimension.width += x;
-		dimension.height += y;
+		dimension.width = x;
+		dimension.height = y;
 	}
 	
 	public void setColor(String color) {
