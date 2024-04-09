@@ -19,9 +19,13 @@ public class DelElement implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
-		GObject element = (GObject) env.getReferenceByName(method.get(2).contents()).getRef();
+		String toDelete = method.get(2).contents();
+		
+		if(!toDelete.startsWith(method.get(0).contents()+".")) throw new IllegalArgumentException(toDelete + " is not a children of " + method.get(0).contents());
+		
+		GObject element = (GObject) env.getReferenceByName(toDelete).getRef();
 		((GObject) reference.getRef()).del(element);
-		env.clear(method.get(2).contents()); //Unreference element and all his children
+		env.clear(toDelete); //Unreference element and all his children
 		
 		return reference;
 	}

@@ -25,7 +25,7 @@ export default function GImage({image, images}) {
 
     if (imgindex != -1) {
       images[imgindex].convertToBase64((base64) => {
-        setImg(<img src={base64} width={image.dimension.width} height={image.dimension.height} />)
+        setImg(<img src={base64}/>)
       })
     } else {
       setImg(<img alt="Image not found in images list" />)

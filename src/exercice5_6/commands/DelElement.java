@@ -18,10 +18,14 @@ public class DelElement implements Command {
 	public Reference run(Reference reference, SNode method) {
 		if(method.size() != 3) throw new IllegalArgumentException("DelElement: Required 3 args, passed: " + method.size());
 		
-		GElement element = (GElement) env.getReferenceByName(method.get(2).contents()).getRef();
+		String toDelete = method.get(2).contents();
+		
+		if(!toDelete.startsWith(method.get(0).contents()+".")) throw new IllegalArgumentException(toDelete + " is not a children of " + method.get(0).contents());
+		
+		GElement element = (GElement) env.getReferenceByName(toDelete).getRef();
 		((GContainer) reference.getRef()).removeElement(element);
 		((GContainer) reference.getRef()).repaint();
-		env.deleteReference(method.get(2).contents());
+		env.clear(toDelete);
 		
 		return reference;
 	}

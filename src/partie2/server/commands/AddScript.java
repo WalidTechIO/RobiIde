@@ -16,8 +16,12 @@ public class AddScript implements Command {
 		Reference reference = interpreter.getReferenceByNode(method.get(0));
 		Objects.requireNonNull(reference);
 		
+		String scriptName = method.get(2).contents();
+		
+		if(reference.getCommandByName(scriptName) != null) throw new IllegalArgumentException("AddScript: A primitive called " + scriptName + " already exists for the entity " + method.get(0).contents());
+		
 		Script script = new Script(method.get(0).contents(), method.get(3));
-		reference.addScript(method.get(2).contents(), script);
+		reference.addScript(scriptName, script);
 		
 		return reference;
 	}

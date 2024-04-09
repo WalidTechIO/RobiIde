@@ -3,9 +3,10 @@ package exercice5_6.commands;
 import exercice5_6.Environment;
 import exercice5_6.Interpreter;
 import exercice5_6.Reference;
-import graphicLayer.GBounded;
 import graphicLayer.GContainer;
 import graphicLayer.GElement;
+import graphicLayer.GImage;
+import graphicLayer.GString;
 import stree.parser.SNode;
 
 public class AddElement implements Command {
@@ -28,15 +29,20 @@ public class AddElement implements Command {
 		
 		GElement element = (GElement) ref.getRef();
 		
-		ref.addCommand("setColor", new SetColor());
+		//Images et textes n'ont pas d'enfants (pas d'add, de del ou de clear)
+		//Les images n'ont pas besoin de couleur ni de dimension (Le graphicsLayer n'integere pas de methode permettant de leur assigner une dimension)
+		//Tout les objets peuvent avoir ou supprimer des scripts et translater dans l'espace
 		ref.addCommand("translate", new Translate());
 		ref.addCommand("addScript", new AddScript(env));
 		ref.addCommand("delScript", new DeleteScript());
-		if(element instanceof GBounded) {
+		if(!(element instanceof GImage)) {
+			ref.addCommand("setColor", new SetColor());
 			ref.addCommand("setDim", new SetDimension());
-			ref.addCommand("add", new AddElement(env));
-			ref.addCommand("del", new DelElement(env));
-			ref.addCommand("clear", new Clear());
+			if(!(element instanceof GString)) {
+				ref.addCommand("add", new AddElement(env));
+				ref.addCommand("del", new DelElement(env));
+				ref.addCommand("clear", new Clear());
+			}
 		}
 		
 		((GContainer) reference.getRef()).addElement(element);

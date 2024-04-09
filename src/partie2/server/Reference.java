@@ -52,7 +52,7 @@ public class Reference {
 			return scripts.get(methodName).call(interpreter, argsList);
 		}
 		
-		throw new IllegalArgumentException("Method \"" + methodName + "\" is unknow for entity: " + environment.getNameByReference(this));
+		throw new IllegalArgumentException("Method \"" + methodName + "\" is unknow for the entity: " + environment.getNameByReference(this));
 	}
 	
 	public Object getRef() {
