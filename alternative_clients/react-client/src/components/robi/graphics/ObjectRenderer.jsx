@@ -6,7 +6,7 @@ import GText from "./GText.jsx";
 export default function ObjectRenderer({object, images}) {
 
     //World rendering
-    if(object.type === "WORLD") {
+    if(object.type === "GWorld") {
 
         if (object.dimension.width < 0) {
             object.dimension.width = 200
@@ -31,10 +31,10 @@ export default function ObjectRenderer({object, images}) {
 
     //Common objects
     return <>
-        {object.type === "RECT" && <GRect rectangle={object} images={images}/>}
-        {object.type === "IMAGE" && <GImage image={object} images={images} />}
-        {object.type === "OVAL" && <GOval oval={object} images={images} />}
-        {object.type === "TEXT" && <GText text={object} />}
+        {object.type === "GRect" && <GRect rectangle={object} images={images}/>}
+        {object.type === "GImage" && <GImage image={object} images={images} />}
+        {object.type === "GOval" && <GOval oval={object} images={images} />}
+        {object.type === "GText" && <GText text={object} />}
     </>
 
 }

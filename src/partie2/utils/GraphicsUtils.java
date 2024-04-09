@@ -68,8 +68,9 @@ public class GraphicsUtils {
 		
 		GElement element = null;
 		
-		switch(child.type()) {
-		case IMAGE:
+		Class<? extends GObject> childClass = child.getClass();
+
+		if(childClass == partie2.io.graphics.GImage.class) {
 			BufferedImage rawImage = null;
 			String path = ((partie2.io.graphics.GImage)child).path();
 			File file = new File(path);
@@ -91,20 +92,18 @@ public class GraphicsUtils {
 				throw new IllegalArgumentException("Invalid path for image");
 			}
 			element = new GImage(rawImage);
-			break;
-		case OVAL:
+		}
+		
+		if(childClass == partie2.io.graphics.GOval.class) {
 			element = new GOval();
-			break;
-		case RECT:
+		}
+
+		if(childClass == partie2.io.graphics.GRect.class) {
 			element = new GRect();
-			break;
-		case TEXT:
+		}
+		
+		if(childClass == partie2.io.graphics.GText.class) {
 			element = new GString(((GText)child).text());
-			break;
-		case WORLD:
-			break;
-		default:
-			break;				
 		}
 		
 		element.setColor(getColorFromName(child.color()));
