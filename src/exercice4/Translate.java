@@ -12,8 +12,12 @@ public class Translate implements Command {
 		
 		if(method.size() < 4) throw new IllegalArgumentException("translate called without translation vector");
 		
-		Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
-		((GElement)reference.getRef()).translate(vec);
+		try {
+			Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+			((GElement)reference.getRef()).translate(vec);
+		} catch(NumberFormatException e) {
+			System.err.println(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid translation value.");
+		}
 		
 		return reference;
 	}

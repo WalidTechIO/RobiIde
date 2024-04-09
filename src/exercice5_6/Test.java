@@ -43,7 +43,7 @@ public class Test {
 		spaceRef.addCommand("setColor", new SetColor());
 		spaceRef.addCommand("setDim", new SetDimension());
 		spaceRef.addCommand("sleep", new Sleep());
-		spaceRef.addCommand("clear", new Clear());
+		spaceRef.addCommand("clear", new Clear(environment));
 		
 		spaceRef.addCommand("addScript", new AddScript(environment));
 		spaceRef.addCommand("delScript", new DeleteScript());

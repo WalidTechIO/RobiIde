@@ -9,7 +9,13 @@ public class Sleep implements Command {
 		
 		if(method.size() < 3) throw new IllegalArgumentException("sleep called without delay");
 		
-		int delay = Integer.parseInt(method.get(2).contents());
+		int delay = 0;
+		try {
+			delay = Integer.parseInt(method.get(2).contents());
+		} catch(NumberFormatException e) {
+			System.err.println("Delay is not valid.");
+		}
+		
 		
 		try {
 			Thread.sleep(delay);

@@ -29,10 +29,6 @@ public class Environment {
 		return references.get(name);
 	}
 	
-	public Reference deleteReference(String name) {
-		return references.remove(name);
-	}
-	
 	public void clear(String prefix) {
 		List<String> toDelete = new ArrayList<>();
 		references.forEach((s, r) -> {

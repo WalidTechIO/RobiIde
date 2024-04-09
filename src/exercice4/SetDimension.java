@@ -1,8 +1,7 @@
-package exercice5_6.commands;
+package exercice4;
 
 import java.awt.Dimension;
 
-import exercice5_6.Reference;
 import graphicLayer.GBounded;
 import graphicLayer.GSpace;
 import stree.parser.SNode;
@@ -30,6 +29,11 @@ public class SetDimension implements Command {
 		}
 		
 		return reference;
+	}
+
+	@Override
+	public Reference run(Reference reference, Environment environment, SNode method) {
+		return run(reference, method);
 	}
 
 }

@@ -9,7 +9,12 @@ public class Sleep implements Command {
 	public Reference run(Reference reference, SNode method) {
 		if(method.size() != 3) throw new IllegalArgumentException("Sleep: Required 3 args, passed: " + method.size());
 		
-		int delay = Integer.parseInt(method.get(2).contents());
+		int delay = 0;
+		try {
+			delay = Integer.parseInt(method.get(2).contents());
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid delay.");
+		}
 		
 		try {
 			Thread.sleep(delay);

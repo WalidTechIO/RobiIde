@@ -16,9 +16,15 @@ public class AddElement implements Command {
 		if(method.size() != 4) throw new IllegalArgumentException("Wrong number of args");
 		
 		Reference obj = new Interpreter().compute(environment, method.get(3));
+		
+		if(obj == null) {
+			return null;
+		}
+		
 		GElement element = (GElement) obj.getRef();
 		obj.addCommand("translate", new Translate());
 		obj.addCommand("setColor", new SetColor());
+		obj.addCommand("setDim", new SetDimension());
 		((GSpace) reference.getRef()).addElement(element);
 		((GSpace) reference.getRef()).repaint();
 		environment.addReference(method.get(2).contents(), obj);

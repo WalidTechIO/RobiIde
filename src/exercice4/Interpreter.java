@@ -10,7 +10,7 @@ public class Interpreter {
 		try {
 			return receiver.run(environment, expr);
 		} catch(NullPointerException|IllegalArgumentException e) {
-			e.printStackTrace();
+			System.err.println(e.getMessage());
 		}
 		return null;
 	}

@@ -41,7 +41,7 @@ public class AddElement implements Command {
 			if(!(element instanceof GString)) {
 				ref.addCommand("add", new AddElement(env));
 				ref.addCommand("del", new DelElement(env));
-				ref.addCommand("clear", new Clear());
+				ref.addCommand("clear", new Clear(env));
 			}
 		}
 		

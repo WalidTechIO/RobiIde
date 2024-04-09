@@ -20,7 +20,7 @@ public class NewImage implements Command {
 		try {
 			rawImage = ImageIO.read(path);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new IllegalArgumentException("Image path is invalid");
 		}
 		return new Reference(new GImage(rawImage));
 	}

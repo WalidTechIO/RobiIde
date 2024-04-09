@@ -18,7 +18,7 @@ public class DelElement implements Command {
 		GElement element = (GElement) environment.getReferenceByName(method.get(2).contents()).getRef();
 		((GSpace) reference.getRef()).removeElement(element);
 		((GSpace) reference.getRef()).repaint();
-		environment.deleteReference(method.get(2).contents());
+		environment.clear(method.get(2).contents());
 		
 		return reference;
 	}

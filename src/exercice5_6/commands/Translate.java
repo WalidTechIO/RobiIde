@@ -13,8 +13,13 @@ public class Translate implements Command {
 
 		if(method.size() != 4) throw new IllegalArgumentException("Translate: Required 4 args, passed: " + method.size());
 		
-		Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
-		((GElement)reference.getRef()).translate(vec);
+		try {
+			Point vec = new Point(Integer.parseInt(method.get(2).contents()), Integer.parseInt(method.get(3).contents()));
+			((GElement)reference.getRef()).translate(vec);
+		} catch(NumberFormatException e) {
+			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid translation value.");
+		}
+		
 		
 		return reference;
 	}

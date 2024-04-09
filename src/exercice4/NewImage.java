@@ -18,7 +18,8 @@ public class NewImage implements Command {
 		try {
 			rawImage = ImageIO.read(path);
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.err.println("Image not found");
+			return null;
 		}
 		return new Reference(new GImage(rawImage));
 	}
