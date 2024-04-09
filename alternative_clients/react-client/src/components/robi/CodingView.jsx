@@ -1,14 +1,9 @@
-import React, {useState} from 'react';
-
 export default function CodingView({submitCallback, direct, setDirect, setFiles, next, isLast}) {
-
-    const [ip, setIp] = useState("")
-    const [port, setPort] = useState("")
 
     const handleSubmit = (e) => {
         e.preventDefault();
         const data = new FormData(e.target);
-        submitCallback(ip, port, data.get("program"))
+        submitCallback(data.get("ip"), data.get("port"), data.get("program"))
     }
 
     return <>
@@ -16,11 +11,11 @@ export default function CodingView({submitCallback, direct, setDirect, setFiles,
         <form onSubmit={handleSubmit}>
             <div className="mb-3">
                 <label htmlFor="ip" className="form-label">Adresse du serveur:</label>
-                <input type="text" className="form-control" id="ip" name="ip" value={ip} onChange={(e) => setIp(e.target.value)}/>
+                <input type="text" className="form-control" id="ip" name="ip" placeholder="localhost" />
             </div>
             <div className="mb-3">
                 <label htmlFor="port" className="form-label">Port du serveur:</label>
-                <input type="text" className="form-control" id="port" name="port" value={port} onChange={(e) => setPort(e.target.value)}/>
+                <input type="text" className="form-control" id="port" name="port" placeholder="8080"/>
             </div>
             <div className="mb-3">
                 <label htmlFor="mode" className="form-check-label">Execution directe: </label>
@@ -37,7 +32,6 @@ export default function CodingView({submitCallback, direct, setDirect, setFiles,
             <div>
                 <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Compiler le programme"}</button>
                 {!direct && <button type="button" className="btn btn-dark mx-1" onClick={next}>{!isLast ? "Executer la prochaine instruction" : "Reset"}</button>}
-                {direct && isLast && <button type="button" className="mx-1 btn btn-dark" onClick={() => next()}>Rejouer</button>}
             </div>
         </form>
     </>

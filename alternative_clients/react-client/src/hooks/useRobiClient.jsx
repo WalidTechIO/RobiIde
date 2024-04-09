@@ -3,6 +3,8 @@ import Renderer from "../components/robi/Renderer.jsx"
 import Loader from "../components/robi/Loader.jsx"
 import Debug from "../components/robi/Debug.jsx"
 import CodingView from "../components/robi/CodingView.jsx";
+import ErrorModal from "../components/robi/ErrorModal.jsx";
+import { useState } from "react";
 
 function reducer(state, action) {
     switch (action.type) {
@@ -77,6 +79,8 @@ export default function useRobiClient(initial = {
         env: {}
     }
 }) {
+
+    const [error, setError] = useState("")
     //TODO: Mettre l'etat dans un contexte
     const [state, dispatch] = useReducer(reducer, initial)
 
@@ -101,7 +105,7 @@ export default function useRobiClient(initial = {
         )})
         .then(r => r.json())
         .then(json => dispatch({type: "SET_DATA", data: json}))
-        .catch(() => alert("Error while fetching data"))
+        .catch(() => setError("Error while fetching data"))
         .finally(() => dispatch({type: "SET_LOADING", loading: false}))
     }
 
@@ -121,13 +125,21 @@ export default function useRobiClient(initial = {
 
     const isLast = state.instPtr === state.data.length
 
+    const errorModalCallback = () => {
+        setError("")
+    }
+
+    console.log("renderer robiclient")
+
+    const errorModal = (error === "") ? <></> : <ErrorModal callback={errorModalCallback} error={error}/>
+
     const renderer = <div className="mb-3"><hr /><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
 
     const debug = <Debug info={state.info} />
 
     const codingview = <CodingView submitCallback={fetchData} direct={direct} setDirect={setDirect} setFiles={setFiles} next={next} isLast={isLast} />
 
-    const robiclient = <>{codingview}{debug}{renderer}</>
+    const robiclient = <>{codingview}{debug}{renderer}{errorModal}</>
 
     return robiclient
 }

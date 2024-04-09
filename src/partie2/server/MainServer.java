@@ -11,24 +11,26 @@ public class MainServer {
 	public static void main(String args[]) {
 		
 		String usage = """
-				Usage: program [-p port] [-e port] [-h] [-m true|false]
-				m: true = multi-client, false = mono-client (Default false)
+				Usage: program [-p port] [-e port] [-h] [-m] [-r]
+				m: multi-client (Default false)
 				p: port ServerSocket (Default: 7777)
 				e: port Endpoint HTTP (Default: 8080)
+				r: activer l'endpoint /render
 				h: Affiche cette aide
 				""";
 		
-		ArgsParser argsParser = new ArgsParser("pieihnmb").parse(args);
+		ArgsParser argsParser = new ArgsParser("pieihnmnrn").parse(args);
 		
 		if(argsParser.hasParsed('h')) {
 			System.out.println(usage);
 			System.exit(0);
 		}
 		
-		String mode = argsParser.hasParsed('m') && ((Boolean)argsParser.get('m')) ? "multi" : "mono";
+		String mode = argsParser.hasParsed('m') ? "multi" : "mono";
 		
 		final Integer portTcp = argsParser.hasParsed('p') ? (Integer)argsParser.get('p') : 7777;
 		final Integer portEndpoint = argsParser.hasParsed('e') ? (Integer)argsParser.get('e') : 8080;
+		final boolean renderApiOn = argsParser.hasParsed('r');
 		
 		ServerSocket serverSocket = null;
 		
@@ -48,7 +50,7 @@ public class MainServer {
 	
 		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
 		
-		final Thread httpServer = new Thread(() -> HttpServer.launch(portEndpoint));
+		final Thread httpServer = new Thread(() -> HttpServer.launch(portEndpoint, renderApiOn));
 		httpServer.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.interrupt()));
 		
