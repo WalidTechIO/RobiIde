@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
@@ -56,10 +57,18 @@ public class Client implements Runnable {
 	 */
 	public Client(InetSocketAddress adr, Controleur controller) throws IOException {
 		this.controller = controller;
-		s = new Socket(adr.getAddress(), adr.getPort());
-		out = new ObjectOutputStream(s.getOutputStream());
-		in = new ObjectInputStream(s.getInputStream());
-		new Thread(this).start();
+		s = new Socket();
+		try {
+			s.setSoTimeout(600);
+			s.connect(adr);
+			out = new ObjectOutputStream(s.getOutputStream());
+			in = new ObjectInputStream(s.getInputStream());
+			s.setSoTimeout(0);
+			new Thread(this).start();
+		} catch(SocketTimeoutException e) {
+			s.close();
+			throw new IOException("Timeout");
+		}
 	}
 	
 	/**
