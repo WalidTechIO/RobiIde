@@ -1,4 +1,4 @@
-export default function CodingView({submitCallback, direct, setDirect, setFiles, next, isLast}) {
+export default function CodingView({ submitCallback, direct, toggleDirect, setFiles, next, isLast}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -19,7 +19,7 @@ export default function CodingView({submitCallback, direct, setDirect, setFiles,
             </div>
             <div className="mb-3">
                 <label htmlFor="mode" className="form-check-label">Execution directe: </label>
-                <input type="checkbox" className="form-check-input mx-1" id="mode" name="mode" checked={direct} onChange={(e) => setDirect(!direct)} />
+                <input type="checkbox" className="form-check-input mx-1" id="mode" name="mode" checked={direct} onChange={toggleDirect} />
             </div>
             <div className="mb-3">
                 <label htmlFor="program" className="form-label">Programme robi:</label>

@@ -4,14 +4,14 @@ import Loader from "../components/robi/Loader.jsx"
 import Debug from "../components/robi/Debug.jsx"
 import CodingView from "../components/robi/CodingView.jsx";
 import ErrorModal from "../components/robi/ErrorModal.jsx";
-import { useState } from "react";
+import { useMemo } from "react";
 
 function reducer(state, action) {
     switch (action.type) {
-        case 'SET_LOADING': {
+        case 'TOGGLE_LOADING': {
             return {
                 ...state,
-                loading: action.loading
+                loading: !state.loading
             }
         }
 
@@ -28,10 +28,10 @@ function reducer(state, action) {
             }
         }
 
-        case 'SET_DIRECT': {
+        case 'TOGGLE_DIRECT': {
             return {
                 ...state,
-                direct: action.value
+                direct: !state.direct
             }
         }
 
@@ -64,6 +64,20 @@ function reducer(state, action) {
                 }
             }
         }
+
+        case 'TOGGLE_ERROR': {
+            return {
+                ...state,
+                error: !state.error
+            }
+        }
+
+        case 'TOGGLE_DEBUG': {
+            return {
+                ...state,
+                showDebug: !state.showDebug
+            }
+        }
     }
 }
 
@@ -71,18 +85,61 @@ export default function useRobiClient(initial = {
     instPtr: 0,
     loading: false,
     direct: true,
+    showDebug: false,
+    error: false,
     data: {},
     current: {},
     files: [],
     info: {
         stack: [],
         env: {}
-    }
+    },
 }) {
 
-    const [error, setError] = useState("")
-    //TODO: Mettre l'etat dans un contexte
     const [state, dispatch] = useReducer(reducer, initial)
+
+    const {fetchData, setFiles, next, errorModalCallback, toggleDirect, toggleDebug} = useMemo(() => {
+        const fetchData = (ip, port, program) => {
+            dispatch({ type: "TOGGLE_LOADING"})
+            fetch(`http://${ip}:${port}/world`, {
+                method: "POST",
+                body: JSON.stringify({
+                    type: "PROG",
+                    program: {
+                        mode: "DIRECT",
+                        contenu: program
+                    }
+                }
+                )
+            })
+                .then(r => r.json())
+                .then(json => dispatch({ type: "SET_DATA", data: json }))
+                .catch(() => dispatch({type: "TOGGLE_ERROR"}))
+                .finally(() => dispatch({ type: "TOGGLE_LOADING"}))
+        }
+
+        const toggleDirect = () => {
+            dispatch({ type: "TOGGLE_DIRECT"})
+        }
+
+        const toggleDebug = () => {
+            dispatch({type: "TOGGLE_DEBUG"})
+        }
+
+        const setFiles = (files) => {
+            dispatch({ type: "SET_FILES", files: files })
+        }
+
+        const next = () => {
+            dispatch({ type: "NEXT" })
+        }
+
+        const errorModalCallback = () => {
+            dispatch({type: "TOGGLE_ERROR"})
+        }
+
+        return {fetchData, setFiles, next, errorModalCallback, toggleDirect, toggleDebug}
+    }, [])
 
     useEffect(() => {
         if(state.direct && state.data.length > state.instPtr) {
@@ -91,55 +148,26 @@ export default function useRobiClient(initial = {
         }
     }, [state.current])
 
-    const fetchData = (ip, port, program) => {
-        dispatch({ type: "SET_LOADING", loading: true })
-        fetch(`http://${ip}:${port}/world`, {
-            method: "POST", 
-            body: JSON.stringify({
-                type: "PROG",
-                program: {
-                    mode: "DIRECT",
-                    contenu: program
-                }
-            }
-        )})
-        .then(r => r.json())
-        .then(json => dispatch({type: "SET_DATA", data: json}))
-        .catch(() => setError("Error while fetching data"))
-        .finally(() => dispatch({type: "SET_LOADING", loading: false}))
-    }
-
-    const setDirect = (value) =>  {
-        dispatch({type: "SET_DIRECT", value: value})
-    }
-
-    const setFiles = (files) => {
-        dispatch({type: "SET_FILES", files: files})
-    }
-
-    const next = () => {
-        dispatch({ type: "NEXT"})
-    }
-
-    const direct = state.direct
-
-    const isLast = state.instPtr === state.data.length
-
-    const errorModalCallback = () => {
-        setError("")
-    }
-
-    console.log("renderer robiclient")
-
-    const errorModal = (error === "") ? <></> : <ErrorModal callback={errorModalCallback} error={error}/>
+    const errorModal = !state.error ? <></> : <ErrorModal callback={errorModalCallback} />
 
     const renderer = <div className="mb-3"><hr /><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
 
     const debug = <Debug info={state.info} />
 
-    const codingview = <CodingView submitCallback={fetchData} direct={direct} setDirect={setDirect} setFiles={setFiles} next={next} isLast={isLast} />
+    const codingview = <CodingView submitCallback={fetchData} direct={state.direct} toggleDirect={toggleDirect} setFiles={setFiles} next={next} isLast={state.instPtr === state.data.length} />
 
-    const robiclient = <>{codingview}{debug}{renderer}{errorModal}</>
+    const robiclient = <>
+        {codingview}
+        <hr />
+        <div className="container">
+            <h1>Debugger</h1>
+            <label className='form-check-label' htmlFor='showDebug'>Afficher les informations de debug: </label>
+            <input id="showDebug" type="checkbox" className="form-check-input mx-1 mb-3" onChange={toggleDebug} checked={state.showDebug} />
+            {state.showDebug && <Debug info={state.info} />}
+        </div>
+        {renderer}
+        {errorModal}
+    </>
 
     return robiclient
 }

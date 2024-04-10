@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-export default function ErrorModal({error, callback}) {
+export default function ErrorModal({callback}) {
 
     useEffect(() => {
         const timeout = setTimeout(callback, 1800)
@@ -18,7 +18,7 @@ export default function ErrorModal({error, callback}) {
 
     return <div style={style}>
         <div className="alert alert-danger alert-dismissible fade show " role="alert">
-            {error}
+            Error while fetching data
             <button type="button" className="btn-close" onClick={callback}></button>
         </div>
     </div>
