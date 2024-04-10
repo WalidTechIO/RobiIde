@@ -74,14 +74,16 @@ public class GraphicsUtils {
 			BufferedImage rawImage = null;
 			String path = ((partie2.io.graphics.GImage)child).path();
 			File file = new File(path);
-			if(!clientRender) rawImage = b64ToImg(path);
 			
 			try {
+				if(!clientRender) rawImage = b64ToImg(path);
 				if(rawImage == null) rawImage = ImageIO.read(file);
-			} catch (IOException e) {
-				throw new IllegalArgumentException("Invalid path for image");
+			} catch (Exception e) {
+				if(!clientRender) element = new GString("Invalid base64 image");
+				if(element == null) element = new GString("Image not found");
 			}
-			element = new CustomGImage(rawImage, child.dimension());
+			
+			if(element == null) element = new CustomGImage(rawImage, child.dimension());
 		}
 		
 		if(childClass == partie2.io.graphics.GOval.class) element = new GOval();
