@@ -1,3 +1,10 @@
+# Auteurs
+- HAJJI Youssef
+- KALDA Taha
+- EL OUAZIZI Walid
+- ECHERARHI Hamza
+- ARZAZ Tasnime
+
 # Telecharger JavaFX
 - [Lien](https://gluonhq.com/products/javafx/)
 
@@ -18,11 +25,13 @@
 ## Serveur
 
 - Un serveur d'interpretation ROBI
+
 	- Mode Socket TCP
 		- Mode un client a la fois
 		- Mode multi-client
 		- Rendu graphique effectuer cote client
 		- Recois des requetes sous forme de chaine JSON renvoie les reponses en chaine JSON egalement
+
 	- Mode Endpoint HTTP
 		- /render
 			- Effectue un rendu cote serveur !
@@ -32,7 +41,6 @@
 			- La source de l'image est l'image encodée en base64
 			- Image new peut prendre en argument une image au format base 64 plutot qu'un chemin
 			- La reponse est une page HTML contenant le script et une balise img d'id renderer
-			
 		- /world
 			- Cet endpoint permet de developper des clients fonctionnant en mode etape par etape
 			- Renvoie en JSON une liste de reponses
@@ -40,11 +48,12 @@
 			- Chaque reponse est composée:
 				- D'un feedback
 				- D'un monde courant (Arbre d'objects graphique serveur)
-				- De la derniere expression appelee
+				- De la derniere S-expr appelee
 				- De l'environnement (references, primitives, scripts)
 		
 ## Clients
 - 3 Clients pour le serveur
+
 	- JAVA:
 		- Gere le mode etape par etape et animation
 		- Permet de consulter l'environnement(references, scripts et primitives des references)
@@ -52,10 +61,12 @@
 		- Permet d'exporter la derniere requete/response au format JSON et de les consulter dans une UI
 		- Permet de sauvegarder et charger un script robi
 		- Lors du rendu les images sont récupérés sur la machine cliente et non le serveur
+
 	- Web Simple:
 		- Pas de mode etape par etape
 		- Rendu cote serveur
 		- Pour transmettre les images au serveur un systeme de template et de pre-compilation du programme ROBI a ete mis en place
+
 	- Web React:
 		- Gere le mode etape par etape et animation
 		- Rendu cote client

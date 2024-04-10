@@ -19,6 +19,10 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 	@JsonSubTypes.Type(value = GText.class),
 	@JsonSubTypes.Type(value = GImage.class),
 })
+
+/**
+ * Classe abstraite et serializable en json representant un Object graphique serveur.
+ */
 public abstract class GObject implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = -2898754037405728359L;

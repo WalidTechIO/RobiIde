@@ -12,6 +12,7 @@ import partie2.client.ui.IHMRobiMain;
 import partie2.client.ui.LoginControleur;
 import partie2.client.ui.RreViewportControleur;
 
+//Generation of scenes the application use
 public class UIUtils {
 	
 	public static SceneWrapper<LoginControleur> login() throws IOException {

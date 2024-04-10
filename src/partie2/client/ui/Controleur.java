@@ -30,8 +30,8 @@ import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import partie2.client.Client;
 import partie2.io.DebugInfo;
-import partie2.io.Mode;
 import partie2.io.Program;
+import partie2.io.Program.Mode;
 import partie2.io.State;
 import partie2.utils.SceneWrapper;
 import partie2.utils.UIUtils;
@@ -249,6 +249,9 @@ public class Controleur {
 		alert.show();
 	}
 	
+	/**
+	 * Enregistrement du script robi courant
+	 */
 	public void save(ActionEvent e) {
 		ExtensionFilter filter = new ExtensionFilter("Robi File (*.robi)", "*.robi");
 		FileChooser fc = new FileChooser();
@@ -272,6 +275,9 @@ public class Controleur {
 		new Alert(AlertType.INFORMATION, "Fichier sauvegardé.").show();
 	}
 	
+	/**
+	 * Chargement d'un script
+	 */
 	public void load(ActionEvent e) {
 		ExtensionFilter filter = new ExtensionFilter("Robi File (*.robi)", "*.robi");
 		FileChooser fc = new FileChooser();
@@ -295,6 +301,9 @@ public class Controleur {
 		}
 	}
 	
+	/**
+	 * Deconnexion du serveur
+	 */
 	public void logout(ActionEvent e) {
 		endDebug(null);
 		try {
@@ -304,6 +313,9 @@ public class Controleur {
 		} catch (IOException ignored) {}
 	}
 	
+	/**
+	 * Affichage de la vue de debug
+	 */
 	public void debug(ActionEvent e) {
 		if(isDebugging()) return;
 		try {
@@ -320,6 +332,9 @@ public class Controleur {
 		
 	}
 	
+	/**
+	 * Exporter l'etat courant
+	 */
 	public void exportDebug(ActionEvent e) {
 		String resp = client.exportState();
 		ExtensionFilter filter = new ExtensionFilter("JSON file (*.json)", "*.json");
@@ -342,6 +357,9 @@ public class Controleur {
 		}
 	}
 	
+	/**
+	 * Ouvrir une liseuse d'etat
+	 */
 	public void importDebug(ActionEvent e) {
 		//Prepare FileChooser with extension filter
 		ExtensionFilter filter = new ExtensionFilter("JSON file (*.json)", "*.json");
@@ -395,6 +413,9 @@ public class Controleur {
 		}
 	}
 
+	/**
+	 * Callback de fermeture de la fenetre de debug
+	 */
 	private Object endDebug(WindowEvent event) {
 		if(!isDebugging()) return null;
 		debug.close();

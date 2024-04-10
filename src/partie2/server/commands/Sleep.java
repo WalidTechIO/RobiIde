@@ -22,6 +22,8 @@ public class Sleep implements Command {
 			throw new IllegalArgumentException(e.getMessage().split(":")[1].trim().replace("\"", "") + " is not a valid delay.");
 		}
 		
+		//We take pause only if we respond to TCP service client and in direct mode
+		//We register pause if we are running the command from the HTTP server to update current delay
 		if(interpreter.isRunningFromHttpRequest()) {
 			interpreter.registerPause(delay);
 		} else {

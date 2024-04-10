@@ -191,10 +191,6 @@ public class GraphicsUtils {
 		
 	}
 	
-	public static String b64ImageToHtmlSrc(String img) {
-		return "src='data:image/png;base64," + img.trim() + "' />";
-	}
-	
 	public static BufferedImage b64ToImg(String b64) {
 		ByteArrayInputStream is = new ByteArrayInputStream(Base64.getDecoder().decode(b64));
 		try {

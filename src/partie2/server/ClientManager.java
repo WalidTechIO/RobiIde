@@ -14,13 +14,30 @@ import partie2.io.Request.RequestType;
 import partie2.io.Response;
 public class ClientManager implements Runnable, canSendResponse {
 	
+	/**
+	 * Interpreter s'occupant du client
+	 */
 	private final Interpreter interpreter;
+	/**
+	 * Socket du client
+	 */
 	private final Socket s;
+	/**
+	 * Stream d'object entrant du client
+	 */
 	private final ObjectInputStream in;
+	/**
+	 * Stream d'object sortant vers le client
+	 */
 	private final ObjectOutputStream out;
-	
+	/**
+	 * Statut de travail du client manager
+	 */
 	private boolean working = true;
 	
+	/**
+	 * Constructeur
+	 */
 	public ClientManager(Socket client) throws IOException {
 		this.interpreter = new Interpreter(this);
 		s = client;
@@ -29,6 +46,9 @@ public class ClientManager implements Runnable, canSendResponse {
 		out = new ObjectOutputStream(s.getOutputStream());
 	}
 	
+	/**
+	 * Methode de traitement des données reçues
+	 */
 	boolean receiveData() {
 		try {
 			Object obj = in.readObject();			
@@ -54,6 +74,9 @@ public class ClientManager implements Runnable, canSendResponse {
 		return false;
 	}
 	
+	/**
+	 * Méthode d'envoie de reponse
+	 */
 	public void sendResponse(Response response) {		
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		String res = null;
@@ -69,6 +92,9 @@ public class ClientManager implements Runnable, canSendResponse {
 		}
 	}
 
+	/**
+	 * mainloop du client manager
+	 */
 	@Override
 	public void run() {
 		while(working) {
@@ -76,6 +102,9 @@ public class ClientManager implements Runnable, canSendResponse {
 		}
 	}
 	
+	/**
+	 * Arret du client manager
+	 */
 	public void stop() {
 		working = false;
 		System.out.println("Disconnected: " + s.getInetAddress().getHostAddress() + ":" + s.getPort());

@@ -24,6 +24,9 @@ public class RreViewportControleur {
 	@FXML
 	private TextArea request;
 	
+	/**
+	 * Affiche les infos de l'etat stocké
+	 */
 	public void setViewport(State state) {
 		if(state.response() != null) {
 			BufferedImage img = null;

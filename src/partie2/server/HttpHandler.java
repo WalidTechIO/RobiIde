@@ -54,7 +54,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		this.mode = mode;
 	}
 
-	//Gere les echanges HTTP arrivant sur l'endpoint
+	//Gere les echanges HTTP arrivant sur les endpoint
 	@Override
 	public void handle(HttpExchange t) throws IOException {
 		OutputStream os;
@@ -93,11 +93,13 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		}
 	}
 	
+	//Delegue la construction de la reponse selon le mode
 	private String buildResponse(Mode mode) {
 		if(isRendering()) return delegateRender();
 		else return delegateWorld();
 	}
 	
+	//En mode rendu on renvoie le squelette html dans lequel on insere le script
 	private String delegateRender() {
 		return  """
 				<!DOCTYPE html>
@@ -116,12 +118,13 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 				</html>
 				""".formatted(buildScript());
 	}
-
+	
+	//Le script map chacun de nos couples/image delai par un setTimeout modifiant la source de l'image de rendu
 	private String buildScript() {
 		
 		Function<ImageWrapper, String> mapper = (img) -> {
 			return """
-					setTimeout(() => { document.getElementById('renderer').src = 'data:image/png;base64, %s' }, %d)
+					setTimeout(() => { document.getElementById('renderer').src = 'data:image/png;base64,%s' }, %d)
 					""".formatted(img.image(), img.delay());
 		};
 		
@@ -132,6 +135,7 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		
 	}
 
+	//En mode world (JSON) on renvoie un tableau json contenant des couple reponse/delai
 	private String delegateWorld() {
 		ObjectWriter ow = new ObjectMapper().writer();
 		try {
@@ -143,26 +147,27 @@ public class HttpHandler implements com.sun.net.httpserver.HttpHandler, canSendR
 		return "Error";
 	}
 
+	//Quand l'intepreter veut envoyer une reponse au client ici on la stocke avec le delai courant
+	//On prend soin de copier le monde sinon la reponse fini erronée
 	@Override
 	public void sendResponse(Response reponse) {
 		reponse = new Response(reponse.feedback(), reponse.world().copy(), reponse.info()); //Make a World copy before stock response
 		if(!isRendering()) responses.add(new ResponseWrapper(reponse, currentDelay));
 	}
 
+	//En cas de pause en mode rendu on effectue le rendu et stock un couple image delai courant
+	//En mode world on met simplement a jour le delai courant
 	public void registerPause(GWorld space, int delay) {
 		
 		if(isRendering()) {
 			try {
 				String image = GraphicsUtils.render(space, false);
 				imgs.add(new ImageWrapper(image, currentDelay));
-				currentDelay += delay;
 			} catch (RendererException e) {
-				System.err.println(e.getMessage());
+				System.err.println("Server rendering error: " + e.getMessage());
 			}
-		} else {
-			 currentDelay += delay;
 		}
-		
+		currentDelay += delay;
 	}
 	
 	public boolean isRendering() {

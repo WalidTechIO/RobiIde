@@ -10,6 +10,7 @@ public class MainServer {
 
 	public static void main(String args[]) {
 		
+		//Utilisation de la CLI serveur
 		String usage = """
 				Usage: program [-p port] [-e port] [-h] [-m] [-r]
 				m: multi-client (Default false)
@@ -19,8 +20,10 @@ public class MainServer {
 				h: Affiche cette aide
 				""";
 		
+		//Parsage des arguments de lancement
 		ArgsParser argsParser = new ArgsParser("pieihnmnrn").parse(args);
 		
+		//Calcul des variables de lancement selon les arguments
 		if(argsParser.hasParsed('h')) {
 			System.out.println(usage);
 			System.exit(0);
@@ -34,6 +37,7 @@ public class MainServer {
 		
 		ServerSocket serverSocket = null;
 		
+		//Ouverture du service TCP
 		try {
 			serverSocket = new ServerSocket(portTcp);
 			if(portEndpoint > 65535 || portEndpoint < 0) {
@@ -50,10 +54,12 @@ public class MainServer {
 	
 		System.out.println("ROBI Server ready\nListening on 0.0.0.0:" + serverSocket.getLocalPort() + "\nMode: " + mode);
 		
+		//Ouverture du service HTTP
 		final Thread httpServer = new Thread(() -> HttpServer.launch(portEndpoint, renderApiOn));
 		httpServer.start();
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> httpServer.interrupt()));
 		
+		//Gestion des connexion entrantes sur le service TCP selon le mode
 		while(true) {
 			try {
 				Socket client = serverSocket.accept();

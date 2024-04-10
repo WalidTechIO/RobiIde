@@ -67,10 +67,6 @@ public class Reference {
 		scripts.remove(name);
 	}
 	
-	public List<String> availableScript() {
-		return new ArrayList<>(scripts.keySet());
-	}
-	
 	ReferenceInfo info() {
 		String className = reference.getClass().getSimpleName();
 		if(className.equals("Class")) {

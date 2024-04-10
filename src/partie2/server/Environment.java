@@ -28,6 +28,7 @@ public class Environment {
 	}
 
 	public void clear(String prefix) {
+		//If we delete as same time as we iterate this will throw a ConcurrentModificationException
 		List<String> toDelete = new ArrayList<>();
 		references.forEach((s, r) -> {
 			if(s.startsWith(prefix) && !s.equals("space")) toDelete.add(s);

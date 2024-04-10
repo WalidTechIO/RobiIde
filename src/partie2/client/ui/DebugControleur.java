@@ -26,16 +26,25 @@ public class DebugControleur {
 	
 	private DebugInfo dbginfo;
 	
+	/**
+	 * Initialisation de la vue de debug
+	 */
 	public void initialize() {
 		env.setOnMouseClicked(this::onReferenceSelected);
 		scripts.setOnMouseClicked(this::onScriptSelected);
 		call.setOnMouseClicked(this::onExpressionSelected);
 	}
 	
+	/**
+	 * Defini le texte affiche dans la zone info
+	 */
 	public void setInfo(String message) {
 		info.setText(message);
 	}
 	
+	/**
+	 * Ajoute un appel a la stack
+	 */
 	public void addCall(String expr) {
 		call.getItems().add(expr);
 		call.scrollTo(call.getItems().size());
@@ -75,6 +84,9 @@ public class DebugControleur {
 		}
 	}
 	
+	/**
+	 * Methode appelee par le controleur de l'ui principale pour passer les infos a cette vue
+	 */
 	public void debugReceipt(DebugInfo dbginfo) {
 		this.dbginfo = dbginfo;
 		addCall(dbginfo.expr());
@@ -85,6 +97,9 @@ public class DebugControleur {
 		});
 	}
 	
+	/**
+	 * Fermeture de la fenetre
+	 */
 	public void close() {
 		((Stage)env.getScene().getWindow()).close();
 	}

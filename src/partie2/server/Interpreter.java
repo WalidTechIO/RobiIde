@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.List;
 
 import partie2.io.DebugInfo;
-import partie2.io.Mode;
 import partie2.io.Program;
+import partie2.io.Program.Mode;
 import partie2.io.Response;
 import partie2.io.graphics.GImage;
 import partie2.io.graphics.GOval;

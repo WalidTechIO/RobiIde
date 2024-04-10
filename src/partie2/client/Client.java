@@ -43,11 +43,17 @@ public class Client implements Runnable {
 	 * Controleur de l'UI.
 	 */
 	private Controleur controller;
-	
+	/**
+	 * Statut de travail du client
+	 */
 	private boolean working = true;
-	
+	/**
+	 * Derniere requete effectuée
+	 */
 	private Request lastRequest = null;
-	
+	/**
+	 * Derniere reponse reçue
+	 */
 	private Response lastResponse = null;
 	
 	/**
@@ -84,6 +90,9 @@ public class Client implements Runnable {
 		}
 	}
 	
+	/**
+	 * Envoie un programme au serveur.
+	 */
 	public void sendProgram(Program program) {
 		
 		try {
@@ -128,6 +137,9 @@ public class Client implements Runnable {
 		}
 	}
 	
+	/**
+	 * Termine le client.
+	 */
 	public void close() {
 		working = false;
 		try {
@@ -135,6 +147,9 @@ public class Client implements Runnable {
 		} catch(IOException ignored) {}
 	}
 	
+	/**
+	 * Exporte la derniere reponse et derniere requete en JSON.
+	 */
 	public String exportState() {
 		try {
 			return toJson(new State(lastRequest, lastResponse));
@@ -143,6 +158,9 @@ public class Client implements Runnable {
 		}
 	}
 	
+	/**
+	 * Transforme l'obejct en chaine JSON
+	 */
 	public String toJson(Object obj) throws IOException {
 		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
 		return ow.writeValueAsString(obj);

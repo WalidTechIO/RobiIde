@@ -31,7 +31,7 @@ public class AddElement implements Command {
 		GObject element = (GObject) newRef.getRef();
 		
 		//Images et textes n'ont pas d'enfants (pas d'add, de del ou de clear)
-		//Tout les objets peuvent avoir ou supprimer des scripts et translater dans l'espace
+		//Tout les objets peuvent avoir ou supprimer des scripts, definir leur couleur, leur dimension et translater dans l'espace
 		newRef.addCommand("translate", new Translate());
 		newRef.addCommand("addScript", new AddScript());
 		newRef.addCommand("delScript", new DeleteScript());
@@ -44,7 +44,7 @@ public class AddElement implements Command {
 			newRef.addCommand("clear", new Clear());
 		}
 		
-		//On prend le partie d'override la reference si elle etait deja presente
+		//On prend le partie d'override la reference si elle etait deja presente (Nos variables robi ne sont pas des constantes)
 		if(env.getReferenceByName(refName) != null) {
 			SNode delMethod = new SDefaultNode();
 			for(int i=0;i<3;i++) delMethod.addChild(new SDefaultNode());

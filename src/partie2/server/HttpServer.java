@@ -7,6 +7,7 @@ import partie2.server.HttpHandler.Mode;
 
 public class HttpServer {
 	
+	//Demarre un service HTTP avec 1 a 2 endpoints selon le mode
 	public static void launch(int port, boolean renderApiOn) {
 		try {
 			com.sun.net.httpserver.HttpServer server = com.sun.net.httpserver.HttpServer.create(new InetSocketAddress(port),0);
