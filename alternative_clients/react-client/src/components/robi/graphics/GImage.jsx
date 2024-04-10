@@ -36,6 +36,7 @@ export default function GImage({image, images}) {
     position: "absolute",
     top: image.position.height,
     left: image.position.width,
+    backgroundColor: image.color,
     maxWidth: 'calc(100% - ' + image.position.width + 'px)',
     maxHeight: 'calc(100% - ' + image.position.height + 'px)',
     overflow: 'hidden'

@@ -29,7 +29,7 @@ const fetchScript = (ip, port, programFinal) => {
             script.textContent = animation.textContent
             renderzone.innerHTML = renderer
             document.head.appendChild(script)
-        }).catch(error => {
+        }).catch(() => {
             renderzone.innerHTML = 'Aucun rendu' + modal
             const timeout = setTimeout(() => {
                 renderzone.innerHTML = 'Aucun rendu'

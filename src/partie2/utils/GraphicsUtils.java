@@ -11,6 +11,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Base64;
+import java.util.List;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
 
 import javax.imageio.ImageIO;
 import javax.swing.JFrame;
@@ -105,7 +108,13 @@ public class GraphicsUtils {
 	}
 
 	private static Color getColorFromName(String colorName) {
+		
 		try {
+			//Support RGB color in hexadecimal representation
+			if(colorName.matches("^#[0-9A-Fa-f]{6}$")) {
+				List<String> composants = Pattern.compile("[^#]{2}").matcher(colorName).results().map(MatchResult::group).toList();
+				return new Color(Integer.parseInt(composants.get(0), 16),Integer.parseInt(composants.get(1), 16),Integer.parseInt(composants.get(2), 16));
+			}
 			return (Color) Class.forName("java.awt.Color").getField(colorName).get(null);
 		} catch(Exception e) {
 			return null;
@@ -161,7 +170,7 @@ public class GraphicsUtils {
 
 	}
 	
-	//Permit image to have dimension
+	//Permit image to have dimension and background color(for png)
 	private static class CustomGImage extends GImage {
 		
 		private final Dimension dim;
@@ -174,16 +183,16 @@ public class GraphicsUtils {
 		@Override
 		public void draw(Graphics2D g) {
 			if(dim.width > 0 && dim.height > 0) {
-				g.drawImage(getRawImage(), getPosition().x, getPosition().y, dim.width, dim.height, null);
+				g.drawImage(getRawImage(), getPosition().x, getPosition().y, dim.width, dim.height, color, null);
 			} else {
-				g.drawImage(getRawImage(), getPosition().x, getPosition().y, null);
+				g.drawImage(getRawImage(), getPosition().x, getPosition().y, color, null);
 			}
 		}
 		
 	}
 	
 	public static String b64ImageToHtmlSrc(String img) {
-		return "src=\"data:image/png;base64, " + img.trim() + " \" />";
+		return "src='data:image/png;base64," + img.trim() + "' />";
 	}
 	
 	public static BufferedImage b64ToImg(String b64) {
