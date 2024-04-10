@@ -2,17 +2,13 @@ import ObjectComputer from "./ObjectRenderer.jsx";
 
 export default function GOval({oval, images}) {
 
-    if (oval.dimension.width < 0) {
-        oval.dimension.width = 24
-    }
-    if (oval.dimension.height < 0) {
-        oval.dimension.height = 24
-    }
+    const width = oval.dimension.width < 0 ? 24 : oval.dimension.width;
+    const height = oval.dimension.height < 0 ? 24 : oval.dimension.height;
 
     const style = {
         position: "absolute",
-        width: `${oval.dimension.width}px`,
-        height: `${oval.dimension.height}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         backgroundColor: oval.color,
         top: oval.position.height,
         left: oval.position.width,

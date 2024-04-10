@@ -2,17 +2,13 @@ import ObjectComputer from "./ObjectRenderer.jsx";
 
 export default function Rect({rectangle, images}) {
 
-    if(rectangle.dimension.width < 0){
-        rectangle.dimension.width = 24
-    }
-    if (rectangle.dimension.height < 0) {
-        rectangle.dimension.height = 24
-    }
+    const width = rectangle.dimension.width < 0 ? 24 : rectangle.dimension.width;
+    const height = rectangle.dimension.height < 0 ? 24 : rectangle.dimension.height;
 
     const style = {
         position: "absolute",
-        width: `${rectangle.dimension.width}px`,
-        height: `${rectangle.dimension.height}px`,
+        width: `${width}px`,
+        height: `${height}px`,
         backgroundColor: rectangle.color,
         top: rectangle.position.height,
         left: rectangle.position.width

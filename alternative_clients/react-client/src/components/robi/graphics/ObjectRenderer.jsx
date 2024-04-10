@@ -7,15 +7,7 @@ export default function ObjectRenderer({object, images}) {
 
     //World rendering
     if(object.type === "GWorld") {
-
-        //Minimal dimension for world (minimum size of swing JPanel)
-        if (object.dimension.width < 120) {
-            object.dimension.width = 120
-        }
-        if (object.dimension.height < 10) {
-            object.dimension.height = 10
-        }
-
+        
         const style = {
             position: "relative",
             backgroundColor: object.color,
