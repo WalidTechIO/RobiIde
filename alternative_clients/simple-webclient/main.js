@@ -38,7 +38,6 @@ const fetchScript = (ip, port, programFinal) => {
                 renderzone.innerHTML = 'Aucun rendu'
                 clearTimeout(timeout)
             })
-            console.log("Error while fetching animation: " + error)
         })
 }
 
@@ -59,7 +58,7 @@ const handleSubmit = (e) => {
         }
         for (let i = 0; i < filesArray.length; i++) {
             filesArray[i].convertToBase64(function (base64) {
-                program = program.replaceAll(filesArray[i].name, base64.split(',')[1])
+                program = program.replaceAll("Image new " + filesArray[i].name, "Image new " + base64.split(',')[1])
                 fileRemaining--
                 if (fileRemaining === 0) {
                     resolve(program)
