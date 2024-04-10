@@ -30,7 +30,7 @@ export default function GImage({image, images}) {
     } else {
       setImg(<img alt="Image not found in images list" />)
     }
-  }, [])
+  }, [image.dimension])
 
   const style = {
     position: "absolute",

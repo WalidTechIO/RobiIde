@@ -8,7 +8,7 @@ File.prototype.convertToBase64 = function (callback) {
 }
 
 const renderzone = document.getElementById("renderzone")
-const loader = '<div class="spinner-grow text-primary" role="status"><span class="sr-only"></span></div>'
+const loader = '<div class="mx-auto align-items-center justify-content-center d-flex" style="height: 10vh;"><div class="spinner-grow text-primary" role="status"><span class="sr-only"></span></div></div>'
 const renderer = '<img alt="Aucun rendu" id="renderer" class="mb-2 img-fluid"/>'
 const modal = '<div id="modal" style="position: absolute; bottom: 0; right: 20px"><div class="alert alert-danger alert-dismissible fade show " role="alert">Error while fetching data<button type="button" class="btn-close"></button></div></div>'
 

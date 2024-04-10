@@ -9,6 +9,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import partie2.client.Client;
@@ -28,6 +30,9 @@ public class LoginControleur {
 	
 	public void initialize() {
 		login.setOnMouseClicked(this::loginAttempt);
+		ip.setOnKeyPressed(this::enterPressedOnInput);
+		port.setOnKeyPressed(this::enterPressedOnInput);
+		
 	}
 	
 	public void loginAttempt(MouseEvent e) {
@@ -51,6 +56,12 @@ public class LoginControleur {
 			((Stage)ip.getScene().getWindow()).setScene(mainWrapper.scene());
 		} catch (IOException ex) {
 			new Alert(Alert.AlertType.ERROR, "Impossible de se connecter au serveur").show();
+		}
+	}
+	
+	private void enterPressedOnInput(KeyEvent e) {
+		if(e.getCode().equals(KeyCode.ENTER)) {
+			loginAttempt(null);
 		}
 	}
 
