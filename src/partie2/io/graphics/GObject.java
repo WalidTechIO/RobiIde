@@ -26,7 +26,7 @@ public abstract class GObject implements Serializable, Cloneable {
 	public final UUID uuid = UUID.randomUUID();
 	public Dimension dimension = new Dimension(-1, -1);
 	public Dimension position = new Dimension(0, 0);
-	public String color = "blue";
+	public String color = "default";
 	public List<GObject> childrens = new ArrayList<>();
 	
 	public Dimension dimension() {

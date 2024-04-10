@@ -12,7 +12,6 @@ public class GWorld extends GObject {
 	
 	public GWorld(String windowName, Dimension dim) {
 		setDim(dim.width, dim.height);
-		setColor("unknow"); //Will set world color to default Swing window color
 	}
 	
 	public GWorld copy() {
