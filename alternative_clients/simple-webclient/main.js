@@ -51,7 +51,7 @@ const handleSubmit = (e) => {
     const data = new FormData(e.target);
     const filesArray = document.getElementById("selector").files ?? []
 
-    const computeProgram = new Promise((resolve, reject) => {
+    const computeProgram = new Promise((resolve) => {
         let program = data.get("program")
         let fileRemaining = filesArray.length
         if(fileRemaining === 0) {
@@ -59,7 +59,7 @@ const handleSubmit = (e) => {
         }
         for (let i = 0; i < filesArray.length; i++) {
             filesArray[i].convertToBase64(function (base64) {
-                program = program.replaceAll("{" + filesArray[i].name + "}", base64.split(',')[1])
+                program = program.replaceAll(filesArray[i].name, base64.split(',')[1])
                 fileRemaining--
                 if (fileRemaining === 0) {
                     resolve(program)
