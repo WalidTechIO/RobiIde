@@ -17,9 +17,9 @@
             <Label layoutX="31.0" layoutY="492.0" text="Feedback:" />
             <TextField fx:id="feedback" editable="false" layoutX="104.0" layoutY="488.0" prefHeight="25.0" prefWidth="282.0" />
             <Line endX="310.0" endY="-3.0" layoutX="101.0" layoutY="255.0" startX="-101.0" startY="-3.0" />
-            <Label layoutX="15.0" layoutY="6.0" prefHeight="17.0" prefWidth="84.0" text="Request Info:" />
+            <Label layoutX="8.0" layoutY="6.0" prefHeight="17.0" prefWidth="92.0" text="Request Info:" />
             <TextArea fx:id="request" editable="false" layoutX="8.0" layoutY="23.0" prefHeight="224.0" prefWidth="390.0" />
-            <Label layoutX="15.0" layoutY="258.0" prefHeight="17.0" prefWidth="84.0" text="Response Info:" />
+            <Label layoutX="8.0" layoutY="259.0" prefHeight="17.0" prefWidth="113.0" text="Response Info:" />
          </children>
       </AnchorPane>
    </children>

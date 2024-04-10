@@ -258,6 +258,10 @@ public class Controleur {
 			if(codeTextArea.getText().isBlank()) throw new IOException();
 			File f = fc.showSaveDialog(null);
 			if(f == null) return;
+			String path = f.getAbsolutePath();
+			if(!path.endsWith(".robi")) {
+				f = new File(path + ".robi");
+			}
 			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
 			bw.append(codeTextArea.getText());
 			bw.close();
@@ -326,6 +330,10 @@ public class Controleur {
 		try {
 			File f = fc.showSaveDialog(null);
 			if(f == null) return;
+			String path = f.getAbsolutePath();
+			if(!path.endsWith(".json")) {
+				f = new File(path + ".json");
+			}
 			BufferedWriter bw = new BufferedWriter(new FileWriter(f));
 			bw.append(resp);
 			bw.close();

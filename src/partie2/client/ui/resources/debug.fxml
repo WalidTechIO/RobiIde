@@ -14,13 +14,13 @@
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <ListView fx:id="call" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="327.0" />
-                  <Label prefHeight="17.0" prefWidth="137.0" text="Historique des appels : " />
+                  <Label prefHeight="17.0" prefWidth="268.0" text="Historique des appels : " />
                </children>
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
                <children>
                   <ListView fx:id="env" editable="false" layoutY="21.0" prefHeight="165.0" prefWidth="327.0" />
-                  <Label prefHeight="17.0" prefWidth="90.0" text="Environnement :" />
+                  <Label prefHeight="17.0" prefWidth="230.0" text="Environnement :" />
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="186.0" prefWidth="371.0">
