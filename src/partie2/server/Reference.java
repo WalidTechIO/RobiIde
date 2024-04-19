@@ -68,12 +68,12 @@ public class Reference {
 	}
 	
 	ReferenceInfo info() {
-		String className = reference.getClass().getSimpleName();
-		if(className.equals("Class")) {
+		String className = reference.getClass().getCanonicalName();
+		if(className.equals("java.lang.Class")) {
 			Class<?> classe = (Class<?>) reference;
 			className = "The class " + classe.getSimpleName();
 		} else {
-			className = "An instance of " + className;
+			className = "An instance of " + reference.getClass().getSimpleName();
 		}
 		List<String> primitivesName = new ArrayList<>(primitives.keySet());
 		Map<String, ScriptInfo> scriptsInfo = new HashMap<>();

@@ -238,9 +238,6 @@ public class Controleur {
 				
 				Liste des developpeurs: 
 				- EL OUAZIZI Walid
-				- KALDA Taha
-				- HAJJI Youssef
-				- ECHERARHI Hamza
 				""";
 		
 		

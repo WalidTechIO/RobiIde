@@ -1,9 +1,5 @@
-# Auteurs
-- HAJJI Youssef
-- KALDA Taha
+# Auteur
 - EL OUAZIZI Walid
-- ECHERARHI Hamza
-- ARZAZ Tasnime
 
 # Telecharger JavaFX
 - [Lien](https://gluonhq.com/products/javafx/)
