@@ -29,10 +29,10 @@ function reducer(state, action) {
             }
             return {
                 ...state,
-                current: -1,
+                current: state.data[0] ? 0 : -1,
                 info: {
-                    stack: [],
-                    env: {}
+                    stack: [state.data[0]?.resp.info.expr],
+                    env: state.data[0]?.resp.info.env || {}
                 }
             }
         }
