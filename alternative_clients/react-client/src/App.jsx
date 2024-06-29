@@ -19,7 +19,7 @@ function App() {
     info,
     fetch,
     next,
-    errorModalCallback,
+    toggleError,
     toggleDirect
   } = useRobiClient()
 
@@ -37,7 +37,7 @@ function App() {
       <h1>Espace de rendu</h1>
       {(!loading && <Renderer current={current} />) || <Loader />}
     </div>
-    {error && <ErrorModal callback={errorModalCallback} />}
+    {error && <ErrorModal callback={toggleError} />}
   </div>
 }
 

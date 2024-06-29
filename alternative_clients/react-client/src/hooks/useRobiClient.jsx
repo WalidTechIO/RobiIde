@@ -3,13 +3,7 @@ import { useReducer, useEffect, useMemo } from "react"
 function reducer(state, action) {
 
     switch (action.type) {
-        case 'TOGGLE_LOADING': {
-            return {
-                ...state,
-                loading: !state.loading
-            }
-        }
-
+        
         case 'SET_DATA': {
             return {
                 ...state,
@@ -22,21 +16,14 @@ function reducer(state, action) {
             }
         }
 
-        case 'TOGGLE_DIRECT': {
-            return {
-                ...state,
-                direct: !state.direct
-            }
-        }
-
         case 'NEXT': {
             if (state.current + 1 < state.data.length) {
                 return {
                     ...state,
                     current: state.current + 1,
                     info: {
-                        stack: [...state.info.stack, state.data[state.current+1].resp.info.expr],
-                        env: state.data[state.current+1].resp.info.env
+                        stack: [...state.info.stack, state.data[state.current + 1].resp.info.expr],
+                        env: state.data[state.current + 1].resp.info.env
                     }
                 }
             }
@@ -47,6 +34,20 @@ function reducer(state, action) {
                     stack: [],
                     env: {}
                 }
+            }
+        }
+        
+        case 'TOGGLE_LOADING': {
+            return {
+                ...state,
+                loading: !state.loading
+            }
+        }
+
+        case 'TOGGLE_DIRECT': {
+            return {
+                ...state,
+                direct: !state.direct
             }
         }
 
@@ -61,19 +62,26 @@ function reducer(state, action) {
 
 export default function useRobiClient() {
 
-    const [state, dispatch] = useReducer(reducer, {
+    const [{
+        current,
+        loading,
+        direct,
+        error,
+        data,
+        info
+    }, dispatch] = useReducer(reducer, {
         current: -1,
         loading: false,
-        direct: true,
         error: false,
-        data: {},
+        direct: true,
+        data: [],
         info: {
             stack: [],
             env: {}
         },
     })
 
-    const {fetchData, next, errorModalCallback, toggleDirect} = useMemo(() => {
+    const { fetchData, next, toggleError, toggleDirect } = useMemo(() => {
         const fetchData = (ip, port, program) => {
             dispatch({ type: "TOGGLE_LOADING"})
             fetch(`http://${ip}:${port}/world`, {
@@ -93,24 +101,24 @@ export default function useRobiClient() {
                 .finally(() => dispatch({ type: "TOGGLE_LOADING"}))
         }
 
-        const toggleDirect = () => {
-            dispatch({ type: "TOGGLE_DIRECT"})
-        }
-
         const next = () => {
             dispatch({ type: "NEXT" })
         }
 
-        const errorModalCallback = () => {
+        const toggleDirect = () => {
+            dispatch({ type: "TOGGLE_DIRECT"})
+        }
+
+        const toggleError = () => {
             dispatch({type: "TOGGLE_ERROR"})
         }
 
-        return {fetchData, next, errorModalCallback, toggleDirect}
+        return { fetchData, next, toggleError, toggleDirect }
     }, [])
 
     useEffect(() => {
-        if(state.direct && state.data.length > state.current + 1) {
-            const delay = state.data[state.current + 1].delay - (state.data[state.current]?.delay || 0)
+        if(direct && data.length > current + 1) {
+            const delay = data[current + 1].delay - (data[current]?.delay || 0)
             setTimeout(next, delay)
         }
     })
@@ -118,13 +126,13 @@ export default function useRobiClient() {
     return { 
         fetch: fetchData,
         next,
-        errorModalCallback,
+        toggleError,
         toggleDirect,
-        direct: state.direct,
-        info: state.info,
-        loading: state.loading,
-        isLast: state.current + 1 === state.data.length,
-        error: state.error,
-        current: state.data[state.current]?.resp
+        direct,
+        info,
+        loading,
+        error,
+        isLast: current + 1 === data.length,
+        current: data[current]?.resp
     }
 }
