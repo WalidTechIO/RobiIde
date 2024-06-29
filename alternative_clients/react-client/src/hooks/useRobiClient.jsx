@@ -133,6 +133,7 @@ export default function useRobiClient() {
         next,
         errorModalCallback,
         toggleDirect,
+        files: state.files,
         direct: state.direct,
         info: state.info,
         loading: state.loading,
