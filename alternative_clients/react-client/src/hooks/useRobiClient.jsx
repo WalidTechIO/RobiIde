@@ -1,12 +1,7 @@
-import { useReducer, useEffect } from "react"
-import Renderer from "../components/robi/Renderer.jsx"
-import Loader from "../components/robi/Loader.jsx"
-import Debug from "../components/robi/Debug.jsx"
-import CodingView from "../components/robi/CodingView.jsx";
-import ErrorModal from "../components/robi/ErrorModal.jsx";
-import { useMemo } from "react";
+import { useReducer, useEffect, useMemo } from "react"
 
 function reducer(state, action) {
+
     switch (action.type) {
         case 'TOGGLE_LOADING': {
             return {
@@ -19,8 +14,7 @@ function reducer(state, action) {
             return {
                 ...state,
                 data: action.data,
-                instPtr: 0,
-                current: {},
+                current: -1,
                 info: {
                     stack: [],
                     env: {}
@@ -43,21 +37,19 @@ function reducer(state, action) {
         }
 
         case 'NEXT': {
-            if(state.instPtr < state.data.length) {
+            if (state.current + 1 < state.data.length) {
                 return {
                     ...state,
-                    current: state.data[state.instPtr],
-                    instPtr: state.instPtr + 1,
+                    current: state.current + 1,
                     info: {
-                        stack: [...state.info.stack, state.data[state.instPtr].resp.info.expr],
-                        env: state.data[state.instPtr].resp.info.env
+                        stack: [...state.info.stack, state.data[state.current+1].resp.info.expr],
+                        env: state.data[state.current+1].resp.info.env
                     }
                 }
             }
             return {
                 ...state,
-                current: {},
-                instPtr: 0,
+                current: -1,
                 info: {
                     stack: [],
                     env: {}
@@ -71,34 +63,25 @@ function reducer(state, action) {
                 error: !state.error
             }
         }
-
-        case 'TOGGLE_DEBUG': {
-            return {
-                ...state,
-                showDebug: !state.showDebug
-            }
-        }
     }
 }
 
-export default function useRobiClient(initial = {
-    instPtr: 0,
-    loading: false,
-    direct: true,
-    showDebug: false,
-    error: false,
-    data: {},
-    current: {},
-    files: [],
-    info: {
-        stack: [],
-        env: {}
-    },
-}) {
+export default function useRobiClient() {
 
-    const [state, dispatch] = useReducer(reducer, initial)
+    const [state, dispatch] = useReducer(reducer, {
+        current: -1,
+        loading: false,
+        direct: true,
+        error: false,
+        data: {},
+        files: [],
+        info: {
+            stack: [],
+            env: {}
+        },
+    })
 
-    const {fetchData, setFiles, next, errorModalCallback, toggleDirect, toggleDebug} = useMemo(() => {
+    const {fetchData, setFiles, next, errorModalCallback, toggleDirect} = useMemo(() => {
         const fetchData = (ip, port, program) => {
             dispatch({ type: "TOGGLE_LOADING"})
             fetch(`http://${ip}:${port}/world`, {
@@ -122,10 +105,6 @@ export default function useRobiClient(initial = {
             dispatch({ type: "TOGGLE_DIRECT"})
         }
 
-        const toggleDebug = () => {
-            dispatch({type: "TOGGLE_DEBUG"})
-        }
-
         const setFiles = (files) => {
             dispatch({ type: "SET_FILES", files: files })
         }
@@ -138,36 +117,27 @@ export default function useRobiClient(initial = {
             dispatch({type: "TOGGLE_ERROR"})
         }
 
-        return {fetchData, setFiles, next, errorModalCallback, toggleDirect, toggleDebug}
+        return {fetchData, setFiles, next, errorModalCallback, toggleDirect}
     }, [])
 
     useEffect(() => {
-        if(state.direct && state.data.length > state.instPtr) {
-            const delay = state.data[state.instPtr].delay - (state.data[state.instPtr - 1] ? state.data[state.instPtr - 1].delay : 0)
+        if(state.direct && state.data.length > state.current + 1) {
+            const delay = state.data[state.current + 1].delay - (state.data[state.current]?.delay || 0)
             setTimeout(next, delay)
         }
-    }, [state.current])
+    })
 
-    const errorModal = !state.error ? <></> : <ErrorModal callback={errorModalCallback} />
-
-    const renderer = <div className="mb-3"><hr /><h1>Espace de rendu</h1>{(!state.loading && <Renderer state={state} />) || <Loader />}</div>
-
-    const debug = <Debug info={state.info} />
-
-    const codingview = <CodingView submitCallback={fetchData} direct={state.direct} toggleDirect={toggleDirect} setFiles={setFiles} next={next} isLast={state.instPtr === state.data.length} />
-
-    const robiclient = <>
-        {codingview}
-        <hr />
-        <div className="container">
-            <h1>Debugger</h1>
-            <label className='form-check-label' htmlFor='showDebug'>Afficher les informations de debug: </label>
-            <input id="showDebug" type="checkbox" className="form-check-input mx-1 mb-3" onChange={toggleDebug} checked={state.showDebug} />
-            {state.showDebug && <Debug info={state.info} />}
-        </div>
-        {renderer}
-        {errorModal}
-    </>
-
-    return robiclient
+    return { 
+        fetch: fetchData,
+        setFiles,
+        next,
+        errorModalCallback,
+        toggleDirect,
+        direct: state.direct,
+        info: state.info,
+        loading: state.loading,
+        isLast: state.current + 1 === state.data.length,
+        error: state.error,
+        current: state.data[state.current]?.resp
+    }
 }

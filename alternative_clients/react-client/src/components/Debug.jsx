@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import {useState} from 'react';
 
 export default function Debug({info}) {
 
@@ -16,14 +16,14 @@ export default function Debug({info}) {
     const refInfo = info.env[finalRef] ? `Type: ${info.env[finalRef].className}\nPrimitives:\n\t- ${info.env[finalRef].primitives.join("\n\t- ")}${finalRefScriptInfo}` : ""
 
     Object.keys(info.env).forEach((key) => {
-        selectChildrens[selectChildrens.length] = <option key={key} value={key}>{key}</option>
+        selectChildrens.push(<option key={key} value={key}>{key}</option>)
     })
 
     return <>
         <br/>
         <label className='form-label' htmlFor='refSelector'>References :</label>
         <select id="refSelector" className="form-control mb-3" onChange={(e) => setSelectedRef(e.target.value)} value={finalRef} disabled={selectChildrens.length === 0}>
-            {selectChildrens.map(children => children)}
+            {selectChildrens}
         </select>
         <div className='mb-3'>
             <div>
