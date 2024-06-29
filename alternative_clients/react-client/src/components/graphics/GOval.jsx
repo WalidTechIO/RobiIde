@@ -1,6 +1,6 @@
 import ObjectComputer from "./ObjectRenderer.jsx";
 
-export default function GOval({oval, images}) {
+export default function GOval({oval}) {
 
     const width = oval.dimension.width < 0 ? 24 : oval.dimension.width;
     const height = oval.dimension.height < 0 ? 24 : oval.dimension.height;
@@ -17,7 +17,7 @@ export default function GOval({oval, images}) {
 
     return <div style={style}>
         {oval.childrens.map(children => {
-            return (<ObjectComputer key={children.uuid} object={children} images={images} />)
+            return (<ObjectComputer key={children.uuid} object={children} />)
         })}
     </div>
 }

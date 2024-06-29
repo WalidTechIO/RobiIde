@@ -29,13 +29,6 @@ function reducer(state, action) {
             }
         }
 
-        case 'SET_FILES': {
-            return {
-                ...state,
-                files: action.files
-            }
-        }
-
         case 'NEXT': {
             if (state.current + 1 < state.data.length) {
                 return {
@@ -74,14 +67,13 @@ export default function useRobiClient() {
         direct: true,
         error: false,
         data: {},
-        files: [],
         info: {
             stack: [],
             env: {}
         },
     })
 
-    const {fetchData, setFiles, next, errorModalCallback, toggleDirect} = useMemo(() => {
+    const {fetchData, next, errorModalCallback, toggleDirect} = useMemo(() => {
         const fetchData = (ip, port, program) => {
             dispatch({ type: "TOGGLE_LOADING"})
             fetch(`http://${ip}:${port}/world`, {
@@ -105,10 +97,6 @@ export default function useRobiClient() {
             dispatch({ type: "TOGGLE_DIRECT"})
         }
 
-        const setFiles = (files) => {
-            dispatch({ type: "SET_FILES", files: files })
-        }
-
         const next = () => {
             dispatch({ type: "NEXT" })
         }
@@ -117,7 +105,7 @@ export default function useRobiClient() {
             dispatch({type: "TOGGLE_ERROR"})
         }
 
-        return {fetchData, setFiles, next, errorModalCallback, toggleDirect}
+        return {fetchData, next, errorModalCallback, toggleDirect}
     }, [])
 
     useEffect(() => {
@@ -129,11 +117,9 @@ export default function useRobiClient() {
 
     return { 
         fetch: fetchData,
-        setFiles,
         next,
         errorModalCallback,
         toggleDirect,
-        files: state.files,
         direct: state.direct,
         info: state.info,
         loading: state.loading,

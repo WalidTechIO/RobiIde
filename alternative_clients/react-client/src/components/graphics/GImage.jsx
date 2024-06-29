@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-export default function GImage({image, images}) {
+export default function GImage({image}) {
 
   const [img, setImg] = useState(<img alt="Loading..." />)
 
@@ -14,7 +14,7 @@ export default function GImage({image, images}) {
 
   useEffect(() => {
     let imgindex = -1
-
+    const images = document.getElementById('images_selector')?.files
     if (images) {
       for (let i = 0; i < images.length; i++) {
         if (images[i].name === image.path) {

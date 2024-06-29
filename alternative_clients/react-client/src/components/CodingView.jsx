@@ -1,4 +1,4 @@
-export default function CodingView({ submitCallback, direct, toggleDirect, setFiles, next, isLast}) {
+export default function CodingView({ submitCallback, direct, toggleDirect, next, isLast}) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -27,7 +27,7 @@ export default function CodingView({ submitCallback, direct, toggleDirect, setFi
             </div>
             <div className="mb-3">
                 <label htmlFor="selector" className="form-label">Images:</label>
-                <input className="form-control" type="file" id="selector" multiple={true} onChange={(e) => setFiles(e.target.files)}/>
+                <input className="form-control" type="file" id="images_selector" multiple={true} />
             </div>
             <div>
                 <button className="btn btn-primary mx-1" type="submit">{direct ? "Lancer l'animation" : "Compiler le programme"}</button>

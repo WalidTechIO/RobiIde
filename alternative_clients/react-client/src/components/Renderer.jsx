@@ -1,6 +1,6 @@
 import ObjectRenderer from "./graphics/ObjectRenderer.jsx"
 
-export default function Renderer({current, files}) {
+export default function Renderer({current}) {
 
     if(!current) return <p>Aucun rendu</p>
 
@@ -8,6 +8,6 @@ export default function Renderer({current, files}) {
         <p>
             Feedback: {current.feedback}
         </p>
-        <ObjectRenderer object={current.world} images={files}/>
+        <ObjectRenderer object={current.world} />
     </>
 }

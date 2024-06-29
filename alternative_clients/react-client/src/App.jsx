@@ -16,17 +16,15 @@ function App() {
     direct,
     isLast,
     error,
-    files,
     info,
     fetch,
-    setFiles,
     next,
     errorModalCallback,
     toggleDirect
   } = useRobiClient()
 
   return <div className="container mt-5">
-    <CodingView submitCallback={fetch} direct={direct} toggleDirect={toggleDirect} setFiles={setFiles} next={next} isLast={isLast} />
+    <CodingView submitCallback={fetch} direct={direct} toggleDirect={toggleDirect} next={next} isLast={isLast} />
     <hr />
     <div className="container">
       <h1>Debugger</h1>
@@ -37,7 +35,7 @@ function App() {
     <div className="mb-3">
       <hr />
       <h1>Espace de rendu</h1>
-      {(!loading && <Renderer current={current} files={files} />) || <Loader />}
+      {(!loading && <Renderer current={current} />) || <Loader />}
     </div>
     {error && <ErrorModal callback={errorModalCallback} />}
   </div>
